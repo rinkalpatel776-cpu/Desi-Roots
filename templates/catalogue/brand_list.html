@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Featured Brands | Spice Pantry{% endblock %}
+
+{% block content %}
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container text-center">
+    <h1 class="h2 mb-2">Featured Brands</h1>
+    <p class="text-muted mb-0">We supply high-quality products from leading grocery and spice brands.</p>
+  </div>
+</div>
+
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for brand in brands %}
+      <div class="col">
+        <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex align-items-center mb-3">
+              {% if brand.logo %}
+              <div class="d-flex align-items-center justify-content-center border border-sp rounded bg-white p-1" style="width: 64px; height: 50px; flex-shrink: 0;">
+                <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+              </div>
+              {% else %}
+              <div class="d-flex align-items-center justify-content-center border border-sp rounded-circle bg-light" style="width: 50px; height: 50px; flex-shrink: 0;">
+                <i class="bi bi-tag-fill text-olive fs-5"></i>
+              </div>
+              {% endif %}
+              <h4 class="h5 mb-0 ms-3 fw-semibold text-dark">{{ brand.name }}</h4>
+            </div>
+            
+            <p class="text-muted small mb-4">
+              {{ brand.description|default:"Sourced premium quality products under this trusted brand. Highly appreciated by chefs and kitchen managers in Bristol." }}
+            </p>
+          </div>
+          
+          <a href="/products/?brand={{ brand.slug }}" class="btn btn-outline-primary w-100">
+            View {{ brand.name }} Products
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted">No brands found. Brands will be registered via the administration console.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

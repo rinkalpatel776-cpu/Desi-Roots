@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Frequently Asked Questions | Spice Pantry{% endblock %}
+
+{% block content %}
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container text-center">
+    <h1 class="h2 mb-2">Frequently Asked Questions</h1>
+    <p class="text-muted mb-0">Find quick answers to common questions about accounts, pricing, and deliveries.</p>
+  </div>
+</div>
+
+<div class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        {% if faqs %}
+        <div class="accordion mb-5" id="faqAccordionPage">
+          {% for faq in faqs %}
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingPage{{ faq.id }}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePage{{ faq.id }}" aria-expanded="false" aria-controls="collapsePage{{ faq.id }}">
+                {{ faq.question }}
+              </button>
+            </h2>
+            <div id="collapsePage{{ faq.id }}" class="accordion-collapse collapse" aria-labelledby="headingPage{{ faq.id }}" data-bs-parent="#faqAccordionPage">
+              <div class="accordion-body">
+                {{ faq.answer|linebreaksbr }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5 bg-white border border-sp rounded">
+          <i class="bi bi-question-circle fs-1 text-muted mb-3 d-block"></i>
+          <h4>No FAQ Data Available</h4>
+          <p class="text-muted">Frequently asked questions will be published here once added to the admin panel.</p>
+        </div>
+        {% endif %}
+
+        <div class="card p-4 bg-light border-sp border text-center mt-5">
+          <h5 class="h6 mb-2">Have a Different Question?</h5>
+          <p class="small text-muted mb-3">Our wholesale support desk is available to assist your food business operations directly.</p>
+          <a href="/contact/" class="btn btn-outline-primary btn-sm">Contact Support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

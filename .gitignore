@@ -1,0 +1,42 @@
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# ── Virtual environments ────────────────────────────────────
+venv/
+env/
+.venv/
+
+# ── Secrets — NEVER commit these ───────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Django ─────────────────────────────────────────────────
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+/media/
+
+# ── PostgreSQL local data directory ────────────────────────
+pg_data/
+
+# ── IDE / editor ────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── macOS ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+
+# ── AI / agent config ───────────────────────────────────────
+.agents/
+.gemini/

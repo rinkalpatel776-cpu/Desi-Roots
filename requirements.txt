@@ -1,0 +1,30 @@
+# Spice Pantry — Python dependencies
+#
+# Version families below are known-good pairings for Django 5.2 LTS.
+# Install, confirm the site runs, then lock exact versions with:
+#     pip freeze > requirements.lock.txt
+#
+# ---- Core ----
+Django>=5.2,<5.3            # LTS release - security patches for years
+psycopg[binary]>=3.2        # PostgreSQL driver
+django-environ>=0.12        # reads settings from .env, keeps secrets out of Git
+Pillow>=11.0                # image handling for product and category images
+
+# ---- Saves you real hours on this timeline ----
+django-import-export>=4.3   # bulk CSV/Excel product import in the admin
+django-crispy-forms>=2.3    # renders the enquiry form without hand-written HTML
+crispy-bootstrap5>=2024.10  # Bootstrap 5 template pack for crispy-forms
+
+# ---- Production ----
+gunicorn>=23.0              # WSGI application server
+whitenoise>=6.8             # serves static files from Django, no CDN needed
+
+# ---- Security ----
+django-axes>=7.0            # locks out repeated failed admin logins
+django-cleanup>=9.0         # removes orphaned image files on delete
+
+# ---- Monitoring ----
+sentry-sdk>=2.0             # free tier error tracking
+
+# ---- Development only: install with pip install -r requirements-dev.txt ----
+# django-debug-toolbar>=4.4  # shows slow queries while building

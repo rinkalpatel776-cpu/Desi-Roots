@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Cookie Policy | Spice Pantry{% endblock %}
+
+{% block content %}
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container text-center">
+    <h1 class="h2 mb-2">Cookie Policy</h1>
+    <p class="text-muted mb-0">Last updated: August 2026</p>
+  </div>
+</div>
+
+<div class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="alert alert-warning border-warning d-flex align-items-center gap-3 mb-5" role="alert">
+          <i class="bi bi-exclamation-triangle-fill fs-4 text-warning"></i>
+          <div>
+            <strong>TODO: CONFIRM WITH BUSINESS</strong><br>
+            Please confirm cookie consent mechanisms and cookieless web analytics integrations with legal advisors prior to launching.
+          </div>
+        </div>
+
+        <div class="bg-white p-5 border border-sp rounded">
+          <h2 class="h4 fw-semibold mb-3">1. What are Cookies?</h2>
+          <p class="text-muted">
+            Cookies are small text files stored on your computer or mobile device when you browse websites. They are widely used to make websites work efficiently and provide security.
+          </p>
+
+          <h2 class="h4 fw-semibold mb-3 mt-4">2. Cookies We Use</h2>
+          <p class="text-muted">
+            Our B2B catalogue website uses a minimal set of cookies, divided into:
+          </p>
+          
+          <h5 class="h6 fw-bold text-dark mt-3 mb-2">Essential Cookies</h5>
+          <p class="text-muted small mb-3">
+            These are required for core website functionality, such as Django session cookies for admin access and CSRF (Cross-Site Request Forgery) protection tokens for secure form submissions. The site cannot function properly without these.
+          </p>
+
+          <h5 class="h6 fw-bold text-dark mb-2">Preferences</h5>
+          <p class="text-muted small">
+            We store a single local storage setting (<code>cookie_consent_accepted</code>) to remember that you accepted our cookies banner, preventing the banner from showing on subsequent visits.
+          </p>
+
+          <h2 class="h4 fw-semibold mb-3 mt-4">3. Analytical Tracking</h2>
+          <p class="text-muted">
+            To understand visitors' behavior, we use <strong>Cloudflare Web Analytics</strong>, which is privacy-first, cookieless, and does not collect or track any personally identifiable information (PII). We do not load third-party marketing cookies or track you across other websites.
+          </p>
+
+          <h2 class="h4 fw-semibold mb-3 mt-4">4. Managing Cookies</h2>
+          <p class="text-muted mb-0">
+            You can restrict or block cookies through your web browser settings. Please consult your browser's Help menu for specific instructions. Disabling essential cookies may prevent form submissions or restrict access to the administration area.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

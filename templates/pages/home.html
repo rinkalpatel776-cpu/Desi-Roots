@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}Spice Pantry | Wholesale Spices & Groceries Bristol{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="sp-hero-wrapper overflow-hidden text-white">
+  <h1 class="visually-hidden">Spice Pantry | Wholesale Spices & Groceries Bristol — Desi Roots Ltd</h1>
+  <div class="container sp-hero-container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto text-center">
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 sp-hero-actions">
+          {# Primary action: the highest-value conversion goal #}
+          <a href="/wholesale/" class="btn btn-primary btn-lg text-white px-4 shadow">
+            <i class="bi bi-chat-left-dots me-2"></i>Request Wholesale Quote
+          </a>
+          {# Secondary action: outlined so it does not compete with primary #}
+          <a href="/products/" class="btn btn-hero-outline btn-lg px-4 shadow">
+            <i class="bi bi-grid-3x3-gap me-2"></i>Browse Products
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Why Choose Spice Pantry -->
+<div class="py-5 bg-white border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-semibold text-dark">Why Choose Spice Pantry</h2>
+      <p class="text-muted">A professional wholesale supplier designed for busy commercial kitchens.</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-3 text-center">
+        <div class="mb-3 text-saffron"><i class="bi bi-award fs-1"></i></div>
+        <h3 class="h5 fw-semibold">Premium Quality</h3>
+        <p class="text-muted small">Strict quality controls for consistent texture and flavor profile.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="mb-3 text-saffron"><i class="bi bi-truck fs-1"></i></div>
+        <h3 class="h5 fw-semibold">Reliable Local Delivery</h3>
+        <p class="text-muted small">Delivered directly to your door in Bristol with our own vehicles.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="mb-3 text-saffron"><i class="bi bi-briefcase fs-1"></i></div>
+        <h3 class="h5 fw-semibold">Trusted B2B Partner</h3>
+        <p class="text-muted small">Dependable wholesale inventory sizes suited to kitchen demands.</p>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="mb-3 text-saffron"><i class="bi bi-tags fs-1"></i></div>
+        <h3 class="h5 fw-semibold">Multiple Leading Brands</h3>
+        <p class="text-muted small">A wide range of trusted brands available under one catalog.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Categories Grid -->
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <span class="text-saffron fw-semibold small text-uppercase" style="letter-spacing: 0.1em;">Wholesale Range</span>
+      <h2 class="h3 fw-bold text-dark mt-1">Explore Our Categories</h2>
+      <p class="text-muted">High-grade bulk staples and authentic ingredients for professional food operations.</p>
+    </div>
+    
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+      {% for cat in categories %}
+      <div class="col">
+        <a href="/products/?category={{ cat.slug }}" class="category-card">
+          {% if cat.image %}
+            <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'rice' %}
+            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=600&auto=format&fit=crop" alt="Wholesale Rice" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'spices' %}
+            <img src="https://images.unsplash.com/photo-1532336414038-cf19250c5757?q=80&w=600&auto=format&fit=crop" alt="Wholesale Spices" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'flour' %}
+            {# Bulk flour/wheat flour sacks — consistent raw-ingredient style #}
+            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600&auto=format&fit=crop" alt="Wholesale Flour" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'oils' %}
+            <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=600&auto=format&fit=crop" alt="Wholesale Oils" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'lentils' %}
+            {# Red/green lentils — correct legume, not chickpeas #}
+            <img src="https://images.unsplash.com/photo-1611575619284-b52ed8ca6b27?q=80&w=600&auto=format&fit=crop" alt="Wholesale Lentils" class="category-card-img" width="300" height="200" loading="lazy">
+          {% elif cat.slug == 'pickles' %}
+            {# Pickled vegetables in jars — matches category label #}
+            <img src="https://images.unsplash.com/photo-1604935067681-0e1b45dd0aa8?q=80&w=600&auto=format&fit=crop" alt="Wholesale Pickles" class="category-card-img" width="300" height="200" loading="lazy">
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=600&auto=format&fit=crop" alt="{{ cat.name }}" class="category-card-img" width="300" height="200" loading="lazy">
+          {% endif %}
+          <div class="category-card-overlay">
+            <h3 class="category-card-title h5">{{ cat.name }}</h3>
+            <span class="category-card-action">Browse <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <!-- Static Fallbacks if DB is completely fresh -->
+      <div class="col-12 text-center">
+        <p class="text-muted">Product categories will be listed here once created in the admin panel.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<div class="py-5 bg-white border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-semibold text-dark">Featured Products</h2>
+      <p class="text-muted">Explore popular ingredients and catering favorites in high demand.</p>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+      {% for product in featured_products %}
+      <div class="col">
+        <div class="card h-100 d-flex flex-column justify-content-between">
+          <div class="card-img-top-wrapper position-relative" style="height: 180px;">
+            {% if product.badge %}
+              <span class="sp-badge position-absolute top-2 start-2">{{ product.badge }}</span>
+            {% endif %}
+            {% with product.images.first as img %}
+              {% if img %}
+                <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" class="img-fluid" style="max-height: 160px;">
+              {% else %}
+                {% include 'partials/product_placeholder.html' with name=product.name %}
+              {% endif %}
+            {% endwith %}
+          </div>
+          
+          <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
+            <div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small">{{ product.category.name }}</span>
+                {% if product.brand %}
+                <span class="text-olive small fw-medium">{{ product.brand.name }}</span>
+                {% endif %}
+              </div>
+              <h6 class="card-title text-dark fw-semibold">{{ product.name }}</h6>
+            </div>
+            
+            <a href="/products/{{ product.slug }}/" class="btn btn-outline-primary btn-sm w-100 mt-3">View Details</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Featured Brands Showcase -->
+{% if featured_brands %}
+<section class="sp-featured-brands-section" aria-label="Featured Brands">
+  <div class="container">
+    <div class="text-center sp-brands-header">
+      <!-- Decorative Twin Leaves Ornament -->
+      <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
+        <span style="display:inline-block; width: 42px; height: 1.5px; background: #E2D9CC;"></span>
+        <svg width="26" height="18" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M14 18C14 18 11.5 12 6 9.5C0.5 7 0 0.5 0 0.5C0 0.5 7.5 0 11.5 5.5C13.2 7.8 14 11 14 18Z" fill="#C98A2B"/>
+          <path d="M14 18C14 18 16.5 12 22 9.5C27.5 7 28 0.5 28 0.5C28 0.5 20.5 0 16.5 5.5C14.8 7.8 14 11 14 18Z" fill="#B37822"/>
+        </svg>
+        <span style="display:inline-block; width: 42px; height: 1.5px; background: #E2D9CC;"></span>
+      </div>
+      <h2 class="h3 sp-brands-title">
+        Featured <span class="accent-word">Brands</span>
+      </h2>
+      <p class="sp-brands-subtitle">
+        A selection of trusted food brands we supply.
+      </p>
+    </div>
+    
+    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-4 g-3 g-lg-4 justify-content-center">
+      {% for brand in featured_brands %}
+      <div class="col">
+        <a href="/products/?brand={{ brand.slug }}" class="brand-showcase-card shadow-sm text-decoration-none" title="{{ brand.name }}">
+          <div class="brand-showcase-logo-wrap">
+            {% if brand.logo %}
+            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo img-fluid" loading="lazy">
+            {% else %}
+            <span class="fw-semibold text-olive fs-6">{{ brand.name }}</span>
+            {% endif %}
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4 pt-2">
+      <a href="/brands/" class="btn-outline-brand-view">
+        View All Brands &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Wholesale 4-Step Process Section -->
+<div class="py-5 bg-white border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-semibold text-dark">How Wholesale Works</h2>
+      <p class="text-muted">Our simple enquiry and direct delivery process for commercial operations.</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="process-step-number">1</div>
+          <h3 class="h5 fw-semibold mb-2">Browse Catalogue</h3>
+          <p class="text-muted small mb-0">Browse our range of spices, rice, lentils, flour, oils, and pickles online.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="process-step-number">2</div>
+          <h3 class="h5 fw-semibold mb-2">Submit Enquiry</h3>
+          <p class="text-muted small mb-0">Add details of items and quantities needed in our digital enquiry form.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="process-step-number">3</div>
+          <h3 class="h5 fw-semibold mb-2">Receive Quote</h3>
+          <p class="text-muted small mb-0">We will email you a formal pricing quote tailored to your business volume.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="process-step">
+          <div class="process-step-number">4</div>
+          <h3 class="h5 fw-semibold mb-2">Delivery</h3>
+          <p class="text-muted small mb-0">We dispatch our own delivery vehicles straight to your premises.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials (Conditionally hidden if empty) -->
+{% if testimonials %}
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-semibold text-dark">Client Testimonials</h2>
+      <p class="text-muted">What local kitchens and food business operators say about us.</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      {% for testimonial in testimonials %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card p-4 h-100 bg-white d-flex flex-column justify-content-between">
+          <p class="text-muted italic mb-4">"{{ testimonial.quote }}"</p>
+          <div>
+            <h6 class="mb-0 fw-semibold text-dark">{{ testimonial.author }}</h6>
+            <span class="small text-olive">{{ testimonial.business }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- FAQ Preview Section -->
+{% if faqs %}
+<div class="py-5 bg-white border-bottom border-sp">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-semibold text-dark">Frequently Asked Questions</h2>
+      <p class="text-muted">Quick answers to common wholesale inquiries.</p>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+          {% for faq in faqs %}
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ faq.id }}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ faq.id }}" aria-expanded="false" aria-controls="collapse{{ faq.id }}">
+                {{ faq.question }}
+              </button>
+            </h2>
+            <div id="collapse{{ faq.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ faq.id }}" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                {{ faq.answer|linebreaksbr }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+          <a href="/faq/" class="btn btn-outline-primary">View All FAQs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Contact Call to Action Banner -->
+<div class="py-5 bg-olive text-white">
+  <div class="container py-4 text-center">
+    <h2 class="h3 fw-semibold mb-2">Partner with Spice Pantry</h2>
+    <p class="mb-4 text-white-50 px-lg-5">Interested in opening a commercial account? Get in touch with us to receive personalized wholesale price list offerings based on your business purchase volume.</p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      {% if site_settings.phone_number %}
+      <a href="tel:{{ site_settings.phone_number }}" class="btn btn-light px-4"><i class="bi bi-telephone me-2"></i>Call Us</a>
+      {% endif %}
+      <a href="/wholesale/" class="btn btn-gold px-4 fw-semibold"><i class="bi bi-envelope me-2"></i>Submit Enquiry</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

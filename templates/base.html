@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>{% block meta_title %}Spice Pantry | Premium Spices & B2B Wholesale Catalogue{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Spice Pantry (trading name of Desi Roots) is a premium B2B wholesale spices and grocery catalogue serving Bristol and surrounding areas.{% endblock %}">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  <!-- Organization JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Spice Pantry",
+    "legalName": "Desi Roots",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "{{ site_settings.phone_number }}",
+      "contactType": "customer service",
+      "email": "{{ site_settings.email_address }}",
+      "areaServed": "GB",
+      "availableLanguage": "en"
+    }]
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <!-- Bootstrap Icons via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Custom Stylesheet with cache bust -->
+  <link href="{% static 'css/style.css' %}?v=2.1" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  {% if site_settings.announcement_bar %}
+  <div class="announcement-bar">
+    {{ site_settings.announcement_bar }}
+  </div>
+  {% endif %}
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-xl sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-inline-flex align-items-center" href="/">
+        <img src="{% static 'images/logo.png' %}" alt="Spice Pantry Logo" width="46" height="46" style="height: 46px; width: auto; max-width: 48px; object-fit: contain;" class="navbar-brand-logo me-2">
+        <span class="brand-text"><span>Spice</span> Pantry</span>
+      </a>
+      <button class="navbar-toggler flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if '/products/' in request.path %}active{% endif %}" href="/products/">Catalogue</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if '/brands/' in request.path %}active{% endif %}" href="/brands/">Brands</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/wholesale/' %}active{% endif %}" href="/wholesale/">Wholesale Enquiry</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="/about/">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/faq/' %}active{% endif %}" href="/faq/">FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="/contact/">Contact</a>
+          </li>
+          <li class="nav-item ms-xl-3 mt-3 mt-xl-0">
+            <a href="/wholesale/" class="btn btn-primary btn-sm text-white text-nowrap">Request Quote</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <main class="min-vh-100">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="footer-brand-wrap mb-3">
+            <a class="footer-brand d-inline-flex align-items-center gap-3 text-white text-decoration-none" href="/">
+              <img src="{% static 'images/logo.png' %}" alt="Spice Pantry Logo" width="52" height="52" style="height: 52px; width: auto; max-width: 52px; object-fit: contain;" class="footer-logo-img rounded-2 bg-white p-1">
+              <div>
+                <span class="fs-5 fw-bold text-white d-block" style="font-family: var(--sp-font-head); letter-spacing: 0.05em;"><span style="color: var(--sp-saffron);">Spice</span> Pantry</span>
+                <small class="text-white-50 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">Wholesale Spices & Groceries</small>
+              </div>
+            </a>
+          </div>
+          <p class="mb-3">Trading brand of Desi Roots. Supplying premium quality spices, rice, flour, oils, lentils, and pickles to commercial kitchens and retailers across Bristol and nearby areas.</p>
+          <div class="d-flex gap-2 mb-4">
+            {% if site_settings.facebook_url %}
+            {# Minimum 44×44 px tap target via padding; gap-2 adds 8px between icons #}
+            <a href="{{ site_settings.facebook_url }}" target="_blank" aria-label="Facebook"
+               class="footer-social-link"><i class="bi bi-facebook fs-5"></i></a>
+            {% endif %}
+            {% if site_settings.instagram_url %}
+            <a href="{{ site_settings.instagram_url }}" target="_blank" aria-label="Instagram"
+               class="footer-social-link"><i class="bi bi-instagram fs-5"></i></a>
+            {% endif %}
+            {% if site_settings.linkedin_url %}
+            <a href="{{ site_settings.linkedin_url }}" target="_blank" aria-label="LinkedIn"
+               class="footer-social-link"><i class="bi bi-linkedin fs-5"></i></a>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-6 col-6">
+          <h2 class="h5">Catalogue</h2>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="/products/">All Products</a></li>
+            <li><a href="/products/?category=rice">Rice</a></li>
+            <li><a href="/products/?category=spices">Spices</a></li>
+            <li><a href="/products/?category=flour">Flour</a></li>
+            <li><a href="/products/?category=oils">Oils</a></li>
+            <li><a href="/products/?category=lentils">Lentils</a></li>
+            <li><a href="/products/?category=pickles">Pickles</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-2 col-md-6 col-6">
+          <h2 class="h5">Quick Links</h2>
+          <ul class="list-unstyled d-flex flex-column gap-2">
+            <li><a href="/wholesale/">Wholesale Enquiry</a></li>
+            <li><a href="/about/">About Us</a></li>
+            <li><a href="/faq/">FAQ</a></li>
+            <li><a href="/contact/">Contact Us</a></li>
+            <li><a href="/brands/">Featured Brands</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+          <h2 class="h5">Contact Wholesale</h2>
+          <ul class="list-unstyled d-flex flex-column gap-3">
+            {% if site_settings.phone_number %}
+            <li class="d-flex align-items-center gap-3">
+              <i class="bi bi-telephone text-saffron fs-5"></i>
+              <a href="tel:{{ site_settings.phone_number }}">{{ site_settings.phone_number }}</a>
+            </li>
+            {% endif %}
+            {% if site_settings.whatsapp_link %}
+            <li class="d-flex align-items-center gap-3">
+              <i class="bi bi-whatsapp text-saffron fs-5"></i>
+              <a href="{{ site_settings.whatsapp_link }}" target="_blank">Chat on WhatsApp</a>
+            </li>
+            {% endif %}
+            {% if site_settings.email_address %}
+            <li class="d-flex align-items-center gap-3">
+              <i class="bi bi-envelope text-saffron fs-5"></i>
+              <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a>
+            </li>
+            {% endif %}
+            {% if site_settings.postal_address %}
+            <li class="d-flex align-items-start gap-3">
+              <i class="bi bi-geo-alt text-saffron fs-5 mt-1"></i>
+              <span>{{ site_settings.postal_address|linebreaksbr }}</span>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom text-center text-md-start d-md-flex justify-content-between align-items-center">
+        <p class="mb-2 mb-md-0">&copy; 2026 Spice Pantry. All rights reserved. Desi Roots is a registered business in the UK.</p>
+        <div class="d-flex justify-content-center gap-4">
+          <a href="/privacy/">Privacy Policy</a>
+          <a href="/cookies/">Cookie Policy</a>
+          <a href="/terms/">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookieConsentBanner" class="cookie-banner d-none">
+    <h6 class="mb-2"><i class="bi bi-shield-check text-saffron me-2"></i>Cookie Preferences</h6>
+    <p class="small text-muted mb-3">We use cookies to ensure you get the best experience on our website. No marketing tracking is used.</p>
+    <div class="d-flex gap-2 justify-content-end">
+      <button id="acceptCookiesBtn" class="btn btn-primary btn-sm text-white py-1 px-3">Accept</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Vanilla Cookie Consent Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const banner = document.getElementById("cookieConsentBanner");
+      const btn = document.getElementById("acceptCookiesBtn");
+      
+      if (!localStorage.getItem("cookie_consent_accepted")) {
+        banner.classList.remove("d-none");
+      }
+      
+      btn.addEventListener("click", function() {
+        localStorage.setItem("cookie_consent_accepted", "true");
+        banner.classList.add("d-none");
+      });
+    });
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

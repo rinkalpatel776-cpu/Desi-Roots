@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block meta_title %}Contact Us | Spice Pantry{% endblock %}
+
+
+
+{% block content %}
+<div class="py-5 bg-light border-bottom border-sp">
+  <div class="container text-center">
+    <div class="d-inline-flex align-items-center justify-content-center gap-2 mb-2">
+      <span class="fs-2">📬</span>
+      <h1 class="h2 mb-0 fw-bold text-dark">Contact Us</h1>
+    </div>
+    <p class="text-muted mb-0">We'd love to hear from you — reach out anytime!</p>
+  </div>
+</div>
+
+<div class="py-5">
+  <div class="container">
+    <div class="row g-5">
+      
+      <!-- Left Column: Get in Touch -->
+      <div class="col-lg-5">
+        <div class="card p-4 p-md-5 border border-sp bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+          <div>
+            <h2 class="h4 fw-bold text-dark mb-1">Get in Touch</h2>
+            <p class="text-muted small mb-4">We typically reply within a few hours.</p>
+            
+            <div class="d-flex flex-column gap-4 mb-4">
+              <!-- Phone / WhatsApp -->
+              {% if site_settings.phone_number or site_settings.whatsapp_link %}
+              <div class="d-flex align-items-start gap-3">
+                <div class="contact-icon-badge bg-saffron-light text-saffron">
+                  <i class="bi bi-telephone-fill fs-5"></i>
+                </div>
+                <div>
+                  <small class="text-uppercase fw-bold text-muted d-block" style="font-size: 0.72rem; letter-spacing: 0.08em;">Phone / WhatsApp</small>
+                  {% if site_settings.phone_number %}
+                  <a href="tel:{{ site_settings.phone_number }}" class="text-dark fw-bold text-decoration-none d-block fs-6">{{ site_settings.phone_number }}</a>
+                  {% endif %}
+                  {% if site_settings.whatsapp_link %}
+                  <a href="{{ site_settings.whatsapp_link }}" target="_blank" class="text-olive small fw-semibold text-decoration-none"><i class="bi bi-whatsapp me-1"></i>Chat on WhatsApp</a>
+                  {% endif %}
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Email -->
+              {% if site_settings.email_address %}
+              <div class="d-flex align-items-start gap-3">
+                <div class="contact-icon-badge bg-blue-light text-primary">
+                  <i class="bi bi-envelope-fill fs-5"></i>
+                </div>
+                <div>
+                  <small class="text-uppercase fw-bold text-muted d-block" style="font-size: 0.72rem; letter-spacing: 0.08em;">Email</small>
+                  <a href="mailto:{{ site_settings.email_address }}" class="text-dark fw-bold text-decoration-none fs-6">{{ site_settings.email_address }}</a>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Service Areas -->
+              <div class="d-flex align-items-start gap-3">
+                <div class="contact-icon-badge bg-green-light text-olive">
+                  <i class="bi bi-geo-alt-fill fs-5"></i>
+                </div>
+                <div>
+                  <small class="text-uppercase fw-bold text-muted d-block" style="font-size: 0.72rem; letter-spacing: 0.08em;">Service Areas</small>
+                  <p class="text-dark fw-bold mb-0 fs-6">Bristol · Bath · Surrounding Commercial Hubs</p>
+                  {% if site_settings.postal_address %}
+                  <small class="text-muted d-block mt-1">{{ site_settings.postal_address }}</small>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Social Media Action Buttons -->
+          <div class="pt-4 border-top border-sp">
+            <small class="text-uppercase fw-bold text-muted d-block mb-3" style="font-size: 0.72rem; letter-spacing: 0.08em;">Direct Channels</small>
+            <div class="d-flex flex-wrap gap-2">
+              {% if site_settings.facebook_url %}
+              <a href="{{ site_settings.facebook_url }}" target="_blank" class="btn btn-social-fb">
+                <i class="bi bi-facebook"></i>Facebook
+              </a>
+              {% endif %}
+              {% if site_settings.instagram_url %}
+              <a href="{{ site_settings.instagram_url }}" target="_blank" class="btn btn-social-insta">
+                <i class="bi bi-instagram"></i>Instagram
+              </a>
+              {% endif %}
+              {% if site_settings.whatsapp_link %}
+              <a href="{{ site_settings.whatsapp_link }}" target="_blank" class="btn btn-social-wa">
+                <i class="bi bi-whatsapp"></i>WhatsApp
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Send a Message Form -->
+      <div class="col-lg-7">
+        <div class="card p-4 p-md-5 bg-white border border-sp shadow-sm h-100">
+          <h3 class="h4 fw-bold text-dark mb-1">Send a Message</h3>
+          <p class="text-muted small mb-4">Please fill out your details below and our team will get back to you promptly.</p>
+          
+          <form method="POST" action="{% url 'enquiries:wholesale_enquiry' %}" novalidate>
+            {% csrf_token %}
+            
+            {{ form|crispy }}
+            
+            <button type="submit" class="btn btn-primary btn-lg text-white w-100 mt-3 shadow-sm">
+              <i class="bi bi-send me-2"></i>Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
