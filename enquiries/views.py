@@ -22,12 +22,16 @@ def wholesale_enquiry(request):
             # Send Notification Emails (with error tolerance)
             try:
                 # 1. Email to Admin
-                admin_subject = f"New Website Enquiry from {enquiry.name}"
+                product_info = enquiry.product.name if enquiry.product else (enquiry.category_interest or "General Catalogue")
+                admin_subject = f"New Wholesale Enquiry: {enquiry.business_name or enquiry.name} ({product_info})"
                 admin_message = (
-                    f"You have received a new website enquiry.\n\n"
-                    f"Name: {enquiry.name}\n"
-                    f"Phone No: {enquiry.phone}\n"
-                    f"Email: {enquiry.email}\n\n"
+                    f"You have received a new wholesale website enquiry.\n\n"
+                    f"Full Name: {enquiry.name}\n"
+                    f"Business Name: {enquiry.business_name or 'N/A'}\n"
+                    f"Business Type: {enquiry.business_type or 'N/A'}\n"
+                    f"Phone Number: {enquiry.phone}\n"
+                    f"Email Address: {enquiry.email}\n"
+                    f"Product / Category: {product_info}\n\n"
                     f"Message:\n{enquiry.message}\n"
                 )
                 send_mail(
@@ -42,8 +46,8 @@ def wholesale_enquiry(request):
                 customer_subject = "Enquiry Received - Spice Pantry"
                 customer_message = (
                     f"Dear {enquiry.name},\n\n"
-                    f"Thank you for contacting Spice Pantry. We have received your enquiry.\n\n"
-                    f"Our team is currently reviewing your message and a manager will contact you within 24 business hours.\n\n"
+                    f"Thank you for contacting Spice Pantry. We have received your wholesale enquiry.\n\n"
+                    f"Our trade team is currently reviewing your requirements and a manager will contact you within 24 business hours.\n\n"
                     f"Best regards,\n"
                     f"The Spice Pantry Team\n"
                     f"Desi Roots Wholesale Supply\n"
@@ -56,18 +60,19 @@ def wholesale_enquiry(request):
                     fail_silently=False
                 )
             except Exception as e:
-                # Log email errors silently so that database save is not rolled back 
-                # and visitor still reaches the thank-you page
+                # Log email errors silently so database save is preserved
                 pass
 
             return redirect('/wholesale/thank-you/')
     else:
-        # Pre-populate message if product_id is in query parameters
+        # Pre-populate message and product if product_id is in query parameters
         initial_data = {}
         product_id = request.GET.get('product_id')
         if product_id:
             try:
                 product = Product.objects.get(id=product_id, is_published=True)
+                initial_data['product'] = product
+                initial_data['category_interest'] = product.category.name if product.category else ''
                 initial_data['message'] = f"Hello, I am interested in wholesale pricing and availability for {product.name}."
             except (Product.DoesNotExist, ValueError):
                 pass

@@ -5,13 +5,13 @@ def create_default_settings(apps, schema_editor):
     if not SiteSettings.objects.exists():
         SiteSettings.objects.create(
             announcement_bar="WE SUPPLY THE SPICE, YOU CREATE THE MAGIC.",
-            phone_number="+44 117 000 0000",
-            whatsapp_link="https://wa.me/447000000000",
+            phone_number="",
+            whatsapp_link="",
             email_address="support@desiroots.co.uk",
-            postal_address="Desi Roots / Spice Pantry\nBristol, United Kingdom",
-            facebook_url="https://facebook.com/spicepantry",
-            instagram_url="https://instagram.com/spicepantry",
-            linkedin_url="https://linkedin.com/company/spicepantry"
+            postal_address="",
+            facebook_url="",
+            instagram_url="",
+            linkedin_url=""
         )
 
 def remove_default_settings(apps, schema_editor):

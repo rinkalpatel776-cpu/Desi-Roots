@@ -10,7 +10,7 @@ class ProductResource(resources.ModelResource):
     class Meta:
         model = Product
         fields = (
-            'sku', 'name', 'category', 'brand', 'description', 'country_of_origin', 
+            'sku', 'name', 'slug', 'category', 'brand', 'description', 'country_of_origin', 
             'ingredients', 'storage_info', 'packaging_info', 'nutrition_info', 
             'is_published', 'is_featured', 'badge', 'meta_title', 'meta_description'
         )
@@ -43,7 +43,12 @@ class ProductResource(resources.ModelResource):
 
         # Prepopulate slug if missing
         if not row.get('slug') and row.get('name'):
-            row['slug'] = slugify(row['name'])
+            base_slug = slugify(row['name'])
+            slug = base_slug
+            sku = row.get('sku', '')
+            if Product.objects.filter(slug=slug).exclude(sku=sku).exists():
+                slug = f"{base_slug}-{slugify(sku)}"
+            row['slug'] = slug
 
     def after_import_row(self, row, row_result, **kwargs):
         # If the row import failed or was skipped, do nothing

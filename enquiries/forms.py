@@ -14,27 +14,76 @@ class EnquiryForm(forms.ModelForm):
         label="Leave this field blank"
     )
 
+    BUSINESS_TYPE_CHOICES = [
+        ('', 'Select business type (optional)'),
+        ('Restaurant', 'Restaurant / Cafe'),
+        ('Takeaway', 'Takeaway / Fast Food'),
+        ('Retailer', 'Independent Grocery / Retailer'),
+        ('Caterer', 'Caterer / Hospitality'),
+        ('Wholesaler', 'Wholesaler / Distributor'),
+        ('Other', 'Other Business'),
+    ]
+
+    business_type = forms.ChoiceField(
+        choices=BUSINESS_TYPE_CHOICES,
+        required=False,
+        label="Business Type",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+    consent_given = forms.BooleanField(
+        required=True,
+        label="I consent to Spice Pantry storing my details and contacting me regarding this enquiry.",
+        error_messages={'required': 'You must agree to the privacy policy to submit an enquiry.'}
+    )
+
     class Meta:
         model = Enquiry
-        fields = ['name', 'phone', 'email', 'message']
+        fields = [
+            'name', 
+            'business_name', 
+            'business_type', 
+            'email', 
+            'phone', 
+            'product', 
+            'category_interest', 
+            'message', 
+            'consent_given'
+        ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Your Full Name'}),
+            'business_name': forms.TextInput(attrs={'placeholder': 'e.g., Bristol Spice Kitchen Ltd'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'e.g., info@yourbusiness.co.uk'}),
             'phone': forms.TextInput(attrs={'placeholder': 'e.g., 0117 900 0000'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'e.g., yourname@example.com'}),
-            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Write your message or volume enquiry here...'}),
+            'product': forms.Select(attrs={'class': 'form-select'}),
+            'category_interest': forms.TextInput(attrs={'placeholder': 'e.g., Whole Spices, Basmati Rice, Lentils'}),
+            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tell us about the products, quantities, or delivery schedule you require...'}),
         }
         labels = {
-            'name': 'Name',
-            'phone': 'Phone No',
-            'email': 'Email',
-            'message': 'Message',
+            'name': 'Full Name',
+            'business_name': 'Business Name',
+            'business_type': 'Business Type',
+            'email': 'Email Address',
+            'phone': 'Phone Number',
+            'product': 'Specific Product (Optional)',
+            'category_interest': 'Product or Category of Interest (Optional)',
+            'message': 'Enquiry / Message Details',
+            'consent_given': 'Privacy Consent',
         }
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        for field_name in ['name', 'phone', 'email', 'message']:
-            self.fields[field_name].required = True
+        self.fields['name'].required = True
+        self.fields['email'].required = True
+        self.fields['phone'].required = True
+        self.fields['message'].required = True
+        self.fields['consent_given'].required = True
+
+        self.fields['product'].queryset = Product.objects.filter(is_published=True).order_by('name')
+        self.fields['product'].empty_label = "Select a product (optional)"
+        self.fields['product'].required = False
+
 
     def clean(self):
         cleaned_data = super().clean()

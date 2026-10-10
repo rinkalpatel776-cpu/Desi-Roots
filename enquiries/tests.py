@@ -21,7 +21,8 @@ class EnquiryTests(TestCase):
         # Access wholesale enquiry form page
         response = self.client.get('/wholesale/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Request Wholesale Information")
+        self.assertContains(response, "Wholesale Enquiry & Contact")
+        self.assertContains(response, "Submit Enquiry")
 
     def test_wholesale_form_prefilled_product(self):
         # Access wholesale page with preselected product parameter

@@ -1,14 +1,12 @@
 /* Spice Pantry — Main CSS */
 
 :root {
-  --sp-saffron:    #E07A28;  /* rich, warm culinary saffron orange */
-  --sp-gold:       #E9C46A;  /* deep turmeric gold accent */
-  --sp-olive:      #6B705C;  /* organic culinary sage green */
-  --sp-bg:         #FCFBF8;  /* soft warm page background */
-  --sp-card:       #FFFFFF;  /* card background */
-  --sp-text:       #1A1A1B;  /* deep obsidian body text */
-  --sp-border:     #E8E2D8;  /* warm borders and dividers */
-  --sp-dark:       #141415;  /* deep obsidian surface */
+  --sp-saffron:    #C98A2B;  /* primary */
+  --sp-olive:      #667A3E;  /* secondary */
+  --sp-bg:         #FCFBF8;  /* page background */
+  --sp-card:       #FFFFFF;  /* cards */
+  --sp-text:       #2F2F2F;  /* body text */
+  --sp-border:     #E8E2D8;  /* borders, dividers */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -42,14 +40,13 @@ a:hover {
 
 /* Custom Announcement Bar */
 .announcement-bar {
-  background: linear-gradient(90deg, #D4691B 0%, #E07A28 50%, #E9C46A 100%);
+  background-color: var(--sp-saffron);
   color: #ffffff;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  padding: 8px 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 7px 0;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* Custom Sticky Navigation */
