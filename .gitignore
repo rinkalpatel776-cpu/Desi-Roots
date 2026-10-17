@@ -41,3 +41,6 @@ Thumbs.db
 # ── AI / agent config ───────────────────────────────────────
 .agents/
 .gemini/
+
+# ── Local data exports (may contain user records) ───────────
+backups/
