@@ -5,23 +5,12 @@
 
 {% block content %}
 <!-- Hero Section -->
-{# Hero photo: Mareefe via Pexels (pexels.com/photo/678414), Pexels License, no attribution required #}
-<section class="sp-hero-wrapper overflow-hidden text-white" aria-labelledby="heroTitle">
-  <picture class="sp-hero-media">
-    <source type="image/webp"
-            srcset="{% static 'images/hero/hero-spices-flatlay-960.webp' %} 960w,
-                    {% static 'images/hero/hero-spices-flatlay-1600.webp' %} 1600w,
-                    {% static 'images/hero/hero-spices-flatlay-2400.webp' %} 2400w"
-            sizes="(max-width: 767.98px) 690px, 100vw">
-    <img src="{% static 'images/hero/hero-spices-flatlay-1600.jpg' %}" alt="" width="1600" height="1067" fetchpriority="high">
-  </picture>
+<div class="sp-hero-wrapper overflow-hidden text-white">
+  <h1 class="visually-hidden">Spice Pantry | Wholesale Spices & Groceries Bristol — Desi Roots Ltd</h1>
   <div class="container sp-hero-container">
     <div class="row">
-      <div class="col-md-9 col-lg-7 col-xl-6">
-        <p class="sp-hero-eyebrow">Wholesale · Bristol</p>
-        <h1 id="heroTitle" class="sp-hero-title">Premium Spices &amp; Grocery Products for Your Business</h1>
-        <p class="sp-hero-subtitle">Supplying restaurants, cafés, retailers and food businesses with carefully selected products across Bristol and nearby areas.</p>
-        <div class="d-flex flex-column flex-sm-row gap-3 sp-hero-actions">
+      <div class="col-lg-8 mx-auto text-center">
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 sp-hero-actions">
           {# Primary action: the highest-value conversion goal #}
           <a href="/wholesale/" class="btn btn-primary btn-lg text-white px-4 shadow">
             <i class="bi bi-chat-left-dots me-2"></i>Request Wholesale Quote
@@ -34,7 +23,7 @@
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- Why Choose Spice Pantry -->
 <div class="py-5 bg-white border-bottom border-sp">
