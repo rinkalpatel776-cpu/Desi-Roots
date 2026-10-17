@@ -182,7 +182,7 @@
         <a href="/products/?brand={{ brand.slug }}" class="brand-showcase-card shadow-sm text-decoration-none" title="{{ brand.name }}">
           <div class="brand-showcase-logo-wrap">
             {% if brand.logo %}
-            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo img-fluid" loading="lazy">
+            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}" loading="lazy">
             {% else %}
             <span class="fw-semibold text-olive fs-6">{{ brand.name }}</span>
             {% endif %}

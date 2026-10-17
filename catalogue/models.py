@@ -1,9 +1,29 @@
 from django.db import models
-from PIL import Image
+from PIL import Image, ImageChops
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
 import os
+
+
+def trim_logo_border(img):
+    """
+    Crop the empty space around a logo so every logo fills its box the same way.
+    Uses transparency when the image has any, otherwise treats near-white as empty.
+    Returns (image, changed).
+    """
+    rgba = img.convert('RGBA')
+    alpha = rgba.getchannel('A')
+    if alpha.getextrema()[0] < 255:
+        mask = alpha.point(lambda v: 255 if v > 16 else 0)
+    else:
+        white = Image.new('RGB', rgba.size, (255, 255, 255))
+        mask = ImageChops.difference(rgba.convert('RGB'), white).convert('L').point(lambda v: 255 if v > 18 else 0)
+    bbox = mask.getbbox()
+    if not bbox or bbox == (0, 0, rgba.width, rgba.height):
+        return img, False
+    return rgba.crop(bbox), True
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -43,6 +63,20 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Trim empty space from newly uploaded logos; saved as PNG to keep transparency
+        if self.logo and not self.logo._committed:
+            img, changed = trim_logo_border(Image.open(self.logo))
+            if changed:
+                output = BytesIO()
+                img.save(output, format='PNG', optimize=True)
+                output.seek(0)
+                base_name = os.path.splitext(os.path.basename(self.logo.name))[0]
+                self.logo = InMemoryUploadedFile(
+                    output, 'ImageField', f"{base_name}.png", 'image/png', output.getbuffer().nbytes, None
+                )
+        super().save(*args, **kwargs)
 
     @classmethod
     def ticked_for_home_page(cls):

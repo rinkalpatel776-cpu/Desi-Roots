@@ -820,12 +820,15 @@ footer .footer-bottom {
   justify-content: center;
 }
 
+/* Every logo gets the same box; the (trimmed) artwork is scaled to fit and centred,
+   so wide logos fill the width, round ones fill the height, and all share one centre line */
 .brand-showcase-logo {
-  max-height: 75px;
-  max-width: 180px;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 160px;
+  max-height: 76px;
   object-fit: contain;
+  object-position: center;
   transition: transform 0.25s ease;
 }
 
@@ -872,8 +875,8 @@ footer .footer-bottom {
     border-radius: 12px;
   }
   .brand-showcase-logo {
-    max-height: 58px;
-    max-width: 135px;
+    max-height: 56px;
+    max-width: 120px;
   }
 }
 

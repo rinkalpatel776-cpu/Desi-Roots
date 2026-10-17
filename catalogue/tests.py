@@ -460,3 +460,62 @@ class CollectProductImagesCommandTests(TestCase):
 
 
 
+
+
+class BrandLogoTrimTests(TestCase):
+    """Logos are trimmed of empty space so they display at a consistent size."""
+
+    def setUp(self):
+        import tempfile
+        from django.test import override_settings
+        self.media_dir = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=self.media_dir)
+        self.override.enable()
+
+    def tearDown(self):
+        import shutil
+        self.override.disable()
+        shutil.rmtree(self.media_dir, ignore_errors=True)
+
+    def make_upload(self, name, mode, size, box, fill, fmt):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        background = (0, 0, 0, 0) if mode == 'RGBA' else (255, 255, 255)
+        img = Image.new(mode, size, background)
+        img.paste(Image.new(mode, (box[2] - box[0], box[3] - box[1]), fill), box[:2])
+        buf = BytesIO()
+        img.save(buf, format=fmt)
+        return SimpleUploadedFile(name, buf.getvalue(), content_type=f'image/{fmt.lower()}')
+
+    def test_transparent_padding_is_trimmed_on_upload(self):
+        logo = self.make_upload('pad.png', 'RGBA', (400, 400), (100, 150, 300, 250), (200, 0, 0, 255), 'PNG')
+        brand = Brand.objects.create(name='Pad', slug='pad', logo=logo)
+        self.assertEqual((brand.logo.width, brand.logo.height), (200, 100))
+
+    def test_white_background_jpeg_is_trimmed_and_saved_as_png(self):
+        logo = self.make_upload('white.jpg', 'RGB', (300, 300), (50, 100, 250, 200), (0, 0, 200), 'JPEG')
+        brand = Brand.objects.create(name='White', slug='white', logo=logo)
+        self.assertTrue(brand.logo.name.endswith('.png'))
+        self.assertLessEqual(abs(brand.logo.width - 200), 2)
+        self.assertLessEqual(abs(brand.logo.height - 100), 2)
+
+    def test_command_trims_existing_logo_to_new_file_and_is_repeatable(self):
+        from io import StringIO
+        from django.core.files.base import ContentFile
+        from django.core.management import call_command
+        brand = Brand.objects.create(name='Old', slug='old')
+        upload = self.make_upload('old.png', 'RGBA', (500, 500), (0, 200, 500, 300), (0, 120, 0, 255), 'PNG')
+        # Store the padded file directly, as logos uploaded before trimming existed
+        name = brand.logo.storage.save('brands/old.png', ContentFile(upload.read()))
+        Brand.objects.filter(pk=brand.pk).update(logo=name)
+
+        call_command('trim_brand_logos', stdout=StringIO())
+        brand.refresh_from_db()
+        self.assertEqual(brand.logo.name, 'brands/old_trim.png')
+        self.assertEqual((brand.logo.width, brand.logo.height), (500, 100))
+        self.assertFalse(brand.logo.storage.exists('brands/old.png'))
+
+        out = StringIO()
+        call_command('trim_brand_logos', stdout=out)
+        self.assertIn('Trimmed 0; skipped 1.', out.getvalue())
