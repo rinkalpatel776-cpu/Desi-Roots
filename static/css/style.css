@@ -673,10 +673,12 @@ footer .footer-bottom {
     ),
     url('../images/hero-spice-merchant.jpg');
   background-size: cover;
-  background-position: center center;
+  /* Anchor to the top so the brand title in the photo is never cropped */
+  background-position: center top;
   background-repeat: no-repeat;
   border-bottom: 2px solid var(--sp-gold);
-  min-height: 520px;
+  /* Height follows the photo's 16:9 shape (2048x1152 -> 56.25vw) so the whole image shows */
+  height: clamp(520px, 56.25vw, 900px);
   display: flex;
   align-items: flex-end;
 }
@@ -714,8 +716,10 @@ footer .footer-bottom {
 /* Mobile screen optimization (< 768px) */
 @media (max-width: 767.98px) {
   .sp-hero-wrapper {
-    min-height: 360px;
-    background-position: center center;
+    /* Taller than 16:9 on phones so the stacked buttons sit below the photo's tagline */
+    height: auto;
+    min-height: 440px;
+    background-position: center top;
     /* Maintain strengthened overlay on mobile too */
     background-image:
       linear-gradient(180deg,
