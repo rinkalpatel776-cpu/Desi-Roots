@@ -94,7 +94,7 @@ Ensure `.env` exists in the project root with your local credentials:
 ```bash
 cp .env.example .env
 # Edit .env with your local settings:
-# DATABASE_URL=postgres://mantra1424@localhost:5432/spice_pantry_db
+# DATABASE_URL=postgres://USER@localhost:5432/DB_NAME
 # SECRET_KEY=<your-local-development-secret-key>
 # DEBUG=True
 ```
