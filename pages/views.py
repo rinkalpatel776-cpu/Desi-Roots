@@ -13,9 +13,9 @@ def home(request):
         .prefetch_related('images', 'pack_sizes')[:4]
     )
     
-    # Brands ticked "Show on home page" in the admin, in their chosen order.
+    # The first 4 brands ticked "Show on home page" in the admin, in their chosen order.
     # The section hides itself when none are ticked.
-    featured_brands = Brand.objects.filter(is_featured=True).order_by('home_order', 'name')
+    featured_brands = Brand.ticked_for_home_page()[:Brand.HOME_PAGE_LIMIT]
 
     # Retrieve testimonials
     testimonials = Testimonial.objects.filter(is_active=True)

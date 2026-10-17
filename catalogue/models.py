@@ -22,6 +22,9 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
+    # How many brands the home page Featured Brands section shows (one row of 4)
+    HOME_PAGE_LIMIT = 4
+
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
     logo = models.ImageField(upload_to='brands/', blank=True, null=True)
@@ -40,6 +43,11 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def ticked_for_home_page(cls):
+        """Every brand ticked 'Show on home page', in home page order."""
+        return cls.objects.filter(is_featured=True).order_by('home_order', 'name')
 
 
 class Product(models.Model):

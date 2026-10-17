@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from django.utils.text import slugify
 from import_export import resources, fields
@@ -234,6 +234,23 @@ class BrandAdmin(admin.ModelAdmin):
     list_display = ('name', 'logo_preview', 'slug', 'is_featured', 'home_order')
     list_editable = ('is_featured', 'home_order')
     list_filter = ('is_featured',)
+
+    def changelist_view(self, request, extra_context=None):
+        # Tell staff exactly which ticked brands make it onto the home page
+        if request.method == 'GET':
+            ticked = list(Brand.ticked_for_home_page().values_list('name', flat=True))
+            shown, hidden = ticked[:Brand.HOME_PAGE_LIMIT], ticked[Brand.HOME_PAGE_LIMIT:]
+            if hidden:
+                messages.warning(request, (
+                    f"The home page shows only {Brand.HOME_PAGE_LIMIT} brands. Showing: {', '.join(shown)}. "
+                    f"Ticked but not shown: {', '.join(hidden)}. Untick brands or change their "
+                    f"Home page order to choose which {Brand.HOME_PAGE_LIMIT} appear."
+                ))
+            elif shown:
+                messages.info(request, f"Home page shows: {', '.join(shown)}.")
+            else:
+                messages.info(request, "No brands are ticked, so the Featured Brands section is hidden on the home page.")
+        return super().changelist_view(request, extra_context)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'description')
     readonly_fields = ('logo_display',)
