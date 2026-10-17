@@ -26,7 +26,14 @@ class Brand(models.Model):
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
     logo = models.ImageField(upload_to='brands/', blank=True, null=True)
     description = models.TextField(blank=True)
-    is_featured = models.BooleanField(default=False, db_index=True)
+    is_featured = models.BooleanField(
+        "Show on home page", default=False, db_index=True,
+        help_text="Tick to show this brand in the Featured Brands section of the home page.",
+    )
+    home_order = models.PositiveIntegerField(
+        "Home page order", default=0,
+        help_text="Lower numbers appear first on the home page. Brands with the same number are sorted by name.",
+    )
 
     class Meta:
         ordering = ['name']

@@ -13,10 +13,9 @@ def home(request):
         .prefetch_related('images', 'pack_sizes')[:4]
     )
     
-    # Retrieve featured brands
-    featured_brands = Brand.objects.filter(is_featured=True)[:6]
-    if not featured_brands.exists():
-        featured_brands = Brand.objects.all()[:6]
+    # Brands ticked "Show on home page" in the admin, in their chosen order.
+    # The section hides itself when none are ticked.
+    featured_brands = Brand.objects.filter(is_featured=True).order_by('home_order', 'name')
 
     # Retrieve testimonials
     testimonials = Testimonial.objects.filter(is_active=True)

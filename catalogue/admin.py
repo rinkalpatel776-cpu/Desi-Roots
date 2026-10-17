@@ -231,8 +231,9 @@ from django.utils.html import mark_safe
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'logo_preview', 'slug', 'is_featured')
-    list_editable = ('is_featured',)
+    list_display = ('name', 'logo_preview', 'slug', 'is_featured', 'home_order')
+    list_editable = ('is_featured', 'home_order')
+    list_filter = ('is_featured',)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'description')
     readonly_fields = ('logo_display',)
