@@ -17,37 +17,47 @@ class EnquiryTests(TestCase):
             is_published=True
         )
 
-    def test_wholesale_form_rendering(self):
-        # Access wholesale enquiry form page
-        response = self.client.get('/wholesale/')
+    def test_contact_page_shows_enquiry_form_without_removed_fields(self):
+        response = self.client.get('/contact/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Wholesale Enquiry & Contact")
-        self.assertContains(response, "Submit Enquiry")
+        self.assertContains(response, 'Send Message')
+        for removed in ('business_type', 'category_interest', 'name="product"'):
+            self.assertNotContains(response, removed)
 
-    def test_wholesale_form_prefilled_product(self):
-        # Access wholesale page with preselected product parameter
-        response = self.client.get(f'/wholesale/?product_id={self.product.id}')
+    def test_product_link_prefills_message_on_contact_page(self):
+        response = self.client.get(f'/contact/?product_id={self.product.id}')
         self.assertEqual(response.status_code, 200)
-        # Verify that the product is selected in the select dropdown list
-        self.assertContains(response, f'value="{self.product.id}" selected')
+        self.assertContains(response, 'wholesale pricing and availability for Turmeric Powder')
+
+    def test_old_wholesale_url_redirects_permanently_to_contact(self):
+        response = self.client.get('/wholesale/')
+        self.assertRedirects(response, '/contact/', status_code=301)
+        response = self.client.get(f'/wholesale/?product_id={self.product.id}')
+        self.assertRedirects(response, f'/contact/?product_id={self.product.id}', status_code=301)
+
+    def test_post_to_old_wholesale_url_still_saves(self):
+        payload = {
+            'name': 'Old Tab', 'email': 'old@tab.co.uk', 'phone': '0117 000 0000',
+            'message': 'Sent from a page opened before the change.', 'consent_given': 'on', 'website': '',
+        }
+        response = self.client.post('/wholesale/', data=payload)
+        self.assertRedirects(response, '/wholesale/thank-you/')
+        self.assertEqual(Enquiry.objects.count(), 1)
 
     def test_valid_enquiry_submission(self):
         # Submit a valid enquiry
         payload = {
             'name': 'John Doe',
             'business_name': 'Bristol Curry House',
-            'business_type': 'Restaurant',
             'email': 'john@curryhouse.co.uk',
             'phone': '0117 999 9999',
-            'product': self.product.id,
-            'category_interest': 'Spices',
             'message': 'We need 50kg of turmeric powder weekly. Please quote.',
             'consent_given': 'on', # Checkbox is sent as 'on'
             'website': '' # Leave honeypot empty
         }
         
         # Submit POST request
-        response = self.client.post('/wholesale/', data=payload)
+        response = self.client.post('/contact/', data=payload)
         
         # Verify redirect to thank you page
         self.assertRedirects(response, '/wholesale/thank-you/')
@@ -64,7 +74,6 @@ class EnquiryTests(TestCase):
         payload = {
             'name': 'Spam Bot',
             'business_name': 'Spam Co',
-            'business_type': 'Caterer',
             'email': 'spam@bot.com',
             'phone': '07000000000',
             'message': 'Spam message',
@@ -73,7 +82,7 @@ class EnquiryTests(TestCase):
         }
         
         # Submit POST request
-        response = self.client.post('/wholesale/', data=payload)
+        response = self.client.post('/contact/', data=payload)
         
         # Verify it doesn't redirect and returns validation errors
         self.assertEqual(response.status_code, 200)
@@ -91,8 +100,9 @@ class EnquiryTests(TestCase):
             'consent_given': 'on'
         }
         
-        response = self.client.post('/wholesale/', data=payload)
+        response = self.client.post('/contact/', data=payload)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pages/contact.html')
         self.assertFormError(response.context['form'], 'name', "This field is required.")
         self.assertEqual(Enquiry.objects.count(), 0)
 

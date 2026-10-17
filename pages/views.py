@@ -33,20 +33,14 @@ def home(request):
     return render(request, 'pages/home.html', context)
 
 
-from django.conf import settings
-from enquiries.forms import EnquiryForm
+from enquiries.views import handle_enquiry_form
 
 def about(request):
     return render(request, 'pages/about.html')
 
 
 def contact(request):
-    form = EnquiryForm()
-    context = {
-        'form': form,
-        'turnstile_site_key': settings.TURNSTILE_SITE_KEY,
-    }
-    return render(request, 'pages/contact.html', context)
+    return handle_enquiry_form(request, 'pages/contact.html')
 
 
 def faq_list(request):

@@ -1,7 +1,6 @@
 from django import forms
 from django.conf import settings
 from .models import Enquiry
-from catalogue.models import Product, Category
 import urllib.request
 import urllib.parse
 import json
@@ -12,23 +11,6 @@ class EnquiryForm(forms.ModelForm):
         required=False, 
         widget=forms.HiddenInput(),
         label="Leave this field blank"
-    )
-
-    BUSINESS_TYPE_CHOICES = [
-        ('', 'Select business type (optional)'),
-        ('Restaurant', 'Restaurant / Cafe'),
-        ('Takeaway', 'Takeaway / Fast Food'),
-        ('Retailer', 'Independent Grocery / Retailer'),
-        ('Caterer', 'Caterer / Hospitality'),
-        ('Wholesaler', 'Wholesaler / Distributor'),
-        ('Other', 'Other Business'),
-    ]
-
-    business_type = forms.ChoiceField(
-        choices=BUSINESS_TYPE_CHOICES,
-        required=False,
-        label="Business Type",
-        widget=forms.Select(attrs={'class': 'form-select'})
     )
 
     consent_given = forms.BooleanField(
@@ -42,11 +24,8 @@ class EnquiryForm(forms.ModelForm):
         fields = [
             'name', 
             'business_name', 
-            'business_type', 
             'email', 
             'phone', 
-            'product', 
-            'category_interest', 
             'message', 
             'consent_given'
         ]
@@ -55,18 +34,13 @@ class EnquiryForm(forms.ModelForm):
             'business_name': forms.TextInput(attrs={'placeholder': 'e.g., Bristol Spice Kitchen Ltd'}),
             'email': forms.EmailInput(attrs={'placeholder': 'e.g., info@yourbusiness.co.uk'}),
             'phone': forms.TextInput(attrs={'placeholder': 'e.g., 0117 900 0000'}),
-            'product': forms.Select(attrs={'class': 'form-select'}),
-            'category_interest': forms.TextInput(attrs={'placeholder': 'e.g., Whole Spices, Basmati Rice, Lentils'}),
             'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tell us about the products, quantities, or delivery schedule you require...'}),
         }
         labels = {
             'name': 'Full Name',
             'business_name': 'Business Name',
-            'business_type': 'Business Type',
             'email': 'Email Address',
             'phone': 'Phone Number',
-            'product': 'Specific Product (Optional)',
-            'category_interest': 'Product or Category of Interest (Optional)',
             'message': 'Enquiry / Message Details',
             'consent_given': 'Privacy Consent',
         }
@@ -79,10 +53,6 @@ class EnquiryForm(forms.ModelForm):
         self.fields['phone'].required = True
         self.fields['message'].required = True
         self.fields['consent_given'].required = True
-
-        self.fields['product'].queryset = Product.objects.filter(is_published=True).order_by('name')
-        self.fields['product'].empty_label = "Select a product (optional)"
-        self.fields['product'].required = False
 
 
     def clean(self):
