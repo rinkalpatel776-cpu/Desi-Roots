@@ -708,3 +708,53 @@ class CatalogueSidebarCountTests(TestCase):
         response = self.client.get('/products/')
         cats = {c.name: c.published_count for c in response.context['categories']}
         self.assertEqual(cats, {'Rice': 1})
+
+
+class BrandDeleteCascadeTests(TestCase):
+    """Deleting a brand deletes its products, their pack sizes and photos (files too); enquiries are kept."""
+
+    def setUp(self):
+        import tempfile
+        from django.test import override_settings
+        self.tmp = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=self.tmp)
+        self.override.enable()
+        self.cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+        self.tata = Brand.objects.create(name='Tata', slug='tata')
+        self.other = Brand.objects.create(name='Heera', slug='heera')
+        self.salt = Product.objects.create(name='Tata Salt', slug='tata-salt', category=self.cat, brand=self.tata)
+        self.keep = Product.objects.create(name='Heera Salt', slug='heera-salt', category=self.cat, brand=self.other)
+        PackSize.objects.create(product=self.salt, size='30 x 1 kg', sku='05590')
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = BytesIO()
+        Image.new('RGB', (200, 150), (200, 200, 200)).save(buf, format='JPEG')
+        self.img = ProductImage.objects.create(product=self.salt, is_primary=True,
+                                               image=SimpleUploadedFile('salt.jpg', buf.getvalue(), content_type='image/jpeg'))
+
+    def tearDown(self):
+        import shutil
+        self.override.disable()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_deleting_brand_deletes_its_products_and_photo_files(self):
+        from enquiries.models import Enquiry
+        enquiry = Enquiry.objects.create(name='A', email='a@example.test', phone='1', message='Salt please', product=self.salt)
+        image_path, thumb_path = self.img.image.path, self.img.thumbnail.path
+        self.assertTrue(os.path.exists(image_path))
+        self.tata.delete()
+        self.assertFalse(Product.objects.filter(pk=self.salt.pk).exists())
+        self.assertFalse(PackSize.objects.filter(sku='05590').exists())
+        self.assertFalse(ProductImage.objects.exists())
+        self.assertFalse(os.path.exists(image_path))
+        self.assertFalse(os.path.exists(thumb_path))
+        self.assertTrue(Product.objects.filter(pk=self.keep.pk).exists(), "other brands' products stay")
+        enquiry.refresh_from_db()
+        self.assertIsNone(enquiry.product, 'the enquiry is kept, with the product link cleared')
+
+    def test_shared_photo_file_is_kept_while_another_product_uses_it(self):
+        shared = ProductImage(product=self.keep, image=self.img.image.name, thumbnail=self.img.thumbnail.name)
+        super(ProductImage, shared).save()  # link the same file, as the admin CSV import can
+        self.tata.delete()
+        self.assertTrue(os.path.exists(shared.image.path))

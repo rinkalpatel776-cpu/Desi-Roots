@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from PIL import Image, ImageChops
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -90,7 +92,8 @@ class Product(models.Model):
     # Optional: some supplier lists have no codes. NULL (not '') so uniqueness still holds for real SKUs.
     sku = models.CharField(max_length=100, unique=True, db_index=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
-    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, blank=True, null=True, related_name='products')
+    # Deleting a brand deletes its products (and with them their pack sizes and photos)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, null=True, related_name='products')
     description = models.TextField(blank=True)
     country_of_origin = models.CharField(max_length=100, blank=True)
     ingredients = models.TextField(blank=True)
@@ -205,3 +208,12 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.name} (Primary: {self.is_primary})"
+
+
+@receiver(post_delete, sender=ProductImage)
+def delete_product_image_files(sender, instance, **kwargs):
+    # Remove the photo and thumbnail files when their record is deleted, e.g. when a brand is deleted
+    for field, column in ((instance.image, 'image'), (instance.thumbnail, 'thumbnail')):
+        # The admin CSV import can link one file to several products: keep files still in use
+        if field and field.name and not ProductImage.objects.filter(**{column: field.name}).exists():
+            field.storage.delete(field.name)
