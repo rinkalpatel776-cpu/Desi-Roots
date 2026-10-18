@@ -697,3 +697,14 @@ class ProductCardEnquireTests(TestCase):
         self.assertNotContains(response, 'View Details')
         self.assertContains(response, 'href="/products/allinson-yeast/" class="sp-card-title-link"')
         self.assertContains(response, 'class="sp-badge sp-card-badge"')
+
+
+class CatalogueSidebarCountTests(TestCase):
+    def test_counts_only_published_products_and_hides_empty_categories(self):
+        rice = Category.objects.create(name='Rice', slug='rice')
+        Category.objects.create(name='Empty', slug='empty')
+        Product.objects.create(name='Live Rice', slug='live-rice', category=rice, is_published=True)
+        Product.objects.create(name='Draft Rice', slug='draft-rice', category=rice, is_published=False)
+        response = self.client.get('/products/')
+        cats = {c.name: c.published_count for c in response.context['categories']}
+        self.assertEqual(cats, {'Rice': 1})

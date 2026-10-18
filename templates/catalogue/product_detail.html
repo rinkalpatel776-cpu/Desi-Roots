@@ -218,7 +218,7 @@
             <!-- Image -->
             <div class="card-img-top-wrapper position-relative" style="height: 160px; padding: 12px;">
               <a href="/products/{{ rel.slug }}/" class="sp-card-img-link" aria-label="{{ rel.name }}">
-              {% with rel.images.first as r_img %}
+              {% with rel.images.all|first as r_img %}
                 {% if r_img %}
                   <img src="{% if r_img.thumbnail %}{{ r_img.thumbnail.url }}{% else %}{{ r_img.image.url }}{% endif %}" alt="{{ r_img.alt_text|default:rel.name }}" class="img-fluid" style="max-height: 140px;">
                 {% else %}

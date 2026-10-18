@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
+from django.db.models import Count, Q
 from .models import Category, Brand, Product
 
 def product_list(request):
@@ -47,8 +47,13 @@ def product_list(request):
         page_obj = paginator.get_page(1)
 
     # Context items for sidebar filters
-    categories = Category.objects.filter(is_active=True).order_order = ['display_order']
-    categories = Category.objects.filter(is_active=True).order_by('display_order', 'name')
+    # Count only published products, in one query, and skip categories with none
+    categories = (
+        Category.objects.filter(is_active=True)
+        .annotate(published_count=Count('products', filter=Q(products__is_published=True)))
+        .filter(published_count__gt=0)
+        .order_by('display_order', 'name')
+    )
     brands = Brand.objects.all().order_by('name')
 
     context = {

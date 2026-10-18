@@ -125,7 +125,7 @@
               <span class="sp-badge sp-card-badge">{{ product.badge }}</span>
             {% endif %}
             <a href="/products/{{ product.slug }}/" class="sp-card-img-link" aria-label="{{ product.name }}">
-            {% with product.images.first as img %}
+            {% with product.images.all|first as img %}
               {% if img %}
                 <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" class="img-fluid" style="max-height: 160px;">
               {% else %}

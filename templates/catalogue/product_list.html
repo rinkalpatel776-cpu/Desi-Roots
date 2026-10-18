@@ -51,7 +51,7 @@
               {% for cat in categories %}
               <a href="?category={{ cat.slug }}{% if active_filters.q %}&q={{ active_filters.q }}{% endif %}{% if active_filters.brand %}&brand={{ active_filters.brand.slug }}{% endif %}" class="py-1 d-flex justify-content-between align-items-center {% if active_filters.category.slug == cat.slug %}fw-bold text-saffron{% else %}text-muted{% endif %}">
                 {{ cat.name }}
-                <span class="badge rounded-pill bg-light text-muted border border-sp">{{ cat.products.count }}</span>
+                <span class="badge rounded-pill bg-light text-muted border border-sp">{{ cat.published_count }}</span>
               </a>
               {% endfor %}
             </div>
@@ -113,7 +113,7 @@
                 {% endif %}
                 
                 <a href="/products/{{ product.slug }}/" class="sp-card-img-link" aria-label="{{ product.name }}">
-                 {% with product.images.first as img %}
+                 {% with product.images.all|first as img %}
                   {% if img %}
                     <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" width="300" height="225" loading="lazy">
                   {% else %}
