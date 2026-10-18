@@ -911,3 +911,18 @@ footer .footer-bottom {
 }
 
 
+
+/* Catalogue filters: on large screens the panel stays in view and scrolls on its own,
+   so scrolling over it moves only the filters and scrolling over products moves the page */
+@media (min-width: 992px) {
+  .sp-filter-panel {
+    position: sticky;
+    top: 100px;
+    z-index: 100;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sp-border) transparent;
+  }
+}
