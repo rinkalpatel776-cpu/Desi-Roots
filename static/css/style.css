@@ -7,6 +7,7 @@
   --sp-card:       #FFFFFF;  /* cards */
   --sp-text:       #2F2F2F;  /* body text */
   --sp-border:     #E8E2D8;  /* borders, dividers */
+  --sp-dark:       #221C17;  /* warm charcoal: footer, hero and tile backgrounds */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -335,7 +336,8 @@ footer {
   border-top: 1px solid #242426;
 }
 
-footer h5 {
+footer h5,
+footer .h5 {
   color: #ffffff;
   font-size: 1.1rem;
   margin-bottom: 24px;
@@ -925,4 +927,12 @@ footer .footer-bottom {
     scrollbar-width: thin;
     scrollbar-color: var(--sp-border) transparent;
   }
+}
+
+/* Phones: the categories & brands toggle in the catalogue filters */
+.sp-filter-chevron {
+  transition: transform 0.2s ease;
+}
+.sp-filter-toggle[aria-expanded="true"] .sp-filter-chevron {
+  transform: rotate(180deg);
 }

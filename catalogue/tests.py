@@ -758,3 +758,30 @@ class BrandDeleteCascadeTests(TestCase):
         super(ProductImage, shared).save()  # link the same file, as the admin CSV import can
         self.tata.delete()
         self.assertTrue(os.path.exists(shared.image.path))
+
+
+class FooterAndMobileFilterTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.rice = Category.objects.create(name='Rice', slug='rice')
+        self.spices = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+        Category.objects.create(name='Pickles', slug='pickles')  # no products
+        self.heera = Brand.objects.create(name='Heera', slug='heera')
+        self.unused = Brand.objects.create(name='East End', slug='east-end')
+        for i in range(3):
+            Product.objects.create(name=f'Spice {i}', slug=f'spice-{i}', category=self.spices, brand=self.heera, is_published=True)
+        Product.objects.create(name='Rice 1', slug='rice-1', category=self.rice, brand=self.heera, is_published=True)
+        Product.objects.create(name='Draft', slug='draft', category=self.rice, brand=self.unused, is_published=False)
+
+    def test_footer_links_to_categories_with_published_products(self):
+        response = self.client.get('/')
+        self.assertEqual([c['slug'] for c in response.context['footer_categories']], ['spices-masalas', 'rice'])
+        self.assertContains(response, 'href="/products/?category=spices-masalas"')
+        self.assertNotContains(response, 'href="/products/?category=pickles"')
+
+    def test_phone_filter_toggle_and_only_brands_with_products(self):
+        response = self.client.get('/products/')
+        self.assertContains(response, 'data-bs-target="#catalogueFilters"')
+        self.assertContains(response, 'class="collapse d-lg-block" id="catalogueFilters"')
+        self.assertEqual([b.name for b in response.context['brands']], ['Heera'])

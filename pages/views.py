@@ -1,10 +1,17 @@
+from django.db.models import Count, Q
 from django.shortcuts import render
 from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
 def home(request):
     # Retrieve active categories
-    categories = Category.objects.filter(is_active=True).order_by('display_order', 'name')[:6]
+    # Only categories that have published products
+    categories = (
+        Category.objects.filter(is_active=True)
+        .annotate(published_count=Count('products', filter=Q(products__is_published=True)))
+        .filter(published_count__gt=0)
+        .order_by('display_order', 'name')[:6]
+    )
     
     # Retrieve featured products (published + featured) with optimizations
     featured_products = (

@@ -24,7 +24,7 @@
       <!-- Sidebar Filters (Col 3 on Large Screens) -->
       <div class="col-lg-3">
         <div class="card p-4 sp-filter-panel">
-          <h5 class="mb-4 border-bottom pb-2 border-sp"><i class="bi bi-funnel me-2 text-olive"></i>Filters</h5>
+          <h5 class="mb-4 border-bottom pb-2 border-sp d-none d-lg-block"><i class="bi bi-funnel me-2 text-olive"></i>Filters</h5>
           
           <!-- Search Form -->
           <form method="GET" action="/products/" class="mb-4">
@@ -41,6 +41,16 @@
             </div>
           </form>
 
+          {# Phones: categories and brands fold away behind this button; always open on large screens #}
+          <button class="btn btn-outline-primary w-100 d-lg-none sp-filter-toggle text-nowrap" type="button"
+                  data-bs-toggle="collapse" data-bs-target="#catalogueFilters" aria-expanded="false" aria-controls="catalogueFilters">
+            <i class="bi bi-funnel me-2" aria-hidden="true"></i>Filters<span class="visually-hidden"> by category and brand</span>
+            {% if active_filters.category or active_filters.brand %}<span class="ms-1">({% if active_filters.category and active_filters.brand %}2{% else %}1{% endif %})</span>{% endif %}
+            <i class="bi bi-chevron-down ms-2 sp-filter-chevron" aria-hidden="true"></i>
+          </button>
+
+          <div class="collapse d-lg-block" id="catalogueFilters">
+          <div class="pt-4 pt-lg-0">
           <!-- Category Filter -->
           <div class="mb-4">
             <h6 class="small fw-bold mb-2">Categories</h6>
@@ -78,6 +88,8 @@
             <i class="bi bi-x-circle me-2"></i>Clear All Filters
           </a>
           {% endif %}
+          </div>
+          </div>
         </div>
       </div>
 

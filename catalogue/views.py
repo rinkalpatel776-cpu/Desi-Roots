@@ -54,7 +54,8 @@ def product_list(request):
         .filter(published_count__gt=0)
         .order_by('display_order', 'name')
     )
-    brands = Brand.objects.all().order_by('name')
+    # Only brands with something to show in the catalogue
+    brands = Brand.objects.filter(products__is_published=True).distinct().order_by('name')
 
     context = {
         'page_obj': page_obj,
