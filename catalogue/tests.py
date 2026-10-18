@@ -685,3 +685,15 @@ class PublishRequiresPhotoTests(TestCase):
         response = self.client.post(self.change_url(self.with_photo), self.edit_payload(self.with_photo), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Product.objects.get(pk=self.with_photo.pk).is_published)
+
+
+class ProductCardEnquireTests(TestCase):
+    def test_card_has_enquire_button_and_links_to_product(self):
+        cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+        p = Product.objects.create(name='Allinson Yeast', slug='allinson-yeast', category=cat, is_published=True, badge='Trending')
+        response = self.client.get('/products/')
+        self.assertContains(response, f'href="/contact/?product_id={p.id}"')
+        self.assertContains(response, 'Enquire')
+        self.assertNotContains(response, 'View Details')
+        self.assertContains(response, 'href="/products/allinson-yeast/" class="sp-card-title-link"')
+        self.assertContains(response, 'class="sp-badge sp-card-badge"')

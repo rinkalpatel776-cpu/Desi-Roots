@@ -217,6 +217,7 @@
           <div class="card h-100 d-flex flex-column">
             <!-- Image -->
             <div class="card-img-top-wrapper position-relative" style="height: 160px; padding: 12px;">
+              <a href="/products/{{ rel.slug }}/" class="sp-card-img-link" aria-label="{{ rel.name }}">
               {% with rel.images.first as r_img %}
                 {% if r_img %}
                   <img src="{% if r_img.thumbnail %}{{ r_img.thumbnail.url }}{% else %}{{ r_img.image.url }}{% endif %}" alt="{{ r_img.alt_text|default:rel.name }}" class="img-fluid" style="max-height: 140px;">
@@ -224,15 +225,16 @@
                   {% include 'partials/product_placeholder.html' with name=rel.name %}
                 {% endif %}
               {% endwith %}
+              </a>
             </div>
             
             <!-- Body -->
             <div class="card-body p-3 d-flex flex-column justify-content-between flex-grow-1">
               <div>
                 <span class="text-muted small text-uppercase" style="font-size: 0.75rem;">{{ rel.category.name }}</span>
-                <h6 class="card-title text-dark fw-semibold mb-2" style="font-size: 0.95rem;">{{ rel.name }}</h6>
+                <h6 class="card-title fw-semibold mb-2" style="font-size: 0.95rem;"><a href="/products/{{ rel.slug }}/" class="sp-card-title-link">{{ rel.name }}</a></h6>
               </div>
-              <a href="/products/{{ rel.slug }}/" class="btn btn-outline-primary btn-sm w-100 mt-2 py-1" style="font-size: 0.8rem;">View Details</a>
+              <a href="/contact/?product_id={{ rel.id }}" class="btn btn-outline-primary btn-sm w-100 mt-2 py-1" style="font-size: 0.8rem;"><i class="bi bi-chat-left-text me-1" aria-hidden="true"></i>Enquire</a>
             </div>
           </div>
         </div>
