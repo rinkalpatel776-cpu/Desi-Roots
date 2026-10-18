@@ -695,7 +695,8 @@ class ProductCardEnquireTests(TestCase):
         self.assertContains(response, f'href="/contact/?product_id={p.id}"')
         self.assertContains(response, 'Enquire')
         self.assertNotContains(response, 'View Details')
-        self.assertContains(response, 'href="/products/allinson-yeast/" class="sp-card-title-link"')
+        self.assertContains(response, 'href="/products/allinson-yeast/" class="sp-card-img-link"')
+        self.assertNotContains(response, 'sp-card-title-link')  # the product name is plain text
         self.assertContains(response, 'class="sp-badge sp-card-badge"')
 
 
