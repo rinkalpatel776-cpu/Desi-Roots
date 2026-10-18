@@ -87,7 +87,8 @@ class Brand(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=240, unique=True, db_index=True)
-    sku = models.CharField(max_length=100, unique=True, db_index=True)
+    # Optional: some supplier lists have no codes. NULL (not '') so uniqueness still holds for real SKUs.
+    sku = models.CharField(max_length=100, unique=True, db_index=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, blank=True, null=True, related_name='products')
     description = models.TextField(blank=True)
@@ -108,12 +109,19 @@ class Product(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return f"{self.name} ({self.sku})"
+        return f"{self.name} ({self.sku})" if self.sku else self.name
+
+    def save(self, *args, **kwargs):
+        # Store a missing SKU as NULL so several products can have none
+        if not self.sku:
+            self.sku = None
+        super().save(*args, **kwargs)
 
 
 class PackSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='pack_sizes')
     size = models.CharField(max_length=50, help_text="e.g., 5kg, 400g, 10kg")
+    sku = models.CharField(max_length=100, blank=True, db_index=True, help_text="Supplier code for this size, if any.")
     display_order = models.PositiveIntegerField(default=0)
 
     class Meta:

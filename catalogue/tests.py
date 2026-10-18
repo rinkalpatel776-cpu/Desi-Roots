@@ -519,3 +519,94 @@ class BrandLogoTrimTests(TestCase):
         out = StringIO()
         call_command('trim_brand_logos', stdout=out)
         self.assertIn('Trimmed 0; skipped 1.', out.getvalue())
+
+
+class ImportCatalogueCsvTests(TestCase):
+    """The supplier catalogue importer: grouped products, per-size codes, photos, drafts, re-runs."""
+
+    def setUp(self):
+        import tempfile
+        from django.test import override_settings
+        from PIL import Image
+        self.tmp = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=os.path.join(self.tmp, 'media'))
+        self.override.enable()
+        self.photos = os.path.join(self.tmp, 'photos')
+        os.makedirs(self.photos)
+        Image.new('RGB', (400, 300), (200, 120, 40)).save(os.path.join(self.photos, 'heera-22022.jpg'))
+        self.csv_path = os.path.join(self.tmp, 'products.csv')
+        with open(self.csv_path, 'w', newline='', encoding='utf-8') as f:
+            w = csv.writer(f)
+            w.writerow(['sku', 'name', 'brand', 'category', 'pack_sizes', 'pack_size_skus', 'image_filename'])
+            w.writerow(['22022', 'Heera Amchoor Powder', 'Heera', 'Spices & Masalas', '20 x 100 g|10 x 400 g', '22022|22142', 'heera-22022.jpg'])
+            w.writerow(['', 'MDH Chana Masala', 'MDH', 'Spices & Masalas', '60 x 100 g|24 x 500 g', '', ''])
+            w.writerow(['', 'MDH Kitchen King', 'MDH', 'Spices & Masalas', '60 x 100 g', '', ''])
+
+    def tearDown(self):
+        import shutil
+        self.override.disable()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def run_import(self, *extra):
+        from io import StringIO
+        from django.core.management import call_command
+        out = StringIO()
+        call_command('import_catalogue_csv', self.csv_path, '--photos', self.photos, *extra, stdout=out)
+        return out.getvalue()
+
+    def test_imports_drafts_with_sizes_codes_and_photo(self):
+        self.run_import()
+        self.assertEqual(Product.objects.count(), 3)
+        self.assertFalse(Product.objects.filter(is_published=True).exists())
+        heera = Product.objects.get(sku='22022')
+        self.assertEqual(heera.brand.name, 'Heera')
+        self.assertEqual(heera.category.name, 'Spices & Masalas')
+        self.assertEqual([(p.size, p.sku) for p in heera.pack_sizes.all()],
+                         [('20 x 100 g', '22022'), ('10 x 400 g', '22142')])
+        self.assertEqual(heera.images.count(), 1)
+        self.assertTrue(heera.images.first().is_primary)
+
+    def test_products_without_sku_are_stored_as_null(self):
+        self.run_import()
+        self.assertEqual(Product.objects.filter(sku__isnull=True).count(), 2)
+        self.assertEqual(Product.objects.get(name='MDH Chana Masala').pack_sizes.count(), 2)
+
+    def test_rerun_updates_without_duplicates(self):
+        self.run_import()
+        Product.objects.filter(sku='22022').update(is_published=True)
+        out = self.run_import()
+        self.assertIn('created: 0, updated: 3', out)
+        self.assertEqual(Product.objects.count(), 3)
+        self.assertEqual(PackSize.objects.count(), 5)
+        self.assertEqual(ProductImage.objects.count(), 1)
+        self.assertTrue(Product.objects.get(sku='22022').is_published, 'a re-run must not unpublish')
+
+    def test_dry_run_saves_nothing(self):
+        out = self.run_import('--dry-run')
+        self.assertIn('Dry run', out)
+        self.assertEqual(Product.objects.count(), 0)
+        products_dir = os.path.join(self.tmp, 'media', 'products')
+        self.assertFalse(os.path.exists(products_dir) and os.listdir(products_dir), 'dry run must not write photos')
+
+
+class ProductPageSkuDisplayTests(TestCase):
+    def setUp(self):
+        self.cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+
+    def test_product_without_sku_shows_no_sku_or_none(self):
+        p = Product.objects.create(name='MDH Kitchen King', slug='mdh-kitchen-king', category=self.cat, is_published=True)
+        PackSize.objects.create(product=p, size='60 x 100 g')
+        response = self.client.get(f'/products/{p.slug}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'SKU:')
+        self.assertNotContains(response, 'None')
+        self.assertNotContains(response, '"sku"')
+
+    def test_per_size_codes_are_listed(self):
+        p = Product.objects.create(name='East End Sunflower Oil', slug='east-end-sunflower-oil', sku='E048935',
+                                   category=self.cat, is_published=True)
+        PackSize.objects.create(product=p, size='3 x 5 ltr', sku='E048935', display_order=0)
+        PackSize.objects.create(product=p, size='6 x 2 ltr', sku='E000815', display_order=1)
+        response = self.client.get(f'/products/{p.slug}/')
+        self.assertContains(response, '6 x 2 ltr: E000815')
+        self.assertContains(response, 'SKU: <span class="font-monospace text-dark">E048935</span>', html=False)
