@@ -117,6 +117,17 @@ class Product(models.Model):
             self.sku = None
         super().save(*args, **kwargs)
 
+    def has_photo(self):
+        return self.images.exists()
+
+    def unpublish_if_no_photo(self):
+        """A product may only be published once it has a photo. Returns True if it was unpublished."""
+        if self.is_published and not self.has_photo():
+            self.is_published = False
+            self.save(update_fields=['is_published'])
+            return True
+        return False
+
 
 class PackSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='pack_sizes')

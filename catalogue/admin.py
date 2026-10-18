@@ -208,6 +208,9 @@ class ProductResource(resources.ModelResource):
                 super(ProductImage, pi).save()
                 self.image_report['linked'].append((product.sku, clean_name, is_primary))
 
+        # A row can't publish a product that still has no photo
+        product.unpublish_if_no_photo()
+
 
 class PackSizeInline(admin.TabularInline):
     model = PackSize
@@ -268,19 +271,57 @@ class BrandAdmin(admin.ModelAdmin):
     logo_display.short_description = "Current Logo"
 
 
+class HasPhotoFilter(admin.SimpleListFilter):
+    title = 'photo'
+    parameter_name = 'has_photo'
+
+    def lookups(self, request, model_admin):
+        return [('yes', 'Has a photo'), ('no', 'No photo yet')]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(photo_count__gt=0)
+        if self.value() == 'no':
+            return queryset.filter(photo_count=0)
+        return queryset
+
+
+NO_PHOTO_MESSAGE = "A product can only be published once it has a photo."
+
+
 @admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin):
     resource_class = ProductResource
-    list_display = ('name', 'sku', 'category', 'brand', 'is_published', 'is_featured', 'badge')
-    list_filter = ('is_published', 'is_featured', 'category', 'brand')
+    list_display = ('name', 'sku', 'category', 'brand', 'has_photo_column', 'is_published', 'is_featured', 'badge')
+    list_select_related = ('category', 'brand')  # brand is optional, so Django won't join it on its own
+    list_filter = ('is_published', HasPhotoFilter, 'is_featured', 'category', 'brand')
     list_editable = ('is_published', 'is_featured', 'badge')
     search_fields = ('name', 'sku', 'category__name', 'brand__name')
     prepopulated_fields = {'slug': ('name',)}
     inlines = [PackSizeInline, ProductImageInline]
     actions = ['make_published', 'make_unpublished']
 
+    def get_queryset(self, request):
+        # One query for the photo column and filter, not one per row
+        return super().get_queryset(request).annotate(photo_count=models.Count('images'))
+
+    @admin.display(boolean=True, description='Photo', ordering='photo_count')
+    def has_photo_column(self, obj):
+        return obj.photo_count > 0
+
+    def save_related(self, request, form, formsets, change):
+        # Runs after inline photos are saved, for both the edit page and the list's checkboxes
+        super().save_related(request, form, formsets, change)
+        if form.instance.unpublish_if_no_photo():
+            messages.warning(request, f"\"{form.instance.name}\" was saved as a draft. {NO_PHOTO_MESSAGE}")
+
     def make_published(self, request, queryset):
-        queryset.update(is_published=True)
+        ids = list(queryset.filter(photo_count__gt=0).values_list('pk', flat=True))
+        published = Product.objects.filter(pk__in=ids).update(is_published=True)
+        skipped = queryset.count() - len(ids)
+        messages.success(request, f"Published {published} product(s).")
+        if skipped:
+            messages.warning(request, f"{skipped} product(s) were left as drafts because they have no photo yet.")
     make_published.short_description = "Publish selected products"
 
     def make_unpublished(self, request, queryset):

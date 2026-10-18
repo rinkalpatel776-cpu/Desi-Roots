@@ -610,3 +610,78 @@ class ProductPageSkuDisplayTests(TestCase):
         response = self.client.get(f'/products/{p.slug}/')
         self.assertContains(response, '6 x 2 ltr: E000815')
         self.assertContains(response, 'SKU: <span class="font-monospace text-dark">E048935</span>', html=False)
+
+
+class PublishRequiresPhotoTests(TestCase):
+    """A product can only be published once it has a photo."""
+
+    def setUp(self):
+        import tempfile
+        from django.contrib.auth.models import User
+        from django.test import override_settings
+        self.tmp = tempfile.mkdtemp()
+        self.override = override_settings(MEDIA_ROOT=self.tmp)
+        self.override.enable()
+        self.client.force_login(User.objects.create_superuser('staff', 'staff@example.test', 'test-pass-123'))
+        self.cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+        self.no_photo = Product.objects.create(name='No Photo', slug='no-photo', sku='NP1', category=self.cat, is_published=False)
+        self.with_photo = Product.objects.create(name='With Photo', slug='with-photo', sku='WP1', category=self.cat, is_published=False)
+        self.add_photo(self.with_photo)
+
+    def tearDown(self):
+        import shutil
+        self.override.disable()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def add_photo(self, product):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        buf = BytesIO()
+        Image.new('RGB', (200, 150), (180, 90, 30)).save(buf, format='JPEG')
+        ProductImage.objects.create(product=product, is_primary=True,
+                                    image=SimpleUploadedFile('p.jpg', buf.getvalue(), content_type='image/jpeg'))
+
+    def change_url(self, product):
+        from django.urls import reverse
+        return reverse('admin:catalogue_product_change', args=[product.pk])
+
+    def edit_payload(self, product):
+        return {
+            'name': product.name, 'slug': product.slug, 'sku': product.sku, 'category': self.cat.pk,
+            'is_published': 'on',
+            'pack_sizes-TOTAL_FORMS': '0', 'pack_sizes-INITIAL_FORMS': '0',
+            'images-TOTAL_FORMS': '0', 'images-INITIAL_FORMS': str(product.images.count()),
+            **{f'images-{i}-id': img.pk for i, img in enumerate(product.images.all())},
+            **{f'images-{i}-product': product.pk for i, _ in enumerate(product.images.all())},
+        }
+
+    def test_model_rule_unpublishes_product_without_photo(self):
+        self.no_photo.is_published = True
+        self.no_photo.save()
+        self.assertTrue(self.no_photo.unpublish_if_no_photo())
+        self.assertFalse(Product.objects.get(pk=self.no_photo.pk).is_published)
+        self.with_photo.is_published = True
+        self.with_photo.save()
+        self.assertFalse(self.with_photo.unpublish_if_no_photo())
+
+    def test_bulk_publish_skips_products_without_photo(self):
+        from django.urls import reverse
+        response = self.client.post(reverse('admin:catalogue_product_changelist'), {
+            'action': 'make_published', '_selected_action': [self.no_photo.pk, self.with_photo.pk]}, follow=True)
+        self.assertTrue(Product.objects.get(pk=self.with_photo.pk).is_published)
+        self.assertFalse(Product.objects.get(pk=self.no_photo.pk).is_published)
+        self.assertContains(response, 'left as drafts because they have no photo yet')
+
+    def test_edit_page_keeps_product_without_photo_as_draft(self):
+        payload = self.edit_payload(self.no_photo)
+        payload['images-INITIAL_FORMS'] = '0'
+        response = self.client.post(self.change_url(self.no_photo), payload, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Product.objects.get(pk=self.no_photo.pk).is_published)
+        self.assertContains(response, 'can only be published once it has a photo')
+
+    def test_edit_page_publishes_product_with_photo(self):
+        response = self.client.post(self.change_url(self.with_photo), self.edit_payload(self.with_photo), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Product.objects.get(pk=self.with_photo.pk).is_published)
