@@ -44,16 +44,5 @@ TURNSTILE_SECRET_KEY = ''
 PREVIEW_SERVE_MEDIA = True
 
 
-class NoIndexMiddleware:
-    """Ask search engines not to index the temporary preview."""
-
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        response['X-Robots-Tag'] = 'noindex, nofollow'
-        return response
-
-
-MIDDLEWARE = MIDDLEWARE + ['config.settings.preview.NoIndexMiddleware']  # noqa: F405
+# Ask search engines not to index the temporary preview
+MIDDLEWARE = MIDDLEWARE + ['core.middleware.NoIndexMiddleware']  # noqa: F405
