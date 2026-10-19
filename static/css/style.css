@@ -376,20 +376,6 @@ footer .footer-bottom {
   }
 }
 
-/* Cookie Banner styling */
-.cookie-banner {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  max-width: 400px;
-  background-color: var(--sp-card);
-  border: 1px solid var(--sp-border);
-  border-radius: 4px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  z-index: 1050;
-  padding: 24px;
-}
-
 /* Details Table spec */
 .spec-table th {
   font-weight: 600;
@@ -919,4 +905,13 @@ span.footer-social-link,
 }
 .sp-filter-toggle[aria-expanded="true"] .sp-filter-chevron {
   transform: rotate(180deg);
+}
+
+/* Contact form spam trap: kept off-screen rather than display:none, which some bots skip */
+#div_id_website {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

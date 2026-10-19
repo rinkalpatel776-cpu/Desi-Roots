@@ -1,17 +1,26 @@
+import time
+
 from django import forms
 from django.conf import settings
+from django.core import signing
 from .models import Enquiry
 import urllib.request
 import urllib.parse
 import json
 
 class EnquiryForm(forms.ModelForm):
-    # Spam prevention honeypot field (hidden from users via CSS)
+    # Submissions sent sooner than this after the page loaded are treated as bots
+    MIN_SECONDS_TO_SUBMIT = 3
+
+    # Spam trap: a normal text box moved off-screen by CSS (#div_id_website), so people
+    # never see it but form-filling bots do. Anything typed here marks the enquiry as spam.
     website = forms.CharField(
-        required=False, 
-        widget=forms.HiddenInput(),
-        label="Leave this field blank"
+        required=False,
+        label="Leave this field blank",
+        widget=forms.TextInput(attrs={'tabindex': '-1', 'autocomplete': 'off'}),
     )
+    # Signed time the form was shown, to catch instant bot submissions
+    form_started = forms.CharField(required=False, widget=forms.HiddenInput())
 
     consent_given = forms.BooleanField(
         required=True,
@@ -53,15 +62,28 @@ class EnquiryForm(forms.ModelForm):
         self.fields['phone'].required = True
         self.fields['message'].required = True
         self.fields['consent_given'].required = True
+        if not self.is_bound:
+            self.fields['form_started'].initial = signing.dumps(int(time.time()), salt='enquiry-form')
+        # Set by clean(); the view quietly drops spam instead of telling the bot why
+        self.is_spam = False
+
+    def looks_like_spam(self, cleaned_data):
+        if cleaned_data.get('website'):
+            return True
+        try:
+            started = signing.loads(cleaned_data.get('form_started') or '', salt='enquiry-form')
+        except signing.BadSignature:
+            return True  # missing or forged: posted without loading the page
+        return time.time() - started < self.MIN_SECONDS_TO_SUBMIT
 
 
     def clean(self):
         cleaned_data = super().clean()
         
-        # 1. Check Honeypot field
-        website = cleaned_data.get('website')
-        if website:
-            raise forms.ValidationError("Spam detected.")
+        # 1. Spam trap and timing check
+        if self.looks_like_spam(cleaned_data):
+            self.is_spam = True
+            return cleaned_data
 
         # 2. Check Turnstile Verification
         if self.request and settings.TURNSTILE_SECRET_KEY:

@@ -19,6 +19,9 @@ def handle_enquiry_form(request, template_name):
     """Shows the enquiry form, saves valid submissions and sends the notification emails."""
     if request.method == 'POST':
         form = EnquiryForm(request.POST, request=request)
+        if form.is_valid() and form.is_spam:
+            # Bots get the normal thank-you page, but nothing is saved or emailed
+            return redirect('/wholesale/thank-you/')
         if form.is_valid():
             enquiry = form.save()
             
