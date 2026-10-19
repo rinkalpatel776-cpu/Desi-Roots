@@ -28,12 +28,20 @@ def trim_logo_border(img):
 
 
 class Category(models.Model):
+    # How many categories the home page Explore Our Categories section shows (one row of 6)
+    HOME_PAGE_LIMIT = 6
+
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
     display_order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True, db_index=True)
+    show_on_home = models.BooleanField(
+        "Show on home page", default=False, db_index=True,
+        help_text="Tick to show this category in the Explore Our Categories section of the home page "
+                  "(up to 6, in display order). Categories with no published products are never shown.",
+    )
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -41,6 +49,18 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def for_home_page(cls):
+        """Active categories with published products: the ticked ones, or all of them if none are ticked."""
+        categories = (
+            cls.objects.filter(is_active=True)
+            .annotate(published_count=models.Count('products', filter=models.Q(products__is_published=True)))
+            .filter(published_count__gt=0)
+            .order_by('display_order', 'name')
+        )
+        ticked = categories.filter(show_on_home=True)
+        return ticked if ticked.exists() else categories
 
 
 class Brand(models.Model):

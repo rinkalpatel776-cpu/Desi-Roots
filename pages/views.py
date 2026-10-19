@@ -1,17 +1,11 @@
-from django.db.models import Count, Q
 from django.shortcuts import render
 from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
 def home(request):
-    # Retrieve active categories
-    # Only categories that have published products
-    categories = (
-        Category.objects.filter(is_active=True)
-        .annotate(published_count=Count('products', filter=Q(products__is_published=True)))
-        .filter(published_count__gt=0)
-        .order_by('display_order', 'name')[:6]
-    )
+    # Up to 6 categories ticked "Show on home page" in the admin, in display order
+    # (the first 6 with published products if none are ticked)
+    categories = Category.for_home_page()[:Category.HOME_PAGE_LIMIT]
     
     # Retrieve featured products (published + featured) with optimizations
     featured_products = (

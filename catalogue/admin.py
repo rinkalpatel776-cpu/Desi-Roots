@@ -224,8 +224,38 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'display_order', 'is_active')
-    list_editable = ('display_order', 'is_active')
+    list_display = ('name', 'slug', 'display_order', 'is_active', 'show_on_home')
+    list_editable = ('display_order', 'is_active', 'show_on_home')
+    list_filter = ('show_on_home', 'is_active')
+
+    def changelist_view(self, request, extra_context=None):
+        # Tell staff exactly which categories make it onto the home page
+        if request.method == 'GET':
+            limit = Category.HOME_PAGE_LIMIT
+            eligible = Category.for_home_page()
+            names = list(eligible.values_list('name', flat=True))
+            shown, hidden = names[:limit], names[limit:]
+            if not eligible.filter(show_on_home=True).exists():
+                messages.info(request, (
+                    f"No categories are ticked, so the home page shows the first {limit} by display order: "
+                    f"{', '.join(shown)}. Tick \"Show on home page\" to choose them yourself."
+                ))
+            elif hidden:
+                messages.warning(request, (
+                    f"The home page shows only {limit} categories. Showing: {', '.join(shown)}. "
+                    f"Ticked but not shown: {', '.join(hidden)}. Untick categories or change their "
+                    f"Display order to choose which {limit} appear."
+                ))
+            else:
+                messages.info(request, f"Home page shows: {', '.join(shown)}.")
+            unpublished = Category.objects.filter(show_on_home=True).exclude(
+                pk__in=eligible.values('pk')).values_list('name', flat=True)
+            if unpublished:
+                messages.warning(request, (
+                    f"Ticked but hidden because they are inactive or have no published products: "
+                    f"{', '.join(unpublished)}."
+                ))
+        return super().changelist_view(request, extra_context)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'description')
 
