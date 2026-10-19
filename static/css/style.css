@@ -522,9 +522,14 @@ footer .footer-bottom {
   border-radius: 50%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.footer-social-link:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+/* Social icons are shown but not linked, so no hover or pointer */
+span.footer-social-link,
+.sp-social-static {
+  cursor: default;
+}
+.btn.sp-social-static:hover {
+  opacity: 1;
+  transform: none;
 }
 
 @media (max-width: 576px) {

@@ -81,14 +81,14 @@
             <small class="text-uppercase fw-bold text-muted d-block mb-3" style="font-size: 0.72rem; letter-spacing: 0.08em;">Direct Channels</small>
             <div class="d-flex flex-wrap gap-2">
               {% if site_settings.facebook_url %}
-              <a href="{{ site_settings.facebook_url }}" target="_blank" class="btn btn-social-fb">
-                <i class="bi bi-facebook"></i>Facebook
-              </a>
+              <span class="btn btn-social-fb sp-social-static">
+                <i class="bi bi-facebook" aria-hidden="true"></i>Facebook
+              </span>
               {% endif %}
               {% if site_settings.instagram_url %}
-              <a href="{{ site_settings.instagram_url }}" target="_blank" class="btn btn-social-insta">
-                <i class="bi bi-instagram"></i>Instagram
-              </a>
+              <span class="btn btn-social-insta sp-social-static">
+                <i class="bi bi-instagram" aria-hidden="true"></i>Instagram
+              </span>
               {% endif %}
               {% if site_settings.whatsapp_link %}
               <a href="{{ site_settings.whatsapp_link }}" target="_blank" class="btn btn-social-wa">
