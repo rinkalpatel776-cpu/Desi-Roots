@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Terms & Conditions | Spice Pantry{% endblock %}
+{% block meta_title %}Terms &amp; Conditions | Spice Pantry{% endblock %}
+{% block meta_description %}The terms that apply to using the Spice Pantry website, operated by Desi Roots Ltd.{% endblock %}
 
 {% block content %}
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
-    <h1 class="h2 mb-0">Terms & Conditions</h1>
+    <h1 class="h2 mb-2">Terms &amp; Conditions</h1>
+    <p class="text-muted mb-0">Last updated: 19 October 2026</p>
   </div>
 </div>
 
@@ -13,44 +15,89 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-9">
-        <div class="alert alert-warning border-warning d-flex align-items-center gap-3 mb-5" role="alert">
-          <i class="bi bi-exclamation-triangle-fill fs-4 text-warning"></i>
-          <div>
-            <strong>TODO: CONFIRM WITH BUSINESS</strong><br>
-            Please confirm default trading terms, payment terms, and delivery policies with a legal professional before launching.
-          </div>
-        </div>
-
-        <div class="bg-white p-5 border border-sp rounded">
-          <h2 class="h4 fw-semibold mb-3">1. Agreement to Terms</h2>
-          <p class="text-muted">
-            These terms and conditions govern the use of the Spice Pantry (trading name of Desi Roots) wholesale catalog website. By browsing our catalog or submitting a wholesale enquiry, you agree to these terms.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">2. B2B Wholesale Catalogue Only</h2>
-          <p class="text-muted">
-            This website functions as a B2B product showcase and catalogue. **It is not an e-commerce store.** No online payments, shopping baskets, checkouts, or purchase ordering capabilities are provided on the site.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">3. Quotations & Pricing</h2>
-          <p class="text-muted">
-            All prices are quoted privately via email in response to a completed wholesale enquiry form. Quotes are tailored based on your business purchasing volumes, delivery requirements, and credit assessment. Catalog descriptions, packaging types, and availability parameters are subject to change without notice.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">4. Deliveries</h2>
-          <p class="text-muted">
-            We deliver with our own fleet to commercial kitchens and warehouses within Bristol and surrounding areas. Specific delivery zones, minimum order values, and schedules will be provided alongside your formal pricing quote.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">5. Intellectual Property</h2>
-          <p class="text-muted">
-            The brands, logo, tagline, images, product descriptions, and codebase of Spice Pantry / Desi Roots are protected by UK copyright and trademark regulations. You may not copy, scraping, or reuse catalogue contents without explicit written consent.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">6. Jurisdiction</h2>
-          <p class="text-muted mb-0">
-            These terms are governed by and construed in accordance with the laws of England and Wales. Any disputes arising from these terms are subject to the exclusive jurisdiction of the English courts.
-          </p>
+        {# Text supplied by the business (SPICE PANTRY.docx, 19 October 2026); publish wording unchanged #}
+        <div class="bg-white p-4 p-md-5 border border-sp rounded">
+          <h2 class="h5 fw-semibold mb-3">2.1 About us</h2>
+          <p class="text-muted">This website is operated by Desi Roots Ltd trading under Spice Pantry (“Spice Pantry”, “we”, “us” or “our”).</p>
+          <p class="text-muted">Company registration number: 16939222<br>
+Address: 23 Halls Garden, Bristol, BS34 8RJ, United Kingdom<br>
+Email: <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a></p>
+          <p class="text-muted">These Terms and Conditions apply to your use of our website and purchases made through it.</p>
+          <p class="text-muted">By using our website, you agree to comply with these terms. If you do not agree, please do not use the website.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.2 Customers and business purchases</h2>
+          <p class="text-muted">We sell grocery products to retail customers and may also offer products to restaurants, retailers and other trade customers.</p>
+          <p class="text-muted">Some terms may differ depending on whether you purchase as a consumer or for business purposes. Consumer protections provided by law will not be excluded or reduced by these terms.</p>
+          <p class="text-muted">For trade customers, any agreed quotations, credit arrangements, minimum order quantities or special delivery arrangements will apply where confirmed in writing.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.3 Products and availability</h2>
+          <p class="text-muted">We aim to ensure that product descriptions, images, sizes, ingredients and other information are accurate.</p>
+          <p class="text-muted">Product images are for illustration and may differ slightly from the actual packaging. Packaging and labelling may change from time to time.</p>
+          <p class="text-muted">Product availability is not guaranteed. We may withdraw a product or limit quantities where necessary.</p>
+          <p class="text-muted">For food products, please read the product label for ingredients, allergens, storage instructions, best-before dates and use-by dates where applicable.</p>
+          <p class="text-muted">If a product becomes unavailable after you place an order, we will contact you and explain the available options, which may include a refund or an agreed alternative.</p>
+          <p class="text-muted">We will not substitute a product without your agreement.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.4 Prices and taxes</h2>
+          <p class="text-muted">Prices and applicable taxes will be displayed before you complete your order.</p>
+          <p class="text-muted">Delivery charges and any other compulsory charges will be disclosed before you place your order.</p>
+          <p class="text-muted">We may change prices at any time, but a price change will not alter an order that we have already accepted, except where correction of an obvious pricing error is permitted by law and we contact you about it.</p>
+          <p class="text-muted">If a clear pricing or listing error occurs, we will contact you before proceeding with the affected order.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.5 Orders and acceptance</h2>
+          <p class="text-muted">When you submit an order, you are making an offer to purchase the selected products.</p>
+          <p class="text-muted">An automated order acknowledgement confirms that we have received your order; it does not necessarily mean that we have accepted it.</p>
+          <p class="text-muted">We may decline or cancel an order where, for example:</p>
+          <ul class="text-muted">
+            <li>A product is unavailable.</li>
+            <li>Payment has not been authorised.</li>
+            <li>There is a material pricing or listing error.</li>
+            <li>We reasonably suspect fraud or unauthorised activity.</li>
+            <li>We cannot deliver to the address provided.</li>
+          </ul>
+          <p class="text-muted">If we cancel an order after receiving payment, we will arrange a refund for the amount paid for the cancelled products.</p>
+          <p class="text-muted">We will provide order confirmation and other required information in accordance with applicable law.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.6 Payment</h2>
+          <p class="text-muted">Payment methods accepted will be displayed at checkout.</p>
+          <p class="text-muted">Orders must be paid for using an accepted payment method. We may wait for payment authorisation or cleared funds before dispatching an order.</p>
+          <p class="text-muted">For trade customers, orders are on a <b>pro forma basis</b> unless different payment terms are expressly agreed in writing. This means payment is required before dispatch or delivery.</p>
+          <p class="text-muted">Any agreed credit terms must be confirmed in writing and may be subject to separate conditions.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.7 Delivery</h2>
+          <p class="text-muted">We currently intend to serve Bristol, Bath and surrounding areas, subject to the delivery options shown at checkout.</p>
+          <p class="text-muted">Delivery charges, available delivery areas and estimated delivery times will be displayed before you place an order.</p>
+          <p class="text-muted">We will take reasonable steps to deliver within the estimated timeframe. If no other delivery period is agreed, applicable consumer law generally requires delivery within 30 days.</p>
+          <p class="text-muted">You must provide an accurate delivery address and contact details. Please ensure someone can receive the delivery where necessary.</p>
+          <p class="text-muted">Further information is set out in our Delivery Policy.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.8 Cancellations, returns and refunds</h2>
+          <p class="text-muted">You may have a legal right to cancel an online purchase within the applicable cancellation period, subject to statutory exceptions.</p>
+          <p class="text-muted">Different rules apply to faulty, damaged, incorrect or misdescribed products. Certain food products may be excluded from change-of-mind cancellation where a specific legal exception applies, but food products are not automatically excluded from all return rights.</p>
+          <p class="text-muted">Please read our Cancellation Policy and Returns and Refunds Policy.</p>
+          <p class="text-muted">Nothing in these terms removes or limits any consumer rights that cannot legally be excluded.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.9 Food safety and product information</h2>
+          <p class="text-muted">Customers are responsible for reading product labels and following the manufacturer’s storage and preparation instructions.</p>
+          <p class="text-muted">If you have an allergy or dietary requirement, check the ingredients and allergen information on the product packaging before use. If you need clarification, contact us before consuming the product.</p>
+          <p class="text-muted">Do not consume a product if its packaging has been tampered with or if you reasonably believe it is unsafe. Contact us promptly so we can investigate.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.10 Website use</h2>
+          <p class="text-muted">You agree not to misuse our website, attempt unauthorised access, interfere with its operation or use it for fraudulent or unlawful purposes.</p>
+          <p class="text-muted">We may suspend access where reasonably necessary to protect the website, our customers or our business.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.11 Intellectual property</h2>
+          <p class="text-muted">Unless otherwise stated, website text, original images, branding, design and other content created for Spice Pantry are owned by us or used with permission.</p>
+          <p class="text-muted">You may not reproduce or commercially use our original content without prior written permission, except where permitted by law.</p>
+          <p class="text-muted">Third-party product names, trademarks and logos belong to their respective owners. Their appearance on our website does not necessarily imply sponsorship or endorsement.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.12 Liability</h2>
+          <p class="text-muted">We do not exclude or limit liability where doing so would be unlawful.</p>
+          <p class="text-muted">Nothing in these terms limits liability for death or personal injury caused by negligence, fraud, fraudulent misrepresentation or any other liability that cannot legally be excluded.</p>
+          <p class="text-muted">For consumer purchases, we remain responsible for providing goods that meet the requirements of applicable consumer law, including being of satisfactory quality, fit for purpose where applicable, and as described.</p>
+          <p class="text-muted">For business purchases, to the extent permitted by law, we will not be liable for indirect or consequential losses that were not reasonably foreseeable when the contract was formed. Any other limitation of liability for a trade order must be reasonable and lawful in the circumstances.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.13 Events outside our control</h2>
+          <p class="text-muted">We will not be responsible for delay or failure caused by events beyond our reasonable control, such as severe weather, transport disruption, supplier interruptions or public emergencies.</p>
+          <p class="text-muted">We will take reasonable steps to inform affected customers and minimise disruption.</p>
+          <p class="text-muted">This section does not remove any applicable statutory rights to a refund or cancellation.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.14 Privacy</h2>
+          <p class="text-muted">We process personal information in accordance with our Privacy Policy, available on our website.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.15 Changes to these terms</h2>
+          <p class="text-muted">We may update these terms by publishing a revised version on our website. The version applicable to an existing order will generally be the version in force when that order was accepted, unless a change is required by law or agreed with you.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.16 Governing law</h2>
+          <p class="text-muted">These terms are governed by the laws of England and Wales, subject to any mandatory consumer protections that apply where you live.</p>
+          <p class="text-muted">Consumers may bring proceedings in the courts permitted by applicable law.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">2.17 Contact</h2>
+          <p class="text-muted">Questions about these Terms and Conditions should be sent to <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a>.</p>
         </div>
       </div>
     </div>
