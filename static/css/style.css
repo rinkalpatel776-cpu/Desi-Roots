@@ -8,6 +8,7 @@
   --sp-text:       #2F2F2F;  /* body text */
   --sp-border:     #E8E2D8;  /* borders, dividers */
   --sp-dark:       #221C17;  /* warm charcoal: footer, hero and tile backgrounds */
+  --sp-whatsapp:   #25D366;  /* WhatsApp's own green, for WhatsApp buttons only */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -993,5 +994,44 @@ span.footer-social-link,
   .sp-nav-quote {
     padding: 5px 12px;
     font-size: 0.82rem;
+  }
+}
+
+/* Floating WhatsApp chat button, bottom-right on every page */
+.sp-whatsapp-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1040;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sp-whatsapp);
+  color: #ffffff;
+  font-size: 1.75rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sp-whatsapp-float:hover,
+.sp-whatsapp-float:focus-visible {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+.sp-whatsapp-float:focus-visible {
+  outline: 3px solid var(--sp-saffron);
+  outline-offset: 3px;
+}
+@media (max-width: 575.98px) {
+  .sp-whatsapp-float {
+    right: 14px;
+    bottom: 14px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }

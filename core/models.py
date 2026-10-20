@@ -24,6 +24,10 @@ class SiteSettings(models.Model):
         blank=True, 
         help_text="Full postal address of the business. Required for legal pages."
     )
+    vat_number = models.CharField(
+        "VAT number", max_length=30, blank=True,
+        help_text="Shown in the footer and on the Contact page, e.g. GB 515 3463 07. Leave blank to hide it.",
+    )
     facebook_url = models.URLField(blank=True, help_text="Link to Facebook profile.")
     instagram_url = models.URLField(blank=True, help_text="Link to Instagram profile.")
     linkedin_url = models.URLField(blank=True, help_text="Link to LinkedIn profile.")
