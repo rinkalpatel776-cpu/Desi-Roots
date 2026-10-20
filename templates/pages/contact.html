@@ -2,6 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block meta_title %}Contact Us | Spice Pantry{% endblock %}
+{% block meta_description %}Contact Spice Pantry by phone, WhatsApp or email, or send a wholesale enquiry for trade pricing.{% endblock %}
+{% block og_title %}Contact Us | Spice Pantry{% endblock %}
+{% block og_description %}Contact Spice Pantry by phone, WhatsApp or email, or send a wholesale enquiry for trade pricing.{% endblock %}
 
 
 
@@ -80,19 +83,19 @@
           <div class="pt-4 border-top border-sp">
             <small class="text-uppercase fw-bold text-muted d-block mb-3" style="font-size: 0.72rem; letter-spacing: 0.08em;">Direct Channels</small>
             <div class="d-flex flex-wrap gap-2">
-              {% if site_settings.facebook_url %}
-              <span class="btn btn-social-fb sp-social-static">
-                <i class="bi bi-facebook" aria-hidden="true"></i>Facebook
-              </span>
-              {% endif %}
-              {% if site_settings.instagram_url %}
-              <span class="btn btn-social-insta sp-social-static">
-                <i class="bi bi-instagram" aria-hidden="true"></i>Instagram
-              </span>
-              {% endif %}
               {% if site_settings.whatsapp_link %}
-              <a href="{{ site_settings.whatsapp_link }}" target="_blank" class="btn btn-social-wa">
-                <i class="bi bi-whatsapp"></i>WhatsApp
+              <a href="{{ site_settings.whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-social-wa">
+                <i class="bi bi-whatsapp" aria-hidden="true"></i>WhatsApp
+              </a>
+              {% endif %}
+              {% if site_settings.phone_number %}
+              <a href="tel:{{ site_settings.phone_number|cut:' ' }}" class="btn btn-contact-call">
+                <i class="bi bi-telephone" aria-hidden="true"></i>Call
+              </a>
+              {% endif %}
+              {% if site_settings.email_address %}
+              <a href="mailto:{{ site_settings.email_address }}" class="btn btn-contact-email">
+                <i class="bi bi-envelope" aria-hidden="true"></i>Email
               </a>
               {% endif %}
             </div>

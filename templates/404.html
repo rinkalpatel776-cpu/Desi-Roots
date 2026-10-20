@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Page Not Found | Spice Pantry{% endblock %}
+{% block meta_description %}The page you were looking for could not be found.{% endblock %}
+{% block og_title %}Page Not Found | Spice Pantry{% endblock %}
+
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+<div class="py-5">
+  <div class="container py-5 text-center">
+    <p class="text-saffron fw-semibold text-uppercase small mb-2">Error 404</p>
+    <h1 class="h2 mb-3">Sorry, we can't find that page</h1>
+    <p class="text-muted mb-4">It may have moved, or the link may be out of date. Try the catalogue or search for a product instead.</p>
+
+    <form method="GET" action="/products/" class="mx-auto mb-4 sp-error-search" role="search">
+      <label for="notFoundSearch" class="visually-hidden">Search the catalogue</label>
+      <div class="input-group">
+        <input type="text" id="notFoundSearch" name="q" class="form-control" placeholder="Search products, e.g. basmati rice">
+        <button class="btn btn-primary" type="submit" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
+      </div>
+    </form>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+      <a href="/products/" class="btn btn-primary text-white"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>Browse the Catalogue</a>
+      <a href="/" class="btn btn-outline-primary"><i class="bi bi-house me-2" aria-hidden="true"></i>Go to the Home Page</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

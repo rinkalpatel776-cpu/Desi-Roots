@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block meta_title %}{{ product.meta_title|default:product.name|add:" Wholesale | Spice Pantry" }}{% endblock %}
-{% block meta_description %}{{ product.meta_description|default:product.description|truncatechars:155 }}{% endblock %}
+{% block meta_description %}{% if product.meta_description %}{{ product.meta_description }}{% elif product.description %}{{ product.description|truncatechars:155 }}{% else %}{{ product.name }} available wholesale from Spice Pantry, supplying restaurants and retailers in Bristol and nearby areas. Request a quote.{% endif %}{% endblock %}
+{% block og_title %}{{ product.meta_title|default:product.name|add:" Wholesale | Spice Pantry" }}{% endblock %}
+{% block og_description %}{{ product.name }} available wholesale from Spice Pantry, supplying restaurants and retailers in Bristol and nearby areas.{% endblock %}
+{% block og_image %}{% if primary_image %}{{ request.scheme }}://{{ request.get_host }}{{ primary_image.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block extra_head %}
 <!-- Product & Breadcrumb List JSON-LD -->
