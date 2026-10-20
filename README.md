@@ -14,16 +14,15 @@ The platform allows restaurants, retailers, cafés, hotels and other food busine
 
 Spice Pantry is a catalogue-first wholesale platform designed to showcase food products without online purchasing.
 
-The website currently focuses on:
+The catalogue currently shows **over 1,400 products** from **more than 20 brands** across 18 categories, with more added as product photos arrive. Categories include:
 
+- Spices & Masalas
+- Lentils, Beans & Pulses
 - Rice
-- Spices
-- Flour
-- Oils
-- Lentils
-- Pickles
-
-The system is designed to support approximately **450–500 products** and multiple brands.
+- Flour & Atta
+- Oils & Ghee
+- Pastes, Sauces & Pickles
+- Snacks, Sweets, Drinks and other ethnic groceries
 
 Current service area:
 
@@ -83,7 +82,6 @@ Current service area:
 | JavaScript | Frontend interactions |
 | Git | Version control |
 | GitHub | Source control |
-| Docker | Development/deployment environment |
 | Nginx | Production web server |
 | Gunicorn | Django application server |
 
@@ -119,23 +117,19 @@ Design principles:
 
 ### Homepage
 
-![Spice Pantry Homepage](screenshots/homepage.png)
+![Spice Pantry Homepage](screenshots/homepage.jpg)
 
 ### Product Catalogue
 
-![Product Catalogue](screenshots/products.png)
+![Product Catalogue](screenshots/products.jpg)
 
 ### Product Details
 
-![Product Details](screenshots/product-detail.png)
+![Product Details](screenshots/product-detail.jpg)
 
 ### Wholesale Enquiry
 
-![Wholesale Enquiry](screenshots/enquiry-form.png)
-
-### Admin Dashboard
-
-![Admin Dashboard](screenshots/admin.png)
+![Wholesale Enquiry](screenshots/enquiry-form.jpg)
 
 ---
 
@@ -145,14 +139,16 @@ Design principles:
 Spice-Pantry/
 │
 ├── config/              # Django project configuration
-├── core/                # Core business functionality
+├── catalogue/           # Products, brands, categories, pack sizes and photos
+├── core/                # Site settings and shared templates
 ├── enquiries/           # Wholesale enquiry functionality
 ├── pages/               # Static website pages
 ├── templates/           # Django templates
 ├── static/              # CSS, JavaScript and frontend assets
 ├── media/               # Uploaded media files
 ├── screenshots/         # Project screenshots
-├── documentation/       # Project documentation
+├── deploy/              # Hosting setup (PythonAnywhere)
+├── docs/                # Project brief
 ├── manage.py             # Django management script
 ├── requirements.txt      # Python dependencies
 ├── .env.example         # Environment variable template
