@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # Core custom context processor for settings
                 'core.context_processors.site_settings',
+                'core.context_processors.footer_categories',
             ],
         },
     },

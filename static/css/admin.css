@@ -1,0 +1,10 @@
+/* Small readability tweaks to the built-in Django admin */
+
+/* App names in the sidebar and dashboard ("Authentication and Authorization") read
+   better in their normal case than in all-caps; slightly larger to make up for it */
+.module caption,
+.inline-group h2 {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.8125rem;
+}

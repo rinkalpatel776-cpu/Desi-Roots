@@ -7,6 +7,8 @@
   --sp-card:       #FFFFFF;  /* cards */
   --sp-text:       #2F2F2F;  /* body text */
   --sp-border:     #E8E2D8;  /* borders, dividers */
+  --sp-dark:       #221C17;  /* warm charcoal: footer, hero and tile backgrounds */
+  --sp-whatsapp:   #25D366;  /* WhatsApp's own green, for WhatsApp buttons only */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -205,7 +207,8 @@ a:hover {
 }
 
 .card-img-top-wrapper {
-  background-color: var(--sp-bg);
+  /* White, like the product pack shots, so photo edges don't show as a box */
+  background-color: var(--sp-card);
   aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
@@ -239,6 +242,15 @@ a:hover {
   border-radius: 2px;
   background-color: var(--sp-saffron);
   color: #ffffff;
+}
+
+/* Badge pinned to the top-right corner of a product card's image */
+.sp-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .sp-badge-secondary {
@@ -305,7 +317,8 @@ footer {
   border-top: 1px solid #242426;
 }
 
-footer h5 {
+footer h5,
+footer .h5 {
   color: #ffffff;
   font-size: 1.1rem;
   margin-bottom: 24px;
@@ -363,20 +376,6 @@ footer .footer-bottom {
   .process-step:not(:last-child)::after {
     display: none;
   }
-}
-
-/* Cookie Banner styling */
-.cookie-banner {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  max-width: 400px;
-  background-color: var(--sp-card);
-  border: 1px solid var(--sp-border);
-  border-radius: 4px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  z-index: 1050;
-  padding: 24px;
 }
 
 /* Details Table spec */
@@ -511,9 +510,14 @@ footer .footer-bottom {
   border-radius: 50%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.footer-social-link:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+/* Social icons are shown but not linked, so no hover or pointer */
+span.footer-social-link,
+.sp-social-static {
+  cursor: default;
+}
+.btn.sp-social-static:hover {
+  opacity: 1;
+  transform: none;
 }
 
 @media (max-width: 576px) {
@@ -666,17 +670,20 @@ footer .footer-bottom {
   position: relative;
   background-color: var(--sp-dark);
   background-image:
+    /* Light shading only at the bottom, behind the buttons; the photo already has a dark text area */
     linear-gradient(180deg,
-      rgba(0, 0, 0, 0.30) 0%,
-      rgba(0, 0, 0, 0.15) 45%,
-      rgba(18, 14, 10, 0.75) 100%
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(18, 14, 10, 0.60) 100%
     ),
-    url('../images/hero-spice-merchant.jpg');
+    url('../images/hero-ethnic-grocery.jpg');
   background-size: cover;
-  background-position: center center;
+  /* Anchor top-left: the brand title and text sit on the left of the photo, so they are never cropped */
+  background-position: left top;
   background-repeat: no-repeat;
   border-bottom: 2px solid var(--sp-gold);
-  min-height: 520px;
+  /* Height follows the photo's 16:9 shape (2048x1152 -> 56.25vw) so the whole image shows */
+  height: clamp(520px, 56.25vw, 900px);
   display: flex;
   align-items: flex-end;
 }
@@ -711,24 +718,34 @@ footer .footer-bottom {
   transform: translateY(-2px);
 }
 
+/* Tablets: a taller banner so the buttons sit below the badges in the photo */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .sp-hero-wrapper {
+    height: 75vw;
+  }
+  .sp-hero-actions .btn {
+    padding: 0.6rem 1.1rem;
+    font-size: 1rem;
+  }
+}
+
 /* Mobile screen optimization (< 768px) */
 @media (max-width: 767.98px) {
   .sp-hero-wrapper {
-    min-height: 360px;
-    background-position: center center;
-    /* Maintain strengthened overlay on mobile too */
-    background-image:
-      linear-gradient(180deg,
-        rgba(0, 0, 0, 0.32) 0%,
-        rgba(0, 0, 0, 0.18) 40%,
-        rgba(18, 14, 10, 0.80) 100%
-      ),
-      url('../images/hero-spice-merchant.jpg');
+    /* Taller than 16:9 on phones so the stacked buttons sit below the photo's tagline */
+    /* Phones: the whole photo (a 1100x1024 crop with the text and spices) shown at full
+       width, with the buttons on the dark band below it so they cover nothing */
+    height: auto;
+    min-height: 0;
+    padding-top: 93.1vw;
+    background-image: url('../images/hero-ethnic-grocery-phone.jpg');
+    background-size: 100% auto;
+    background-position: center top;
   }
 
   .sp-hero-container {
-    padding-top: 1rem !important;
-    padding-bottom: 1.75rem !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.5rem !important;
   }
 
   .sp-hero-actions {
@@ -816,12 +833,15 @@ footer .footer-bottom {
   justify-content: center;
 }
 
+/* Every logo gets the same box; the (trimmed) artwork is scaled to fit and centred,
+   so wide logos fill the width, round ones fill the height, and all share one centre line */
 .brand-showcase-logo {
-  max-height: 75px;
-  max-width: 180px;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 160px;
+  max-height: 76px;
   object-fit: contain;
+  object-position: center;
   transition: transform 0.25s ease;
 }
 
@@ -868,9 +888,159 @@ footer .footer-bottom {
     border-radius: 12px;
   }
   .brand-showcase-logo {
-    max-height: 58px;
-    max-width: 135px;
+    max-height: 56px;
+    max-width: 120px;
   }
 }
 
 
+
+/* Catalogue filters: on large screens the panel stays in view and scrolls on its own,
+   so scrolling over it moves only the filters and scrolling over products moves the page */
+@media (min-width: 992px) {
+  .sp-filter-panel {
+    position: sticky;
+    top: 100px;
+    z-index: 100;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sp-border) transparent;
+  }
+}
+
+/* Phones: the categories & brands toggle in the catalogue filters */
+.sp-filter-chevron {
+  transition: transform 0.2s ease;
+}
+.sp-filter-toggle[aria-expanded="true"] .sp-filter-chevron {
+  transform: rotate(180deg);
+}
+
+/* Contact form spam trap: kept off-screen rather than display:none, which some bots skip */
+#div_id_website {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Catalogue product cards */
+.sp-product-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Removable filter chips above the product grid */
+.sp-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--sp-border);
+  border-radius: 999px;
+  background-color: var(--sp-card);
+  color: var(--sp-text);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.sp-filter-chip:hover,
+.sp-filter-chip:focus-visible {
+  border-color: var(--sp-saffron);
+  color: var(--sp-saffron);
+}
+
+.sp-sort-form .form-select {
+  width: auto;
+  min-width: 9.5rem;
+}
+
+/* Phones: two compact cards per row */
+@media (max-width: 575.98px) {
+  .sp-product-card .card-img-top-wrapper {
+    /* Square on phones: most packs are tall bags, so they show larger */
+    aspect-ratio: 1 / 1;
+    padding: 8px;
+  }
+  .sp-product-card .card-body {
+    padding: 0.75rem;
+  }
+  .sp-product-card .card-title {
+    font-size: 0.92rem;
+    line-height: 1.3;
+  }
+  .sp-product-card .sp-card-category {
+    font-size: 0.68rem;
+    margin-bottom: 4px !important;
+  }
+  .sp-product-card .badge {
+    font-size: 0.68rem;
+    padding: 2px 5px !important;
+  }
+  .sp-product-card .btn {
+    padding: 4px 6px;
+    font-size: 0.82rem;
+  }
+  .sp-product-card .sp-card-badge {
+    font-size: 0.62rem;
+  }
+  .sp-sort-form {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+  .sp-sort-form .form-select {
+    flex: 1;
+  }
+}
+
+/* Header: Request Quote stays visible next to the menu button on phones and tablets */
+.sp-nav-quote {
+  margin-left: auto;
+  margin-right: 10px;
+}
+@media (max-width: 575.98px) {
+  .sp-nav-quote {
+    padding: 5px 12px;
+    font-size: 0.82rem;
+  }
+}
+
+/* Floating WhatsApp chat button, bottom-right on every page */
+.sp-whatsapp-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1040;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sp-whatsapp);
+  color: #ffffff;
+  font-size: 1.75rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sp-whatsapp-float:hover,
+.sp-whatsapp-float:focus-visible {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+.sp-whatsapp-float:focus-visible {
+  outline: 3px solid var(--sp-saffron);
+  outline-offset: 3px;
+}
+@media (max-width: 575.98px) {
+  .sp-whatsapp-float {
+    right: 14px;
+    bottom: 14px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}

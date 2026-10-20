@@ -3,8 +3,9 @@ from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
 def home(request):
-    # Retrieve active categories
-    categories = Category.objects.filter(is_active=True).order_by('display_order', 'name')[:6]
+    # Up to 6 categories ticked "Show on home page" in the admin, in display order
+    # (the first 6 with published products if none are ticked)
+    categories = Category.for_home_page()[:Category.HOME_PAGE_LIMIT]
     
     # Retrieve featured products (published + featured) with optimizations
     featured_products = (
@@ -13,10 +14,9 @@ def home(request):
         .prefetch_related('images', 'pack_sizes')[:4]
     )
     
-    # Retrieve featured brands
-    featured_brands = Brand.objects.filter(is_featured=True)[:6]
-    if not featured_brands.exists():
-        featured_brands = Brand.objects.all()[:6]
+    # The first 4 brands ticked "Show on home page" in the admin, in their chosen order.
+    # The section hides itself when none are ticked.
+    featured_brands = Brand.ticked_for_home_page()[:Brand.HOME_PAGE_LIMIT]
 
     # Retrieve testimonials
     testimonials = Testimonial.objects.filter(is_active=True)
@@ -34,20 +34,14 @@ def home(request):
     return render(request, 'pages/home.html', context)
 
 
-from django.conf import settings
-from enquiries.forms import EnquiryForm
+from enquiries.views import handle_enquiry_form
 
 def about(request):
     return render(request, 'pages/about.html')
 
 
 def contact(request):
-    form = EnquiryForm()
-    context = {
-        'form': form,
-        'turnstile_site_key': settings.TURNSTILE_SITE_KEY,
-    }
-    return render(request, 'pages/contact.html', context)
+    return handle_enquiry_form(request, 'pages/contact.html')
 
 
 def faq_list(request):

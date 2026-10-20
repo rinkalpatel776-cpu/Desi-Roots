@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block meta_title %}Privacy Policy | Spice Pantry{% endblock %}
+{% block meta_description %}How Desi Roots Ltd, trading as Spice Pantry, collects, uses and protects personal information.{% endblock %}
 
 {% block content %}
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
     <h1 class="h2 mb-2">Privacy Policy</h1>
-    <p class="text-muted mb-0">Last updated: August 2026</p>
+    <p class="text-muted mb-0">Last updated: 19 October 2026</p>
   </div>
 </div>
 
@@ -14,62 +15,124 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-9">
-        <div class="alert alert-warning border-warning d-flex align-items-center gap-3 mb-5" role="alert">
-          <i class="bi bi-exclamation-triangle-fill fs-4 text-warning"></i>
-          <div>
-            <strong>TODO: CONFIRM WITH BUSINESS</strong><br>
-            The legal policy text below contains placeholders. Please confirm official company details, ICO registration numbers, and data retention policies before publishing to production.
-          </div>
-        </div>
-
-        <div class="bg-white p-5 border border-sp rounded">
-          <h2 class="h4 fw-semibold mb-3">1. Introduction</h2>
-          <p class="text-muted">
-            Spice Pantry (trading name of Desi Roots) is committed to protecting your business and personal data. This privacy policy explains how we collect, store, and process information submitted through our B2B wholesale enquiry forms.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">2. Who We Are</h2>
-          <p class="text-muted">
-            Our trading name is Spice Pantry, owned and operated by Desi Roots.
-            <br>
-            <strong>Registered Address:</strong> [TODO: Add company postal address, e.g. from site settings]
-            <br>
-            <strong>Company Registration Number:</strong> [TODO: Add business registration number]
-            <br>
-            <strong>ICO Data Protection Registration Number:</strong> [TODO: Add ICO registration code]
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">3. Data We Collect</h2>
-          <p class="text-muted">
-            We collect data only when you submit an enquiry through our wholesale form. This includes:
-          </p>
+        {# Text supplied by the business (SPICE PANTRY.docx, 19 October 2026); publish wording unchanged #}
+        <div class="bg-white p-4 p-md-5 border border-sp rounded">
+          <h2 class="h5 fw-semibold mb-3">1.1 Introduction</h2>
+          <p class="text-muted">Desi Roots Ltd trading under Spice Pantry (“Spice Pantry”, “we”, “us” or “our”) respects your privacy and is committed to protecting your personal information.</p>
+          <p class="text-muted">This Privacy Policy explains how we collect, use, store and protect personal information when you visit our website, create an account, place an order, contact us or use our services.</p>
+          <p class="text-muted">We process personal information in accordance with applicable UK data protection law, including the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.2 Who we are</h2>
+          <p class="text-muted">The data controller responsible for your personal information is:</p>
+          <p class="text-muted"><b>Desi Roots Ltd trading under Spice Pantry</b><br>
+23 Halls Garden, Bristol, BS34 8RJ, United Kingdom<br>
+Email: <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a></p>
+          <p class="text-muted">Company registration number: 16939222.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.3 Personal information we collect</h2>
+          <p class="text-muted">Depending on how you use our website, we may collect the following information:</p>
           <ul class="text-muted">
-            <li>Contact Name and Job Title</li>
-            <li>Business Name and Business Type</li>
-            <li>Business Email Address and Phone Number</li>
-            <li>Product / Category Interests</li>
-            <li>Any detailed message text you include</li>
+            <li><b>Identity information:</b> name and, where relevant, business name.</li>
+            <li><b>Contact information:</b> email address, telephone number and billing or delivery address.</li>
+            <li><b>Order information:</b> products purchased, quantities, order history, delivery instructions and returns.</li>
+            <li><b>Payment information:</b> payment status, transaction references and limited payment details provided by our payment provider. We do not intend to store full payment card details on our own systems.</li>
+            <li><b>Account information:</b> login details and preferences if you create an account.</li>
+            <li><b>Communication information:</b> messages, enquiries, complaints and customer service correspondence.</li>
+            <li><b>Technical information:</b> IP address, browser type, device information and website usage information where collected.</li>
+            <li><b>Marketing preferences:</b> your preferences concerning promotional emails and other marketing communications.</li>
           </ul>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">4. How We Use Your Data</h2>
-          <p class="text-muted">
-            We process your information based on legitimate business interests to:
-          </p>
+          <p class="text-muted">Please do not submit sensitive personal information through our website unless it is necessary and we have a lawful reason to process it.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.4 How we collect your information</h2>
+          <p class="text-muted">We may collect personal information when you:</p>
           <ul class="text-muted">
-            <li>Respond to your wholesale pricing queries.</li>
-            <li>Provide private pricing quotes.</li>
-            <li>Coordinate logistics and deliveries for active orders.</li>
+            <li>Place an order or create an account.</li>
+            <li>Complete a contact form or contact us by email or telephone.</li>
+            <li>Subscribe to marketing communications.</li>
+            <li>Request a quotation or trade account.</li>
+            <li>Browse our website, where cookies or similar technologies collect information.</li>
+            <li>Interact with payment, delivery or other service providers involved in your order.</li>
           </ul>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">5. Data Retention</h2>
-          <p class="text-muted">
-            We retain B2B enquiries in our secure database for as long as necessary to service your wholesale account or handle follow-up quotes. We do not sell or share your business data with any third-party marketing services.
-          </p>
-
-          <h2 class="h4 fw-semibold mb-3 mt-4">6. Your Rights</h2>
-          <p class="text-muted">
-            Under the UK GDPR, you have the right to request access to the data we hold, correct any mistakes, or request deletion of your records. To do so, please contact us at: <a href="mailto:{{ site_settings.email_address|default:'support@desiroots.co.uk' }}">{{ site_settings.email_address|default:'support@desiroots.co.uk' }}</a>.
-          </p>
+          <p class="text-muted">We may also receive relevant information from payment providers, delivery companies or other service providers where necessary to complete an order or provide our services.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.5 Why we use your information</h2>
+          <p class="text-muted">We may use your personal information to:</p>
+          <ul class="text-muted">
+            <li>Process and fulfil orders.</li>
+            <li>Arrange payment, dispatch and delivery.</li>
+            <li>Send order confirmations and delivery updates.</li>
+            <li>Respond to enquiries, complaints and refund requests.</li>
+            <li>Create and manage customer or trade accounts.</li>
+            <li>Maintain business, accounting, tax and transaction records.</li>
+            <li>Prevent fraud, protect our website and manage security.</li>
+            <li>Improve our products, services and website.</li>
+            <li>Send marketing communications where legally permitted.</li>
+            <li>Comply with applicable legal and regulatory obligations.</li>
+          </ul>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.6 Our lawful bases for processing</h2>
+          <p class="text-muted">We rely on one or more of the following lawful bases, depending on the purpose:</p>
+          <p class="text-muted"><b>Contract:</b> where processing is necessary to accept, manage or fulfil your order or account.</p>
+          <p class="text-muted"><b>Legal obligation:</b> where we must retain or disclose information to meet tax, accounting or other legal requirements.</p>
+          <p class="text-muted"><b>Legitimate interests:</b> where processing is necessary for legitimate business purposes, such as responding to enquiries, improving our services, protecting against fraud and maintaining appropriate records, provided those interests do not override your rights.</p>
+          <p class="text-muted"><b>Consent:</b> where you have given consent, such as for certain marketing communications or non-essential cookies where required.</p>
+          <p class="text-muted">Where we rely on consent, you may withdraw it at any time. Withdrawal does not affect processing carried out lawfully before consent was withdrawn.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.7 Marketing communications</h2>
+          <p class="text-muted">We may send you information about our products, offers and services where permitted by law.</p>
+          <p class="text-muted">You can opt out of marketing emails at any time by using the unsubscribe link in the email or contacting <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a>.</p>
+          <p class="text-muted">We will continue to send essential service messages, such as order confirmations and important delivery updates, where necessary.</p>
+          <p class="text-muted">We will not treat your purchase of products as automatic consent to receive all marketing communications.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.8 Sharing your personal information</h2>
+          <p class="text-muted">We may share relevant information with trusted third parties where necessary, including:</p>
+          <ul class="text-muted">
+            <li>Payment processing providers.</li>
+            <li>Courier and delivery companies.</li>
+            <li>Website hosting, ecommerce and IT service providers.</li>
+            <li>Email and customer support providers.</li>
+            <li>Accounting, legal and professional advisers.</li>
+            <li>Fraud prevention services.</li>
+            <li>Government authorities, regulators or law enforcement where legally required.</li>
+          </ul>
+          <p class="text-muted">We do not sell your personal information to third parties.</p>
+          <p class="text-muted">We require service providers to handle personal information appropriately and to use it only for authorised purposes.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.9 Payments</h2>
+          <p class="text-muted">Payments may be processed by third-party payment providers. Your payment may be subject to the privacy policy and security arrangements of the provider you choose.</p>
+          <p class="text-muted">We do not intend to store full payment card details on our own systems. Please check the payment provider’s information at checkout for details of its processing.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.10 Cookies and similar technologies</h2>
+          <p class="text-muted">Our website may use cookies and similar technologies to operate the shopping basket, maintain security, remember preferences, analyse website performance or support advertising.</p>
+          <p class="text-muted">Strictly necessary cookies may be used where required to provide a service you have requested. We will obtain consent before using non-essential cookies where required by law.</p>
+          <p class="text-muted">You can manage your cookie preferences through our website’s cookie settings, where available.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.11 International transfers</h2>
+          <p class="text-muted">Some service providers may process information outside the United Kingdom.</p>
+          <p class="text-muted">Where personal information is transferred internationally, we will take steps required by applicable data protection law to ensure that the transfer has appropriate safeguards.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.12 How long we retain your information</h2>
+          <p class="text-muted">We retain personal information only for as long as reasonably necessary for the purposes described in this policy, including fulfilling orders, handling disputes, maintaining business records and meeting legal obligations.</p>
+          <p class="text-muted">Retention periods vary according to the type of information and the reason it is held. Financial and transaction records may need to be retained for the period required by applicable tax and accounting rules.</p>
+          <p class="text-muted">Where information is no longer required, we will securely delete it or anonymise it where appropriate.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.13 How we protect your information</h2>
+          <p class="text-muted">We use appropriate technical and organisational measures intended to protect personal information against unauthorised access, loss, misuse, alteration or disclosure.</p>
+          <p class="text-muted">However, no method of transmitting or storing information electronically is completely secure. You should use strong passwords and avoid sharing your account credentials.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.14 Your data protection rights</h2>
+          <p class="text-muted">Subject to applicable law, you may have the right to:</p>
+          <ul class="text-muted">
+            <li>Request access to your personal information.</li>
+            <li>Request correction of inaccurate or incomplete information.</li>
+            <li>Request deletion of your information in certain circumstances.</li>
+            <li>Request restriction of processing.</li>
+            <li>Object to certain processing, including direct marketing.</li>
+            <li>Request transfer of certain information to you or another organisation.</li>
+            <li>Withdraw consent where processing is based on consent.</li>
+            <li>Complain to the Information Commissioner's Office (ICO).</li>
+          </ul>
+          <p class="text-muted">To exercise your rights, contact <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a>. We may need to verify your identity before responding.</p>
+          <p class="text-muted">You also have the right to complain to the UK Information Commissioner's Office at <a href="https://ico.org.uk/" target="_blank" rel="noopener">https://ico.org.uk/</a>.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.15 Children's privacy</h2>
+          <p class="text-muted">Our website is intended for people who are legally able to make purchases. We do not knowingly collect personal information from children for marketing purposes.</p>
+          <p class="text-muted">If you believe a child has provided personal information to us inappropriately, please contact us.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.16 Third-party websites</h2>
+          <p class="text-muted">Our website may contain links to third-party websites or services. We are not responsible for the privacy practices or content of those websites. Please review their privacy policies before providing personal information.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.17 Changes to this Privacy Policy</h2>
+          <p class="text-muted">We may update this policy from time to time to reflect changes to our business, website, services or legal obligations. The updated version will be published on this page with a revised date.</p>
+          <h2 class="h5 fw-semibold mb-3 mt-4">1.18 Contact us</h2>
+          <p class="text-muted">For questions about this Privacy Policy or how we use your personal information, contact:</p>
+          <p class="text-muted"><b>Desi Roots Ltd trading under Spice Pantry</b><br>
+23 Halls Garden, Bristol, BS34 8RJ, United Kingdom<br>
+Email: <a href="mailto:{{ site_settings.email_address }}">{{ site_settings.email_address }}</a></p>
         </div>
       </div>
     </div>

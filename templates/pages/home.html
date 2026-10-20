@@ -9,10 +9,11 @@
   <h1 class="visually-hidden">Spice Pantry | Wholesale Spices & Groceries Bristol — Desi Roots Ltd</h1>
   <div class="container sp-hero-container">
     <div class="row">
-      <div class="col-lg-8 mx-auto text-center">
-        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 sp-hero-actions">
+      {# The buttons line up under the text on the left of the photo; centred on phones #}
+      <div class="col-12 text-center text-md-start">
+        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start gap-3 sp-hero-actions">
           {# Primary action: the highest-value conversion goal #}
-          <a href="/wholesale/" class="btn btn-primary btn-lg text-white px-4 shadow">
+          <a href="/contact/" class="btn btn-primary btn-lg text-white px-4 shadow">
             <i class="bi bi-chat-left-dots me-2"></i>Request Wholesale Quote
           </a>
           {# Secondary action: outlined so it does not compete with primary #}
@@ -122,9 +123,9 @@
         <div class="card h-100 d-flex flex-column justify-content-between">
           <div class="card-img-top-wrapper position-relative" style="height: 180px;">
             {% if product.badge %}
-              <span class="sp-badge position-absolute top-2 start-2">{{ product.badge }}</span>
+              <span class="sp-badge sp-card-badge">{{ product.badge }}</span>
             {% endif %}
-            {% with product.images.first as img %}
+            {% with product.images.all|first as img %}
               {% if img %}
                 <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" class="img-fluid" style="max-height: 160px;">
               {% else %}
@@ -144,7 +145,7 @@
               <h6 class="card-title text-dark fw-semibold">{{ product.name }}</h6>
             </div>
             
-            <a href="/products/{{ product.slug }}/" class="btn btn-outline-primary btn-sm w-100 mt-3">View Details</a>
+            <a href="/contact/?product_id={{ product.id }}" class="btn btn-outline-primary btn-sm w-100 mt-3"><i class="bi bi-chat-left-text me-2" aria-hidden="true"></i>Enquire</a>
           </div>
         </div>
       </div>
@@ -182,7 +183,7 @@
         <a href="/products/?brand={{ brand.slug }}" class="brand-showcase-card shadow-sm text-decoration-none" title="{{ brand.name }}">
           <div class="brand-showcase-logo-wrap">
             {% if brand.logo %}
-            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo img-fluid" loading="lazy">
+            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}" loading="lazy">
             {% else %}
             <span class="fw-semibold text-olive fs-6">{{ brand.name }}</span>
             {% endif %}
@@ -308,13 +309,13 @@
 <!-- Contact Call to Action Banner -->
 <div class="py-5 bg-olive text-white">
   <div class="container py-4 text-center">
-    <h2 class="h3 fw-semibold mb-2">Partner with Spice Pantry</h2>
+    <h2 class="h3 fw-semibold mb-2">Shop with Spice Pantry</h2>
     <p class="mb-4 text-white-50 px-lg-5">Interested in opening a commercial account? Get in touch with us to receive personalized wholesale price list offerings based on your business purchase volume.</p>
     <div class="d-flex flex-wrap justify-content-center gap-3">
       {% if site_settings.phone_number %}
       <a href="tel:{{ site_settings.phone_number }}" class="btn btn-light px-4"><i class="bi bi-telephone me-2"></i>Call Us</a>
       {% endif %}
-      <a href="/wholesale/" class="btn btn-gold px-4 fw-semibold"><i class="bi bi-envelope me-2"></i>Submit Enquiry</a>
+      <a href="/contact/" class="btn btn-gold px-4 fw-semibold"><i class="bi bi-envelope me-2"></i>Submit Enquiry</a>
     </div>
   </div>
 </div>

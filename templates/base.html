@@ -17,7 +17,8 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Spice Pantry",
-    "legalName": "Desi Roots",
+    "legalName": "Desi Roots",{% if site_settings.vat_number %}
+    "vatID": "{{ site_settings.vat_number|cut:' ' }}",{% endif %}
     "url": "{{ request.scheme }}://{{ request.get_host }}/",
     "contactPoint": [{
       "@type": "ContactPoint",
@@ -42,7 +43,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <!-- Custom Stylesheet with cache bust -->
-  <link href="{% static 'css/style.css' %}?v=2.1" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}?v=4.2" rel="stylesheet">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
@@ -66,6 +67,7 @@
         <img src="{% static 'images/logo.png' %}" alt="Spice Pantry Logo" width="46" height="46" style="height: 46px; width: auto; max-width: 48px; object-fit: contain;" class="navbar-brand-logo me-2">
         <span class="brand-text"><span>Spice</span> Pantry</span>
       </a>
+      <a href="/contact/" class="btn btn-primary btn-sm text-white text-nowrap d-xl-none sp-nav-quote"><span class="d-none d-sm-inline">Request </span>Quote</a>
       <button class="navbar-toggler flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -81,9 +83,6 @@
             <a class="nav-link {% if '/brands/' in request.path %}active{% endif %}" href="/brands/">Brands</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if request.path == '/wholesale/' %}active{% endif %}" href="/wholesale/">Wholesale Enquiry</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="/about/">About Us</a>
           </li>
           <li class="nav-item">
@@ -92,8 +91,8 @@
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="/contact/">Contact</a>
           </li>
-          <li class="nav-item ms-xl-3 mt-3 mt-xl-0">
-            <a href="/wholesale/" class="btn btn-primary btn-sm text-white text-nowrap">Request Quote</a>
+          <li class="nav-item ms-xl-3 d-none d-xl-block">
+            <a href="/contact/" class="btn btn-primary btn-sm text-white text-nowrap">Request Quote</a>
           </li>
         </ul>
       </div>
@@ -123,17 +122,17 @@
           <p class="mb-3">Trading brand of Desi Roots. Supplying premium quality spices, rice, flour, oils, lentils, and pickles to commercial kitchens and retailers across Bristol and nearby areas.</p>
           <div class="d-flex gap-2 mb-4">
             {% if site_settings.facebook_url %}
-            {# Minimum 44×44 px tap target via padding; gap-2 adds 8px between icons #}
-            <a href="{{ site_settings.facebook_url }}" target="_blank" aria-label="Facebook"
-               class="footer-social-link"><i class="bi bi-facebook fs-5"></i></a>
+            {# Plain icons on purpose: not linked to the social media pages #}
+            <span role="img" aria-label="Facebook"
+               class="footer-social-link"><i class="bi bi-facebook fs-5" aria-hidden="true"></i></span>
             {% endif %}
             {% if site_settings.instagram_url %}
-            <a href="{{ site_settings.instagram_url }}" target="_blank" aria-label="Instagram"
-               class="footer-social-link"><i class="bi bi-instagram fs-5"></i></a>
+            <span role="img" aria-label="Instagram"
+               class="footer-social-link"><i class="bi bi-instagram fs-5" aria-hidden="true"></i></span>
             {% endif %}
             {% if site_settings.linkedin_url %}
-            <a href="{{ site_settings.linkedin_url }}" target="_blank" aria-label="LinkedIn"
-               class="footer-social-link"><i class="bi bi-linkedin fs-5"></i></a>
+            <span role="img" aria-label="LinkedIn"
+               class="footer-social-link"><i class="bi bi-linkedin fs-5" aria-hidden="true"></i></span>
             {% endif %}
           </div>
         </div>
@@ -142,19 +141,15 @@
           <h2 class="h5">Catalogue</h2>
           <ul class="list-unstyled d-flex flex-column gap-2">
             <li><a href="/products/">All Products</a></li>
-            <li><a href="/products/?category=rice">Rice</a></li>
-            <li><a href="/products/?category=spices">Spices</a></li>
-            <li><a href="/products/?category=flour">Flour</a></li>
-            <li><a href="/products/?category=oils">Oils</a></li>
-            <li><a href="/products/?category=lentils">Lentils</a></li>
-            <li><a href="/products/?category=pickles">Pickles</a></li>
+            {% for cat in footer_categories %}
+            <li><a href="/products/?category={{ cat.slug }}">{{ cat.name }}</a></li>
+            {% endfor %}
           </ul>
         </div>
         
         <div class="col-lg-2 col-md-6 col-6">
           <h2 class="h5">Quick Links</h2>
           <ul class="list-unstyled d-flex flex-column gap-2">
-            <li><a href="/wholesale/">Wholesale Enquiry</a></li>
             <li><a href="/about/">About Us</a></li>
             <li><a href="/faq/">FAQ</a></li>
             <li><a href="/contact/">Contact Us</a></li>
@@ -204,34 +199,15 @@
     </div>
   </footer>
 
-  <!-- Cookie Consent Banner -->
-  <div id="cookieConsentBanner" class="cookie-banner d-none">
-    <h6 class="mb-2"><i class="bi bi-shield-check text-saffron me-2"></i>Cookie Preferences</h6>
-    <p class="small text-muted mb-3">We use cookies to ensure you get the best experience on our website. No marketing tracking is used.</p>
-    <div class="d-flex gap-2 justify-content-end">
-      <button id="acceptCookiesBtn" class="btn btn-primary btn-sm text-white py-1 px-3">Accept</button>
-    </div>
-  </div>
+  {% if site_settings.whatsapp_link %}
+  <!-- Floating WhatsApp chat button (link comes from Site Settings) -->
+  <a href="{{ site_settings.whatsapp_link }}" class="sp-whatsapp-float" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+    <i class="bi bi-whatsapp" aria-hidden="true"></i>
+  </a>
+  {% endif %}
 
   <!-- Bootstrap Bundle JS via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-  <!-- Vanilla Cookie Consent Script -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const banner = document.getElementById("cookieConsentBanner");
-      const btn = document.getElementById("acceptCookiesBtn");
-      
-      if (!localStorage.getItem("cookie_consent_accepted")) {
-        banner.classList.remove("d-none");
-      }
-      
-      btn.addEventListener("click", function() {
-        localStorage.setItem("cookie_consent_accepted", "true");
-        banner.classList.add("d-none");
-      });
-    });
-  </script>
 
   {% block extra_js %}{% endblock %}
 </body>

@@ -13,9 +13,9 @@
   "name": "{{ product.name }}",
   "image": "{% if primary_image %}{{ request.scheme }}://{{ request.get_host }}{{ primary_image.image.url }}{% endif %}",
   "description": "{{ product.description|escapejs }}",
-  "sku": "{{ product.sku }}",
+  {% if product.sku %}"sku": "{{ product.sku }}",
   "mpn": "{{ product.sku }}",
-  "brand": {
+  {% endif %}  "brand": {
     "@type": "Brand",
     "name": "{{ product.brand.name|default:'Spice Pantry' }}"
   },
@@ -108,8 +108,10 @@
         <h1 class="h2 text-dark mb-2">{{ product.name }}</h1>
         
         <div class="d-flex align-items-center gap-3 mb-4">
+          {% if product.sku %}
           <span class="text-muted">SKU: <span class="font-monospace text-dark">{{ product.sku }}</span></span>
           <span class="text-muted">|</span>
+          {% endif %}
           <span class="text-muted">Category: <a href="/products/?category={{ product.category.slug }}" class="text-olive fw-medium">{{ product.category.name }}</a></span>
           {% if product.brand %}
           <span class="text-muted">|</span>
@@ -127,7 +129,7 @@
           <h6 class="small fw-bold text-uppercase text-muted mb-2">Available Pack Sizes</h6>
           <div class="d-flex flex-wrap gap-2">
             {% for size in product.pack_sizes.all %}
-              <span class="badge bg-white text-dark border border-sp fs-6 py-2 px-3 font-monospace">{{ size.size }}</span>
+              <span class="badge bg-white text-dark border border-sp fs-6 py-2 px-3 font-monospace">{{ size.size }}{% if size.sku %} <span class="text-muted fw-normal small">· {{ size.sku }}</span>{% endif %}</span>
             {% empty %}
               <span class="text-muted italic">Catering quantities. Contact for specifications.</span>
             {% endfor %}
@@ -138,7 +140,7 @@
         <div class="card p-4 bg-light border-sp border mb-5">
           <h5 class="h6 mb-2">Interested in Wholesale Pricing?</h5>
           <p class="small text-muted mb-3">Prices are quoted privately by email based on your business requirements and volume order levels.</p>
-          <a href="/wholesale/?product_id={{ product.id }}" class="btn btn-primary text-white w-100">
+          <a href="/contact/?product_id={{ product.id }}" class="btn btn-primary text-white w-100">
             <i class="bi bi-chat-left-text me-2"></i>Enquire About This Product
           </a>
         </div>
@@ -188,10 +190,14 @@
               </tr>
               {% endif %}
               
+              {% if product.sku %}
               <tr>
-                <th scope="row">Product Code / SKU</th>
-                <td class="font-monospace">{{ product.sku }}</td>
+                <th scope="row">Product Codes</th>
+                <td class="font-monospace">
+                  {% for size in product.pack_sizes.all %}{% if size.sku %}<div>{{ size.size }}: {{ size.sku }}</div>{% endif %}{% empty %}{{ product.sku }}{% endfor %}
+                </td>
               </tr>
+              {% endif %}
             </tbody>
           </table>
         </div>
@@ -211,7 +217,7 @@
           <div class="card h-100 d-flex flex-column">
             <!-- Image -->
             <div class="card-img-top-wrapper position-relative" style="height: 160px; padding: 12px;">
-              {% with rel.images.first as r_img %}
+              {% with rel.images.all|first as r_img %}
                 {% if r_img %}
                   <img src="{% if r_img.thumbnail %}{{ r_img.thumbnail.url }}{% else %}{{ r_img.image.url }}{% endif %}" alt="{{ r_img.alt_text|default:rel.name }}" class="img-fluid" style="max-height: 140px;">
                 {% else %}
@@ -226,7 +232,7 @@
                 <span class="text-muted small text-uppercase" style="font-size: 0.75rem;">{{ rel.category.name }}</span>
                 <h6 class="card-title text-dark fw-semibold mb-2" style="font-size: 0.95rem;">{{ rel.name }}</h6>
               </div>
-              <a href="/products/{{ rel.slug }}/" class="btn btn-outline-primary btn-sm w-100 mt-2 py-1" style="font-size: 0.8rem;">View Details</a>
+              <a href="/contact/?product_id={{ rel.id }}" class="btn btn-outline-primary btn-sm w-100 mt-2 py-1" style="font-size: 0.8rem;"><i class="bi bi-chat-left-text me-1" aria-hidden="true"></i>Enquire</a>
             </div>
           </div>
         </div>

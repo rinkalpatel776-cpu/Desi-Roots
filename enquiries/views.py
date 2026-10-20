@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponsePermanentRedirect
+from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
@@ -13,25 +15,26 @@ import urllib.request
 import urllib.parse
 import json
 
-def wholesale_enquiry(request):
+def handle_enquiry_form(request, template_name):
+    """Shows the enquiry form, saves valid submissions and sends the notification emails."""
     if request.method == 'POST':
         form = EnquiryForm(request.POST, request=request)
+        if form.is_valid() and form.is_spam:
+            # Bots get the normal thank-you page, but nothing is saved or emailed
+            return redirect('/wholesale/thank-you/')
         if form.is_valid():
             enquiry = form.save()
             
             # Send Notification Emails (with error tolerance)
             try:
                 # 1. Email to Admin
-                product_info = enquiry.product.name if enquiry.product else (enquiry.category_interest or "General Catalogue")
-                admin_subject = f"New Wholesale Enquiry: {enquiry.business_name or enquiry.name} ({product_info})"
+                admin_subject = f"New Website Enquiry: {enquiry.business_name or enquiry.name}"
                 admin_message = (
                     f"You have received a new wholesale website enquiry.\n\n"
                     f"Full Name: {enquiry.name}\n"
                     f"Business Name: {enquiry.business_name or 'N/A'}\n"
-                    f"Business Type: {enquiry.business_type or 'N/A'}\n"
                     f"Phone Number: {enquiry.phone}\n"
-                    f"Email Address: {enquiry.email}\n"
-                    f"Product / Category: {product_info}\n\n"
+                    f"Email Address: {enquiry.email}\n\n"
                     f"Message:\n{enquiry.message}\n"
                 )
                 send_mail(
@@ -65,14 +68,12 @@ def wholesale_enquiry(request):
 
             return redirect('/wholesale/thank-you/')
     else:
-        # Pre-populate message and product if product_id is in query parameters
+        # Pre-fill the message when arriving from a product page (?product_id=)
         initial_data = {}
         product_id = request.GET.get('product_id')
         if product_id:
             try:
                 product = Product.objects.get(id=product_id, is_published=True)
-                initial_data['product'] = product
-                initial_data['category_interest'] = product.category.name if product.category else ''
                 initial_data['message'] = f"Hello, I am interested in wholesale pricing and availability for {product.name}."
             except (Product.DoesNotExist, ValueError):
                 pass
@@ -83,7 +84,20 @@ def wholesale_enquiry(request):
         'form': form,
         'turnstile_site_key': settings.TURNSTILE_SITE_KEY,
     }
-    return render(request, 'enquiries/wholesale_form.html', context)
+    return render(request, template_name, context)
+
+
+def wholesale_enquiry(request):
+    """
+    Old enquiry URL. Enquiries now live on the contact page, so visits redirect
+    there permanently (keeping ?product_id=), and posts from a page that was
+    open before the change are still accepted.
+    """
+    if request.method == 'POST':
+        return handle_enquiry_form(request, 'pages/contact.html')
+    url = reverse('pages:contact')
+    query = request.META.get('QUERY_STRING', '')
+    return HttpResponsePermanentRedirect(f"{url}?{query}" if query else url)
 
 
 def thank_you(request):

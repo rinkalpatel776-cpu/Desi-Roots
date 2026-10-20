@@ -1,35 +1,26 @@
+import time
+
 from django import forms
 from django.conf import settings
+from django.core import signing
 from .models import Enquiry
-from catalogue.models import Product, Category
 import urllib.request
 import urllib.parse
 import json
 
 class EnquiryForm(forms.ModelForm):
-    # Spam prevention honeypot field (hidden from users via CSS)
+    # Submissions sent sooner than this after the page loaded are treated as bots
+    MIN_SECONDS_TO_SUBMIT = 3
+
+    # Spam trap: a normal text box moved off-screen by CSS (#div_id_website), so people
+    # never see it but form-filling bots do. Anything typed here marks the enquiry as spam.
     website = forms.CharField(
-        required=False, 
-        widget=forms.HiddenInput(),
-        label="Leave this field blank"
-    )
-
-    BUSINESS_TYPE_CHOICES = [
-        ('', 'Select business type (optional)'),
-        ('Restaurant', 'Restaurant / Cafe'),
-        ('Takeaway', 'Takeaway / Fast Food'),
-        ('Retailer', 'Independent Grocery / Retailer'),
-        ('Caterer', 'Caterer / Hospitality'),
-        ('Wholesaler', 'Wholesaler / Distributor'),
-        ('Other', 'Other Business'),
-    ]
-
-    business_type = forms.ChoiceField(
-        choices=BUSINESS_TYPE_CHOICES,
         required=False,
-        label="Business Type",
-        widget=forms.Select(attrs={'class': 'form-select'})
+        label="Leave this field blank",
+        widget=forms.TextInput(attrs={'tabindex': '-1', 'autocomplete': 'off'}),
     )
+    # Signed time the form was shown, to catch instant bot submissions
+    form_started = forms.CharField(required=False, widget=forms.HiddenInput())
 
     consent_given = forms.BooleanField(
         required=True,
@@ -42,11 +33,8 @@ class EnquiryForm(forms.ModelForm):
         fields = [
             'name', 
             'business_name', 
-            'business_type', 
             'email', 
             'phone', 
-            'product', 
-            'category_interest', 
             'message', 
             'consent_given'
         ]
@@ -55,18 +43,13 @@ class EnquiryForm(forms.ModelForm):
             'business_name': forms.TextInput(attrs={'placeholder': 'e.g., Bristol Spice Kitchen Ltd'}),
             'email': forms.EmailInput(attrs={'placeholder': 'e.g., info@yourbusiness.co.uk'}),
             'phone': forms.TextInput(attrs={'placeholder': 'e.g., 0117 900 0000'}),
-            'product': forms.Select(attrs={'class': 'form-select'}),
-            'category_interest': forms.TextInput(attrs={'placeholder': 'e.g., Whole Spices, Basmati Rice, Lentils'}),
             'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Tell us about the products, quantities, or delivery schedule you require...'}),
         }
         labels = {
             'name': 'Full Name',
             'business_name': 'Business Name',
-            'business_type': 'Business Type',
             'email': 'Email Address',
             'phone': 'Phone Number',
-            'product': 'Specific Product (Optional)',
-            'category_interest': 'Product or Category of Interest (Optional)',
             'message': 'Enquiry / Message Details',
             'consent_given': 'Privacy Consent',
         }
@@ -79,19 +62,28 @@ class EnquiryForm(forms.ModelForm):
         self.fields['phone'].required = True
         self.fields['message'].required = True
         self.fields['consent_given'].required = True
+        if not self.is_bound:
+            self.fields['form_started'].initial = signing.dumps(int(time.time()), salt='enquiry-form')
+        # Set by clean(); the view quietly drops spam instead of telling the bot why
+        self.is_spam = False
 
-        self.fields['product'].queryset = Product.objects.filter(is_published=True).order_by('name')
-        self.fields['product'].empty_label = "Select a product (optional)"
-        self.fields['product'].required = False
+    def looks_like_spam(self, cleaned_data):
+        if cleaned_data.get('website'):
+            return True
+        try:
+            started = signing.loads(cleaned_data.get('form_started') or '', salt='enquiry-form')
+        except signing.BadSignature:
+            return True  # missing or forged: posted without loading the page
+        return time.time() - started < self.MIN_SECONDS_TO_SUBMIT
 
 
     def clean(self):
         cleaned_data = super().clean()
         
-        # 1. Check Honeypot field
-        website = cleaned_data.get('website')
-        if website:
-            raise forms.ValidationError("Spam detected.")
+        # 1. Spam trap and timing check
+        if self.looks_like_spam(cleaned_data):
+            self.is_spam = True
+            return cleaned_data
 
         # 2. Check Turnstile Verification
         if self.request and settings.TURNSTILE_SECRET_KEY:

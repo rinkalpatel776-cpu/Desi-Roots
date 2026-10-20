@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
@@ -17,7 +18,7 @@ sitemaps = {
 def robots_txt(request):
     lines = [
         "User-agent: *",
-        f"Disallow: /{settings.ADMIN_URL_PATH}/",
+        # The real admin path is deliberately not listed: robots.txt is public
         "Disallow: /admin/",
         "Sitemap: https://spicepantry.co.uk/sitemap.xml",
     ]
@@ -42,6 +43,10 @@ urlpatterns = [
     path('', include('enquiries.urls')),
 ]
 
-# Serve media files in development mode
+# Serve media files in development, and in the temporary ngrok preview (config.settings.preview)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+elif getattr(settings, 'PREVIEW_SERVE_MEDIA', False):
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]
