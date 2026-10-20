@@ -1,7 +1,19 @@
+from urllib.parse import urlencode
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
 from .models import Category, Brand, Product
+
+# Catalogue sort options: ?sort= value -> (label, ordering). The first one is the default.
+SORT_OPTIONS = {
+    'name': ('Name A–Z', ('name',)),
+    'name-desc': ('Name Z–A', ('-name',)),
+    'brand': ('Brand', ('brand__name', 'name')),
+    'category': ('Category', ('category__name', 'name')),
+}
+DEFAULT_SORT = 'name'
+
 
 def product_list(request):
     # Base query containing optimizations to prevent N+1 queries
@@ -37,6 +49,11 @@ def product_list(request):
         )
         active_filters['q'] = query
 
+    sort = request.GET.get('sort', DEFAULT_SORT)
+    if sort not in SORT_OPTIONS:
+        sort = DEFAULT_SORT
+    queryset = queryset.order_by(*SORT_OPTIONS[sort][1])
+
     # Pagination: 24 products per page
     paginator = Paginator(queryset, 24)
     page_number = request.GET.get('page')
@@ -57,11 +74,24 @@ def product_list(request):
     # Only brands with something to show in the catalogue
     brands = Brand.objects.filter(products__is_published=True).distinct().order_by('name')
 
+    # Query strings for links that keep the current filters and sort
+    params = {'q': query, 'category': category_slug if 'category' in active_filters else '',
+              'brand': brand_slug if 'brand' in active_filters else '',
+              'sort': sort if sort != DEFAULT_SORT else ''}
+
+    def query_without(*names):
+        return urlencode({k: v for k, v in params.items() if v and k not in names})
+
     context = {
         'page_obj': page_obj,
         'categories': categories,
         'brands': brands,
         'active_filters': active_filters,
+        'sort_options': [(key, label) for key, (label, _) in SORT_OPTIONS.items()],
+        'active_sort': sort,
+        'page_query': query_without(),          # for pagination links: ?page=N&<page_query>
+        'sort_query': query_without('q', 'category', 'brand'),  # keeps the sort on category/brand links
+        'remove_filter_urls': {name: '?' + query_without(name) for name in ('q', 'category', 'brand')},
     }
     return render(request, 'catalogue/product_list.html', context)
 
