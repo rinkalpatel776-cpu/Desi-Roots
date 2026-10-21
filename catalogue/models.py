@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageFilter
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
@@ -165,6 +165,24 @@ class PackSize(models.Model):
         return f"{self.product.name} - {self.size}"
 
 
+def make_card_photo(img, max_side=600):
+    """The photo shown on product cards: white background, empty border trimmed, sized for
+    high-resolution (retina) screens and lightly sharpened. Small photos are enlarged at most 2x."""
+    if img.mode in ('RGBA', 'LA', 'P'):
+        rgba = img.convert('RGBA')
+        img = Image.alpha_composite(Image.new('RGBA', rgba.size, 'white'), rgba)
+    img = img.convert('RGB')
+    box = ImageChops.invert(img.convert('L')).point(lambda v: 255 if v > 18 else 0).getbbox()
+    if box and (box[2] - box[0]) * (box[3] - box[1]) < 0.9 * img.width * img.height:
+        pad = int(0.04 * max(box[2] - box[0], box[3] - box[1]))
+        img = img.crop((max(0, box[0] - pad), max(0, box[1] - pad),
+                        min(img.width, box[2] + pad), min(img.height, box[3] + pad)))
+    scale = min(max_side / img.width, max_side / img.height, 2.0)
+    if scale != 1:
+        img = img.resize((max(1, round(img.width * scale)), max(1, round(img.height * scale))), Image.LANCZOS)
+    return img.filter(ImageFilter.UnsharpMask(radius=1.0, percent=70 if scale > 1 else 45, threshold=2))
+
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='products/')
@@ -193,8 +211,8 @@ class ProductImage(models.Model):
                     background.paste(img, mask=img.split()[3])
                     img = background
 
-                # Primary optimized image
-                img.thumbnail((800, 600))
+                # Primary optimized image: kept large enough for sharp display on retina screens
+                img.thumbnail((1600, 1600), Image.LANCZOS)
                 output = BytesIO()
                 img.save(output, format=original_format, quality=85)
                 output.seek(0)
@@ -208,19 +226,18 @@ class ProductImage(models.Model):
                     None
                 )
 
-                # Thumbnail image
-                thumb = img.copy()
-                thumb.thumbnail((300, 225))
+                # Card photo for the catalogue grid
+                thumb = make_card_photo(img.copy())
                 thumb_output = BytesIO()
-                thumb.save(thumb_output, format=original_format, quality=80)
+                thumb.save(thumb_output, format='JPEG', quality=85, optimize=True, progressive=True)
                 thumb_output.seek(0)
-                
+
                 self.thumbnail = InMemoryUploadedFile(
-                    thumb_output, 
-                    'ImageField', 
-                    f"{original_filename}_thumb{original_ext}", 
-                    f"image/{original_format.lower()}", 
-                    sys.getsizeof(thumb_output), 
+                    thumb_output,
+                    'ImageField',
+                    f"{os.path.basename(original_filename)}_card.jpg",
+                    'image/jpeg',
+                    sys.getsizeof(thumb_output),
                     None
                 )
 
