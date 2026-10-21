@@ -1030,3 +1030,21 @@ footer .footer-bottom {
     font-size: 1.5rem;
   }
 }
+
+/* Brands page: initials badge for brands without a logo */
+.sp-brand-initials {
+  width: 64px;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+  background-color: var(--sp-bg);
+  color: var(--sp-saffron);
+  font-family: var(--sp-font-head);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}

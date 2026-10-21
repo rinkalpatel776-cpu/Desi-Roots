@@ -100,6 +100,12 @@ class Brand(models.Model):
                 )
         super().save(*args, **kwargs)
 
+    @property
+    def initials(self):
+        """Up to two letters for the badge shown when a brand has no logo, e.g. 'Tropical Sun' -> 'TS'."""
+        words = [w for w in self.name.replace('-', ' ').split() if w[:1].isalnum()]
+        return ''.join(w[0] for w in words[:2]).upper() or self.name[:1].upper()
+
     @classmethod
     def ticked_for_home_page(cls):
         """Every brand ticked 'Show on home page', in home page order."""
