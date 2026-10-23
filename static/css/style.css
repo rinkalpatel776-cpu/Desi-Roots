@@ -1115,3 +1115,55 @@ footer .footer-bottom {
   font-size: 1.15rem;
   letter-spacing: 0.04em;
 }
+
+/* Cookie notice: bottom-right card (beside the WhatsApp button, clear of the hero buttons) on
+   larger screens, full-width bar on phones */
+.sp-cookie-notice {
+  position: fixed;
+  right: 92px;
+  bottom: 20px;
+  z-index: 1045;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background-color: var(--sp-card);
+  color: var(--sp-text);
+  border: 1px solid var(--sp-border);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+.sp-cookie-notice[hidden] {
+  display: none;
+}
+.sp-cookie-notice__text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.sp-cookie-notice__text a {
+  color: var(--sp-saffron);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sp-cookie-notice .btn {
+  flex-shrink: 0;
+  min-width: 64px;
+}
+
+@media (max-width: 575.98px) {
+  .sp-cookie-notice {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+    border-radius: 0;
+    border-width: 1px 0 0;
+    padding: 14px 16px;
+  }
+  /* keep the WhatsApp button clear of the notice while it is showing */
+  body.sp-cookie-notice-open .sp-whatsapp-float {
+    bottom: 104px;
+  }
+}
