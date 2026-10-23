@@ -201,7 +201,7 @@
       
       <div class="footer-bottom">
         {# Company details a UK company website must show (Companies House record for Desi Roots Ltd) #}
-        <p class="footer-legal">&copy; 2026 Spice Pantry, a trading name of Desi Roots Ltd. Registered in England and Wales, company no. 16939222. Registered office: 23 Halls Garden, Stoke Gifford, Bristol, BS34 8RJ.</p>
+        <p class="footer-legal">&copy; 2026 Spice Pantry, a trading name of Desi Roots Ltd. Registered in England and Wales, company no. 16939222. Registered office: 23 Halls Garden, Stoke Gifford, Bristol, BS34 8RJ.{% if site_settings.vat_number %} VAT no. {{ site_settings.vat_number }}.{% endif %}</p>
         <nav class="footer-policy-links" aria-label="Legal">
           <a href="/privacy/">Privacy Policy</a>
           <a href="/cookies/">Cookie Policy</a>
