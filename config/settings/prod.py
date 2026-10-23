@@ -4,7 +4,7 @@ import sentry_sdk
 DEBUG = False
 
 # Read allowed hosts from environment
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['spicepantry.co.uk', 'www.spicepantry.co.uk'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['desiroots.co.uk', 'www.desiroots.co.uk'])
 
 # Security Headers & SSL Settings
 SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)

@@ -4,6 +4,7 @@ from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
+from django.urls import reverse
 from django.contrib.sitemaps.views import sitemap
 
 from catalogue.sitemaps import ProductSitemap, CategorySitemap, BrandSitemap, StaticViewSitemap
@@ -20,7 +21,8 @@ def robots_txt(request):
         "User-agent: *",
         # The real admin path is deliberately not listed: robots.txt is public
         "Disallow: /admin/",
-        "Sitemap: https://spicepantry.co.uk/sitemap.xml",
+        # Built from the request, so it always names the domain the site is served from
+        f"Sitemap: {request.build_absolute_uri(reverse('django.contrib.sitemaps.views.sitemap'))}",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
