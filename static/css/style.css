@@ -1116,40 +1116,84 @@ footer .footer-bottom {
   letter-spacing: 0.04em;
 }
 
-/* Cookie notice: bottom-right card (beside the WhatsApp button, clear of the hero buttons) on
-   larger screens, full-width bar on phones */
+/* Privacy pop-up: white card at the bottom-right on larger screens, beside the WhatsApp button
+   and clear of the hero buttons; full-width panel on phones */
 .sp-cookie-notice {
   position: fixed;
-  right: 92px;
-  bottom: 20px;
+  right: 96px;
+  bottom: 24px;
   z-index: 1045;
-  max-width: 440px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
+  width: calc(100% - 120px);
+  max-width: 480px;
+  padding: 22px 24px 20px;
   background-color: var(--sp-card);
   color: var(--sp-text);
   border: 1px solid var(--sp-border);
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
 }
 .sp-cookie-notice[hidden] {
   display: none;
 }
+.sp-cookie-notice__title {
+  font-family: var(--sp-font-head);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--sp-text);
+}
 .sp-cookie-notice__text {
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 .sp-cookie-notice__text a {
   color: var(--sp-saffron);
   font-weight: 600;
-  white-space: nowrap;
 }
-.sp-cookie-notice .btn {
+.sp-cookie-notice__details {
+  margin: -4px 0 18px;
+  border: 1px solid var(--sp-border);
+  border-radius: 8px;
+}
+.sp-cookie-notice__details[hidden] {
+  display: none;
+}
+.sp-cookie-notice__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.sp-cookie-notice__row + .sp-cookie-notice__row {
+  border-top: 1px solid var(--sp-border);
+}
+.sp-cookie-notice__row strong {
+  display: block;
+  font-size: 0.85rem;
+}
+.sp-cookie-notice__status {
   flex-shrink: 0;
-  min-width: 64px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sp-olive);
+}
+.sp-cookie-notice__status--off {
+  color: #8a857c;
+}
+.sp-cookie-notice__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.sp-cookie-notice__actions .btn {
+  padding: 9px 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 @media (max-width: 575.98px) {
@@ -1157,13 +1201,25 @@ footer .footer-bottom {
     left: 0;
     right: 0;
     bottom: 0;
+    width: 100%;
     max-width: none;
-    border-radius: 0;
+    border-radius: 14px 14px 0 0;
     border-width: 1px 0 0;
-    padding: 14px 16px;
+    padding: 18px 16px 16px;
   }
-  /* keep the WhatsApp button clear of the notice while it is showing */
+  .sp-cookie-notice__text {
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+  }
+  .sp-cookie-notice__actions {
+    gap: 8px;
+  }
+  .sp-cookie-notice__actions .btn {
+    font-size: 0.82rem;
+    padding: 9px 4px;
+  }
+  /* hide the WhatsApp button while the pop-up covers the bottom of the screen */
   body.sp-cookie-notice-open .sp-whatsapp-float {
-    bottom: 104px;
+    display: none;
   }
 }

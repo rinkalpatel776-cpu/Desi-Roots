@@ -54,7 +54,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
   <!-- Custom Stylesheet with cache bust -->
-  <link href="{% static 'css/style.css' %}?v=4.8" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}?v=4.9" rel="stylesheet">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
@@ -218,33 +218,65 @@
   </a>
   {% endif %}
 
-  {# Cookie notice. The site sets only strictly necessary cookies, so this informs rather than asks for consent. #}
-  <div id="cookieNotice" class="sp-cookie-notice" role="region" aria-label="Cookie notice" hidden>
-    <p class="sp-cookie-notice__text">
-      <i class="bi bi-shield-check text-saffron me-1" aria-hidden="true"></i>
-      We use only essential cookies to keep this site working and secure. No tracking or advertising cookies.
-      <a href="/cookies/">Cookie Policy</a>
+  {# Privacy pop-up. The site sets only strictly necessary cookies (CSRF, staff session, messages),
+     so there is nothing optional to switch on or off: every button just records that the visitor has seen it. #}
+  <div id="cookieNotice" class="sp-cookie-notice" role="dialog" aria-labelledby="cookieNoticeTitle" aria-describedby="cookieNoticeText" hidden>
+    <h2 id="cookieNoticeTitle" class="sp-cookie-notice__title">We value your privacy</h2>
+    <p id="cookieNoticeText" class="sp-cookie-notice__text">
+      We only use essential cookies that keep this website secure and working, such as protecting our enquiry form.
+      We do not use advertising, analytics or tracking cookies. Read our <a href="/cookies/">Cookie Policy</a>.
     </p>
-    <button type="button" id="cookieNoticeOk" class="btn btn-primary btn-sm text-white">OK</button>
+    <div id="cookieNoticeDetails" class="sp-cookie-notice__details" hidden>
+      <div class="sp-cookie-notice__row">
+        <div>
+          <strong>Essential cookies</strong>
+          <span>Keep forms secure and let staff sign in. The website cannot work without them.</span>
+        </div>
+        <span class="sp-cookie-notice__status">Always on</span>
+      </div>
+      <div class="sp-cookie-notice__row">
+        <div>
+          <strong>Analytics and advertising cookies</strong>
+          <span>We do not use any.</span>
+        </div>
+        <span class="sp-cookie-notice__status sp-cookie-notice__status--off">Not used</span>
+      </div>
+    </div>
+    <div class="sp-cookie-notice__actions">
+      <button type="button" id="cookieNoticeCustomize" class="btn btn-outline-primary" aria-expanded="false" aria-controls="cookieNoticeDetails">Customize</button>
+      <button type="button" class="btn btn-outline-primary" data-cookie-choice="rejected">Reject All</button>
+      <button type="button" class="btn btn-primary text-white" data-cookie-choice="accepted">Accept All</button>
+    </div>
   </div>
 
   <!-- Bootstrap Bundle JS via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <script>
-    // Show the cookie notice until the visitor clicks OK; remember that choice in this browser
+    // Show the privacy pop-up until the visitor picks a button; remember that in this browser.
+    // Only essential cookies exist, so Accept and Reject both just close it.
     (function () {
       var notice = document.getElementById("cookieNotice");
       var key = "sp_cookie_notice_ok";
       var seen = false;
-      try { seen = localStorage.getItem(key) === "1"; } catch (e) {}
+      try { seen = !!localStorage.getItem(key); } catch (e) {}
       if (seen) return;
       notice.hidden = false;
       document.body.classList.add("sp-cookie-notice-open");
-      document.getElementById("cookieNoticeOk").addEventListener("click", function () {
-        try { localStorage.setItem(key, "1"); } catch (e) {}
-        notice.hidden = true;
-        document.body.classList.remove("sp-cookie-notice-open");
+
+      var customize = document.getElementById("cookieNoticeCustomize");
+      var details = document.getElementById("cookieNoticeDetails");
+      customize.addEventListener("click", function () {
+        details.hidden = !details.hidden;
+        customize.setAttribute("aria-expanded", String(!details.hidden));
+      });
+
+      notice.querySelectorAll("[data-cookie-choice]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          try { localStorage.setItem(key, button.getAttribute("data-cookie-choice")); } catch (e) {}
+          notice.hidden = true;
+          document.body.classList.remove("sp-cookie-notice-open");
+        });
       });
     })();
   </script>
