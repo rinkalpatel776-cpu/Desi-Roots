@@ -218,8 +218,8 @@
   </a>
   {% endif %}
 
-  {# Privacy pop-up. The site sets only strictly necessary cookies (CSRF, staff session, messages),
-     so there is nothing optional to switch on or off: every button just records that the visitor has seen it. #}
+  {% comment %}Privacy pop-up. The site sets only strictly necessary cookies (CSRF, staff session, messages),
+     so there is nothing optional to switch on or off: every button just records that the visitor has seen it.{% endcomment %}
   <div id="cookieNotice" class="sp-cookie-notice" role="dialog" aria-labelledby="cookieNoticeTitle" aria-describedby="cookieNoticeText" hidden>
     <h2 id="cookieNoticeTitle" class="sp-cookie-notice__title">We value your privacy</h2>
     <p id="cookieNoticeText" class="sp-cookie-notice__text">
