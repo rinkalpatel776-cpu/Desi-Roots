@@ -24,7 +24,7 @@ class EnquiryForm(forms.ModelForm):
 
     consent_given = forms.BooleanField(
         required=True,
-        label="I consent to Spice Pantry storing my details and contacting me regarding this enquiry.",
+        label="I consent to Desi Roots storing my details and contacting me regarding this enquiry.",
         error_messages={'required': 'You must agree to the privacy policy to submit an enquiry.'}
     )
 

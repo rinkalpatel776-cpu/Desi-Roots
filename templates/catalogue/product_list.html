@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block meta_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Spice Pantry{% endblock %}
-{% block meta_description %}{% if active_filters.category %}Wholesale {{ active_filters.category.name|lower }} for restaurants and retailers in Bristol and nearby areas. Browse the range and request a quote from Spice Pantry.{% elif active_filters.brand %}{{ active_filters.brand.name }} products available wholesale from Spice Pantry in Bristol. Browse the range and request a quote.{% else %}Browse Spice Pantry's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endif %}{% endblock %}
-{% block og_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Spice Pantry{% endblock %}
-{% block og_description %}Browse Spice Pantry's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endblock %}
+{% block meta_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Desi Roots{% endblock %}
+{% block meta_description %}{% if active_filters.category %}Wholesale {{ active_filters.category.name|lower }} for restaurants and retailers in Bristol and nearby areas. Browse the range and request a quote from Desi Roots.{% elif active_filters.brand %}{{ active_filters.brand.name }} products available wholesale from Desi Roots in Bristol. Browse the range and request a quote.{% else %}Browse Desi Roots's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endif %}{% endblock %}
+{% block og_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Desi Roots{% endblock %}
+{% block og_description %}Browse Desi Roots's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endblock %}
 
 {% block content %}
 <div class="py-4 py-md-5 bg-light border-bottom border-sp">

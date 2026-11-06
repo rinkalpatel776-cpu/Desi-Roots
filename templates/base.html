@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>{% block meta_title %}Spice Pantry | Premium Spices & B2B Wholesale Catalogue{% endblock %}</title>
+  <title>{% block meta_title %}Desi Roots | Premium Spices & B2B Wholesale Catalogue{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}Wholesale spices, lentils, rice, flour and ethnic groceries for restaurants and retailers in Bristol and nearby areas. Browse the catalogue and request a quote.{% endblock %}">
   
   <!-- Canonical URL -->
@@ -13,13 +13,13 @@
 
   <!-- Link previews (WhatsApp, Facebook, LinkedIn, X) -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Spice Pantry">
+  <meta property="og:site_name" content="Desi Roots">
   <meta property="og:locale" content="en_GB">
-  <meta property="og:title" content="{% block og_title %}Spice Pantry | Wholesale Spices &amp; Groceries Bristol{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}Desi Roots | Wholesale Spices &amp; Groceries Bristol{% endblock %}">
   <meta property="og:description" content="{% block og_description %}Wholesale spices, lentils, rice, flour and ethnic groceries for restaurants and retailers in Bristol and nearby areas. Browse the catalogue and request a quote.{% endblock %}">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
   <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-share.jpg' %}{% endblock %}">
-  <meta property="og:image:alt" content="Spice Pantry, ethnic grocery supplier: bowls of spices, lentils and rice">
+  <meta property="og:image:alt" content="Desi Roots, ethnic grocery supplier: bowls of spices, lentils and rice">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Organization JSON-LD -->
@@ -27,7 +27,7 @@
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Spice Pantry",
+    "name": "Desi Roots",
     "legalName": "Desi Roots",{% if site_settings.vat_number %}
     "vatID": "{{ site_settings.vat_number|cut:' ' }}",{% endif %}
     "url": "{{ request.scheme }}://{{ request.get_host }}/",
@@ -75,8 +75,8 @@
   <nav class="navbar navbar-expand-xl sticky-top">
     <div class="container">
       <a class="navbar-brand d-inline-flex align-items-center" href="/">
-        <img src="{% static 'images/logo.png' %}" alt="Spice Pantry Logo" width="46" height="46" style="height: 46px; width: auto; max-width: 48px; object-fit: contain;" class="navbar-brand-logo me-2">
-        <span class="brand-text"><span>Spice</span> Pantry</span>
+        <img src="{% static 'images/logo.png' %}" alt="Desi Roots Logo" width="46" height="46" style="height: 46px; width: auto; max-width: 48px; object-fit: contain;" class="navbar-brand-logo me-2">
+        <span class="brand-text"><span>Desi</span> Roots</span>
       </a>
       <a href="/contact/" class="btn btn-primary btn-sm text-white text-nowrap d-xl-none sp-nav-quote"><span class="d-none d-sm-inline">Request </span>Quote</a>
       <button class="navbar-toggler flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,9 +123,9 @@
         <div class="col-lg-4 col-md-6">
           <div class="footer-brand-wrap mb-3">
             <a class="footer-brand d-inline-flex align-items-center gap-3 text-white text-decoration-none" href="/">
-              <img src="{% static 'images/logo.png' %}" alt="Spice Pantry Logo" width="52" height="52" style="height: 52px; width: auto; max-width: 52px; object-fit: contain;" class="footer-logo-img rounded-2 bg-white p-1">
+              <img src="{% static 'images/logo.png' %}" alt="Desi Roots Logo" width="52" height="52" style="height: 52px; width: auto; max-width: 52px; object-fit: contain;" class="footer-logo-img rounded-2 bg-white p-1">
               <div>
-                <span class="fs-5 fw-bold text-white d-block" style="font-family: var(--sp-font-head); letter-spacing: 0.05em;"><span style="color: var(--sp-saffron);">Spice</span> Pantry</span>
+                <span class="fs-5 fw-bold text-white d-block" style="font-family: var(--sp-font-head); letter-spacing: 0.05em;"><span style="color: var(--sp-saffron);">Desi</span> Roots</span>
                 <small class="text-white-50 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">Wholesale Spices & Groceries</small>
               </div>
             </a>
@@ -201,7 +201,7 @@
       
       <div class="footer-bottom">
         {# Company details a UK company website must show (Companies House record for Desi Roots Ltd) #}
-        <p class="footer-legal">&copy; 2026 Spice Pantry, a trading name of Desi Roots Ltd. Registered in England and Wales, company no. 16939222. Registered office: 23 Halls Garden, Stoke Gifford, Bristol, BS34 8RJ.{% if site_settings.vat_number %} VAT no. {{ site_settings.vat_number }}.{% endif %}</p>
+        <p class="footer-legal">&copy; 2026 Desi Roots Ltd. Registered in England and Wales, company no. 16939222. Registered office: 23 Halls Garden, Stoke Gifford, Bristol, BS34 8RJ.{% if site_settings.vat_number %} VAT no. {{ site_settings.vat_number }}.{% endif %}</p>
         <nav class="footer-policy-links" aria-label="Legal">
           <a href="/privacy/">Privacy Policy</a>
           <a href="/cookies/">Cookie Policy</a>

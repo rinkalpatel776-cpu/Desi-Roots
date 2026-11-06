@@ -46,13 +46,13 @@ def handle_enquiry_form(request, template_name):
                 )
 
                 # 2. Email to Customer (Auto-responder)
-                customer_subject = "Enquiry Received - Spice Pantry"
+                customer_subject = "Enquiry Received - Desi Roots"
                 customer_message = (
                     f"Dear {enquiry.name},\n\n"
-                    f"Thank you for contacting Spice Pantry. We have received your wholesale enquiry.\n\n"
+                    f"Thank you for contacting Desi Roots. We have received your wholesale enquiry.\n\n"
                     f"Our trade team is currently reviewing your requirements and a manager will contact you within 24 business hours.\n\n"
                     f"Best regards,\n"
-                    f"The Spice Pantry Team\n"
+                    f"The Desi Roots Team\n"
                     f"Desi Roots Wholesale Supply\n"
                 )
                 send_mail(
