@@ -11,11 +11,8 @@
 {% block content %}
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
-    <div class="d-inline-flex align-items-center justify-content-center gap-2 mb-2">
-      <span class="fs-2">📬</span>
-      <h1 class="h2 mb-0 fw-bold text-dark">Contact Us</h1>
-    </div>
-    <p class="text-muted mb-0">We'd love to hear from you — reach out anytime!</p>
+    <h1 class="h2 mb-2 fw-bold text-dark">Contact Us</h1>
+    <p class="text-muted mb-0">Call, WhatsApp or email us, or send a wholesale enquiry using the form.</p>
   </div>
 </div>
 
@@ -28,7 +25,7 @@
         <div class="card p-4 p-md-5 border border-sp bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
           <div>
             <h2 class="h4 fw-bold text-dark mb-1">Get in Touch</h2>
-            <p class="text-muted small mb-4">We typically reply within a few hours.</p>
+            <p class="text-muted small mb-4">For prices, availability or opening a trade account.</p>
             
             <div class="d-flex flex-column gap-4 mb-4">
               <!-- Phone / WhatsApp -->
@@ -40,7 +37,7 @@
                 <div>
                   <small class="text-uppercase fw-bold text-muted d-block" style="font-size: 0.72rem; letter-spacing: 0.08em;">Phone / WhatsApp</small>
                   {% if site_settings.phone_number %}
-                  <a href="tel:{{ site_settings.phone_number }}" class="text-dark fw-bold text-decoration-none d-block fs-6">{{ site_settings.phone_number }}</a>
+                  <a href="tel:{{ site_settings.phone_number|cut:' ' }}" class="text-dark fw-bold text-decoration-none d-block fs-6">{{ site_settings.phone_number }}</a>
                   {% endif %}
                   {% if site_settings.whatsapp_link %}
                   <a href="{{ site_settings.whatsapp_link }}" target="_blank" class="text-olive small fw-semibold text-decoration-none"><i class="bi bi-whatsapp me-1"></i>Chat on WhatsApp</a>
@@ -69,7 +66,7 @@
                 </div>
                 <div>
                   <small class="text-uppercase fw-bold text-muted d-block" style="font-size: 0.72rem; letter-spacing: 0.08em;">Service Areas</small>
-                  <p class="text-dark fw-bold mb-0 fs-6">Bristol · Bath · Surrounding Commercial Hubs</p>
+                  <p class="text-dark fw-bold mb-0 fs-6">Bristol, Bath and nearby areas</p>
                   {% if site_settings.postal_address %}
                   <small class="text-muted d-block mt-1">{{ site_settings.postal_address }}</small>
                   {% endif %}
@@ -113,7 +110,12 @@
             {% csrf_token %}
             
             {{ form|crispy }}
-            
+
+            {# Cloudflare Turnstile spam check, only when the keys are set in .env #}
+            {% if turnstile_site_key %}
+            <div class="cf-turnstile mt-2" data-sitekey="{{ turnstile_site_key }}"></div>
+            {% endif %}
+
             <button type="submit" class="btn btn-primary btn-lg text-white w-100 mt-3 shadow-sm">
               <i class="bi bi-send me-2"></i>Send Message
             </button>
@@ -124,4 +126,10 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if turnstile_site_key %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
 {% endblock %}

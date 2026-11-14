@@ -7,12 +7,15 @@ from .models import Category, Brand, Product
 
 # Catalogue sort options: ?sort= value -> (label, ordering). The first one is the default.
 SORT_OPTIONS = {
+    # Default: key staples first (spices, lentils, rice, flour...), following the category
+    # "Display order" set in the admin, then A–Z within each category
+    'recommended': ('Recommended', ('category__display_order', 'category__name', 'name', 'pk')),
     'name': ('Name A–Z', ('name',)),
     'name-desc': ('Name Z–A', ('-name',)),
     'brand': ('Brand', ('brand__name', 'name')),
     'category': ('Category', ('category__name', 'name')),
 }
-DEFAULT_SORT = 'name'
+DEFAULT_SORT = 'recommended'
 
 
 def product_list(request):

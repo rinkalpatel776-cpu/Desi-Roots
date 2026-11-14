@@ -95,7 +95,16 @@ Define once as CSS custom properties in `:root` and reference them everywhere. N
 }
 ```
 
-Visual direction: premium, minimal, modern, spacious, warm, trustworthy. Generous whitespace, restrained colour, saffron used as an accent rather than a flood. It must read as a professional wholesale supplier, **not** a consumer grocery store. Avoid anything flashy, cluttered, neon, or heavily gradient.
+Visual direction (updated 2026-11-14 at the owner's request): colourful, vibrant and attractive, while staying professional, trustworthy and easy to use, to the standard of leading UK food and wholesale websites. Use the spice accent colours below for sections, badges and icons; show real product packs and food photography generously. It must still read as a professional wholesale supplier. Avoid neon, clutter, and anything that hurts readability: every text/background pair must meet WCAG 2.2 AA contrast.
+
+```css
+:root {
+  --sp-turmeric:   #E8A317;  /* accent: badges, highlights (dark text on it) */
+  --sp-chilli:     #B8322A;  /* accent: offers, emphasis (white text on it) */
+  --sp-cardamom:   #4F7D3A;  /* accent: success, fresh (white text on it) */
+  --sp-masala:     #7A3E1D;  /* accent: deep warm sections (white text on it) */
+}
+```
 
 ---
 

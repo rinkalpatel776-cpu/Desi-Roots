@@ -1223,3 +1223,39 @@ footer .footer-bottom {
     display: none;
   }
 }
+
+/* Phones: Bootstrap's wide g-5 gutter is wider than the page padding and
+   made About, Contact and product pages scroll sideways. */
+@media (max-width: 575.98px) {
+  .row.g-5 {
+    --bs-gutter-x: 1.5rem;
+  }
+}
+
+/* Search box in the top bar */
+.sp-nav-search {
+  flex: 1 1 auto;
+  max-width: 300px;
+}
+.sp-nav-search .form-control {
+  border-color: var(--sp-border);
+  background-color: var(--sp-bg);
+  font-family: var(--sp-font-body);
+}
+.sp-nav-search .form-control:focus {
+  border-color: var(--sp-saffron);
+  box-shadow: 0 0 0 0.2rem rgba(201, 138, 43, 0.2);
+}
+/* Phones and tablets: a full-width row under the logo */
+.sp-nav-search--mobile {
+  flex-basis: 100%;
+  max-width: none;
+  order: 3;
+  margin-top: 10px;
+}
+.sp-nav-search--mobile .form-control {
+  font-size: 16px; /* 16px or more stops iPhones zooming in when the box is tapped */
+}
+.navbar-collapse {
+  order: 4;
+}

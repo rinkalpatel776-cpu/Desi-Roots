@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block meta_title %}Access Denied | Desi Roots{% endblock %}
+{% block meta_description %}You do not have permission to view this page.{% endblock %}
+{% block og_title %}Access Denied | Desi Roots{% endblock %}
+
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+<div class="py-5">
+  <div class="container py-5 text-center">
+    <p class="text-saffron fw-semibold text-uppercase small mb-2">Error 403</p>
+    <h1 class="h2 mb-3">Sorry, you can't view this page</h1>
+    <p class="text-muted mb-4">This page isn't open to the public. Try the catalogue instead, or get in touch if you think this is a mistake.</p>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+      <a href="/products/" class="btn btn-primary text-white"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>Browse the Catalogue</a>
+      <a href="/contact/" class="btn btn-outline-primary"><i class="bi bi-envelope me-2" aria-hidden="true"></i>Contact Us</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

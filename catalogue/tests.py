@@ -138,12 +138,14 @@ class CatalogueTests(TestCase):
             
             # Open and inspect saved files using Pillow
             saved_img = Image.open(product_image.image.path)
-            self.assertLessEqual(saved_img.width, 800)
-            self.assertLessEqual(saved_img.height, 600)
+            # Photos are kept up to 1600px so they stay sharp on retina screens
+            self.assertLessEqual(saved_img.width, 1600)
+            self.assertLessEqual(saved_img.height, 1600)
             
             saved_thumb = Image.open(product_image.thumbnail.path)
-            self.assertLessEqual(saved_thumb.width, 300)
-            self.assertLessEqual(saved_thumb.height, 225)
+            # Card photos are up to 600px (sharp on retina screens)
+            self.assertLessEqual(saved_thumb.width, 600)
+            self.assertLessEqual(saved_thumb.height, 600)
         finally:
             # Cleanup files from disk after testing
             try:

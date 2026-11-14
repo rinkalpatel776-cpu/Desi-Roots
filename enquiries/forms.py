@@ -3,10 +3,17 @@ import time
 from django import forms
 from django.conf import settings
 from django.core import signing
+from django.core.validators import MaxLengthValidator
 from .models import Enquiry
-import urllib.request
-import urllib.parse
 import json
+import logging
+import urllib.error
+import urllib.parse
+import urllib.request
+
+logger = logging.getLogger(__name__)
+
+MESSAGE_MAX_LENGTH = 5000
 
 class EnquiryForm(forms.ModelForm):
     # Submissions sent sooner than this after the page loaded are treated as bots
@@ -62,6 +69,9 @@ class EnquiryForm(forms.ModelForm):
         self.fields['phone'].required = True
         self.fields['message'].required = True
         self.fields['consent_given'].required = True
+        # Keep messages to a sensible size (no database change needed)
+        self.fields['message'].validators.append(MaxLengthValidator(MESSAGE_MAX_LENGTH))
+        self.fields['message'].widget.attrs['maxlength'] = MESSAGE_MAX_LENGTH
         if not self.is_bound:
             self.fields['form_started'].initial = signing.dumps(int(time.time()), salt='enquiry-form')
         # Set by clean(); the view quietly drops spam instead of telling the bot why
@@ -85,8 +95,8 @@ class EnquiryForm(forms.ModelForm):
             self.is_spam = True
             return cleaned_data
 
-        # 2. Check Turnstile Verification
-        if self.request and settings.TURNSTILE_SECRET_KEY:
+        # 2. Cloudflare Turnstile check (only when both keys are set; the contact page shows the widget then)
+        if self.request and settings.TURNSTILE_SECRET_KEY and settings.TURNSTILE_SITE_KEY:
             turnstile_response = self.request.POST.get('cf-turnstile-response')
             if not turnstile_response:
                 raise forms.ValidationError("Spam verification token is missing. Please refresh the page.")
@@ -103,11 +113,12 @@ class EnquiryForm(forms.ModelForm):
                 req = urllib.request.Request(verify_url, data=post_data, method='POST')
                 with urllib.request.urlopen(req, timeout=5) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
-                    if not res_data.get('success'):
-                        raise forms.ValidationError("Spam verification failed. Please try again.")
-            except Exception as e:
-                # Log or handle connection issues - but don't block user if cloudflare is down
-                pass
+            except (urllib.error.URLError, TimeoutError, ValueError):
+                # Cloudflare unreachable: let the enquiry through rather than lose a customer
+                logger.warning("Turnstile verification could not be reached; enquiry allowed")
+                return cleaned_data
+            if not res_data.get('success'):
+                raise forms.ValidationError("Spam verification failed. Please try again.")
 
         return cleaned_data
 

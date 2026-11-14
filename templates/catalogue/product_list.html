@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block meta_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Desi Roots{% endblock %}
-{% block meta_description %}{% if active_filters.category %}Wholesale {{ active_filters.category.name|lower }} for restaurants and retailers in Bristol and nearby areas. Browse the range and request a quote from Desi Roots.{% elif active_filters.brand %}{{ active_filters.brand.name }} products available wholesale from Desi Roots in Bristol. Browse the range and request a quote.{% else %}Browse Desi Roots's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endif %}{% endblock %}
+{% block meta_description %}{% if active_filters.category %}Wholesale {{ active_filters.category.name|lower }} for restaurants and retailers in Bristol and nearby areas. Browse the range and request a quote from Desi Roots.{% elif active_filters.brand %}{{ active_filters.brand.name }} products available wholesale from Desi Roots in Bristol. Browse the range and request a quote.{% else %}Browse Desi Roots' wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endif %}{% endblock %}
 {% block og_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Desi Roots{% endblock %}
-{% block og_description %}Browse Desi Roots's wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endblock %}
+{% block og_description %}Browse Desi Roots' wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endblock %}
 
 {% block content %}
 <div class="py-4 py-md-5 bg-light border-bottom border-sp">
@@ -16,7 +16,7 @@
       </ol>
     </nav>
     <h1 class="h2 mb-0">Wholesale Catalogue</h1>
-    <p class="text-muted mb-0 d-none d-sm-block">Browse our range of premium bulk food products across Bristol & nearby areas.</p>
+    <p class="text-muted mb-0 d-none d-sm-block">Spices, rice, flour, lentils and more, supplied wholesale across Bristol and nearby areas.</p>
   </div>
 </div>
 
@@ -181,7 +181,7 @@
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-        <nav aria-label="Catalog pagination">
+        <nav aria-label="Catalogue pagination">
           <ul class="pagination justify-content-center">
             
             <!-- Previous Button -->
