@@ -153,6 +153,36 @@ class EnquirySecurityTests(TestCase):
         self.assertEqual(len(replies), 3)                          # but only 3 auto-replies per hour
 
 
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com')
+class EnquiryReferenceTests(TestCase):
+    def setUp(self):
+        cache.clear()
+
+    def test_emails_carry_reference_and_reply_goes_to_customer(self):
+        self.client.post('/contact/', data=good_payload(email='buyer@example.co.uk', business_name='Spice Kitchen Ltd'))
+        enquiry = Enquiry.objects.get()
+        ref = f'DR-{enquiry.pk}'
+        self.assertEqual(enquiry.reference, ref)
+        to_business = next(m for m in mail.outbox if m.to == ['support@example.com'])
+        self.assertIn(ref, to_business.subject)
+        self.assertIn('Spice Kitchen Ltd', to_business.subject)
+        self.assertEqual(to_business.reply_to, ['buyer@example.co.uk'])
+        to_customer = next(m for m in mail.outbox if m.to == ['buyer@example.co.uk'])
+        self.assertIn(ref, to_customer.subject)
+        self.assertIn(ref, to_customer.body)
+
+    def test_admin_search_finds_enquiry_by_reference(self):
+        from django.contrib.auth.models import User
+        self.client.post('/contact/', data=good_payload())
+        self.client.post('/contact/', data=good_payload(email='other@example.co.uk'))
+        first = Enquiry.objects.order_by('pk').first()
+        admin = User.objects.create_superuser('boss', 'boss@example.com', 'a-long-test-password-123')
+        self.client.force_login(admin)
+        from django.conf import settings
+        response = self.client.get(f'/{settings.ADMIN_URL_PATH}/enquiries/enquiry/', {'q': f'dr-{first.pk}'})
+        self.assertEqual(list(response.context['cl'].queryset), [first])
+
+
 @override_settings(TURNSTILE_SECRET_KEY='secret-test', TURNSTILE_SITE_KEY='site-test')
 class TurnstileTests(TestCase):
     def setUp(self):
