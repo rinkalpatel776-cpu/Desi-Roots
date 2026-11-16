@@ -274,11 +274,17 @@
 
 {% block extra_js %}
 <script>
-  // Shop by Brand arrows: scroll the brand row by most of its visible width
+  // Shop by Brand arrows: move by as many whole badges as fit, so no logo is left half-shown
+  function brandStep(track) {
+    var badge = track.querySelector('.sp-brand-badge');
+    var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    var width = badge.getBoundingClientRect().width + gap;
+    return Math.max(1, Math.floor((track.clientWidth + gap - 20) / width)) * width;
+  }
   document.querySelectorAll('.sp-brand-slider').forEach(function (slider) {
     var track = slider.querySelector('.sp-brand-track');
-    slider.querySelector('.sp-slide-prev').addEventListener('click', function () { track.scrollBy({ left: -track.clientWidth * 0.8 }); });
-    slider.querySelector('.sp-slide-next').addEventListener('click', function () { track.scrollBy({ left: track.clientWidth * 0.8 }); });
+    slider.querySelector('.sp-slide-prev').addEventListener('click', function () { track.scrollBy({ left: -brandStep(track) }); });
+    slider.querySelector('.sp-slide-next').addEventListener('click', function () { track.scrollBy({ left: brandStep(track) }); });
   });
 </script>
 {% endblock %}
