@@ -113,26 +113,6 @@ Design principles:
 
 ---
 
-## 📸 Screenshots
-
-### Homepage
-
-![Spice Pantry Homepage](screenshots/homepage.jpg)
-
-### Product Catalogue
-
-![Product Catalogue](screenshots/products.jpg)
-
-### Product Details
-
-![Product Details](screenshots/product-detail.jpg)
-
-### Wholesale Enquiry
-
-![Wholesale Enquiry](screenshots/enquiry-form.jpg)
-
----
-
 ## 📂 Project Structure
 
 ```text
@@ -146,8 +126,6 @@ Spice-Pantry/
 ├── templates/           # Django templates
 ├── static/              # CSS, JavaScript and frontend assets
 ├── media/               # Uploaded media files
-├── screenshots/         # Project screenshots
-├── deploy/              # Hosting setup (PythonAnywhere)
 ├── docs/                # Project brief
 ├── manage.py             # Django management script
 ├── requirements.txt      # Python dependencies
