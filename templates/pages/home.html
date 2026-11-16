@@ -136,48 +136,31 @@
 </div>
 {% endif %}
 
-<!-- Featured Brands Showcase -->
+<!-- Shop by Brand slider -->
 {% if featured_brands %}
-<section class="sp-featured-brands-section" aria-label="Featured Brands">
-  <div class="container">
-    <div class="text-center sp-brands-header">
-      <!-- Decorative Twin Leaves Ornament -->
-      <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
-        <span style="display:inline-block; width: 42px; height: 1.5px; background: #E2D9CC;"></span>
-        <svg width="26" height="18" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M14 18C14 18 11.5 12 6 9.5C0.5 7 0 0.5 0 0.5C0 0.5 7.5 0 11.5 5.5C13.2 7.8 14 11 14 18Z" fill="#C98A2B"/>
-          <path d="M14 18C14 18 16.5 12 22 9.5C27.5 7 28 0.5 28 0.5C28 0.5 20.5 0 16.5 5.5C14.8 7.8 14 11 14 18Z" fill="#B37822"/>
-        </svg>
-        <span style="display:inline-block; width: 42px; height: 1.5px; background: #E2D9CC;"></span>
-      </div>
-      <h2 class="h3 sp-brands-title">
-        Featured <span class="accent-word">Brands</span>
-      </h2>
-      <p class="sp-brands-subtitle">
-        Some of the brands we stock.
-      </p>
+<section class="py-5 bg-white border-bottom border-sp" aria-labelledby="home-brands">
+  <div class="container py-3">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-4">
+      <h2 id="home-brands" class="sp-cats-title mb-0">Shop by Brand</h2>
+      <a href="/brands/" class="sp-cats-all">All brands <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </div>
-    
-    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-4 g-3 g-lg-4 justify-content-center">
-      {% for brand in featured_brands %}
-      <div class="col">
-        <a href="/products/?brand={{ brand.slug }}" class="brand-showcase-card shadow-sm text-decoration-none" title="{{ brand.name }}">
-          <div class="brand-showcase-logo-wrap">
+    <div class="sp-brand-slider">
+      <button type="button" class="sp-slide-btn sp-slide-prev" aria-label="Previous brands" aria-controls="brandTrack"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+      <div class="sp-brand-track" id="brandTrack">
+        {% for brand in featured_brands %}
+        <a class="sp-brand-badge" href="/products/?brand={{ brand.slug }}">
+          <span class="sp-badge-ring">
             {% if brand.logo %}
-            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" class="brand-showcase-logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}" loading="lazy">
+            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
             {% else %}
-            <span class="fw-semibold text-olive fs-6">{{ brand.name }}</span>
+            <span class="sp-badge-letter" aria-hidden="true">{{ brand.initials }}</span>
             {% endif %}
-          </div>
+          </span>
+          <span class="sp-badge-name">{{ brand.name }}</span>
         </a>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-
-    <div class="text-center mt-4 pt-2">
-      <a href="/brands/" class="btn-outline-brand-view">
-        View All Brands &rarr;
-      </a>
+      <button type="button" class="sp-slide-btn sp-slide-next" aria-label="More brands" aria-controls="brandTrack"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
     </div>
   </div>
 </section>
@@ -287,4 +270,15 @@
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Shop by Brand arrows: scroll the brand row by most of its visible width
+  document.querySelectorAll('.sp-brand-slider').forEach(function (slider) {
+    var track = slider.querySelector('.sp-brand-track');
+    slider.querySelector('.sp-slide-prev').addEventListener('click', function () { track.scrollBy({ left: -track.clientWidth * 0.8 }); });
+    slider.querySelector('.sp-slide-next').addEventListener('click', function () { track.scrollBy({ left: track.clientWidth * 0.8 }); });
+  });
+</script>
 {% endblock %}

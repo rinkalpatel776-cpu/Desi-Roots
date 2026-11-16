@@ -1294,3 +1294,27 @@ footer .footer-bottom {
 @media (prefers-reduced-motion: reduce) { .sp-cat-circle img { transition: none; } .sp-cat-circle:hover img { transform: none; } }
 @media (max-width: 991.98px) { .sp-cat-circles { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 575.98px) { .sp-cat-circles { grid-template-columns: repeat(3, 1fr); gap: 16px 10px; } .sp-cat-circle-name { font-size: .8rem; } }
+
+/* Home: "Shop by Brand" slider of round logo badges */
+.sp-brand-slider { position: relative; }
+.sp-brand-track { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 6px 4px 10px; scrollbar-width: none; }
+.sp-brand-track::-webkit-scrollbar { display: none; }
+.sp-brand-badge { flex: 0 0 auto; width: 160px; scroll-snap-align: start; text-align: center; text-decoration: none; color: var(--sp-text); border-radius: 12px; }
+.sp-badge-ring { display: flex; align-items: center; justify-content: center; width: 160px; height: 160px; margin: 9px auto 14px; padding: 26px; border-radius: 50%; background: var(--sp-card); border: 3px solid var(--sp-olive); box-shadow: 0 0 0 5px var(--sp-card), 0 0 0 7px var(--sp-saffron); transition: transform .2s ease; }
+.sp-badge-ring img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.sp-badge-letter { font-family: var(--sp-font-head); font-size: 2.6rem; font-weight: 700; color: var(--sp-masala); }
+.sp-badge-name { display: block; font-family: var(--sp-font-head); font-weight: 500; font-size: .92rem; text-transform: uppercase; letter-spacing: .02em; }
+.sp-brand-badge:hover .sp-badge-ring { transform: scale(1.05); }
+.sp-brand-badge:hover .sp-badge-name { color: var(--sp-chilli); }
+.sp-brand-badge:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
+.sp-slide-btn { position: absolute; top: 88px; transform: translateY(-50%); z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--sp-olive); color: #fff; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .4); }
+.sp-slide-btn:hover { background: var(--sp-cardamom); }
+.sp-slide-btn:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
+.sp-slide-prev { left: -14px; }
+.sp-slide-next { right: -14px; }
+@media (prefers-reduced-motion: reduce) { .sp-brand-track { scroll-behavior: auto; } .sp-badge-ring { transition: none; } .sp-brand-badge:hover .sp-badge-ring { transform: none; } }
+@media (max-width: 575.98px) {
+  .sp-brand-badge { width: 120px; }
+  .sp-badge-ring { width: 120px; height: 120px; padding: 18px; }
+  .sp-slide-btn { display: none; }
+}

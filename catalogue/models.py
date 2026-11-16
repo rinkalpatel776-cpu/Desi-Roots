@@ -65,8 +65,8 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
-    # How many brands the home page Featured Brands section shows (one row of 4)
-    HOME_PAGE_LIMIT = 4
+    # How many brands the home page "Shop by Brand" slider shows
+    HOME_PAGE_LIMIT = 40
 
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
@@ -74,7 +74,7 @@ class Brand(models.Model):
     description = models.TextField(blank=True)
     is_featured = models.BooleanField(
         "Show on home page", default=False, db_index=True,
-        help_text="Tick to show this brand in the Featured Brands section of the home page.",
+        help_text="Tick to show this brand in the Shop by Brand slider on the home page.",
     )
     home_order = models.PositiveIntegerField(
         "Home page order", default=0,

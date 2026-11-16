@@ -282,7 +282,7 @@ class BrandAdmin(admin.ModelAdmin):
             elif shown:
                 messages.info(request, f"Home page shows: {', '.join(shown)}.")
             else:
-                messages.info(request, "No brands are ticked, so the Featured Brands section is hidden on the home page.")
+                messages.info(request, "No brands are ticked, so the Shop by Brand slider is hidden on the home page.")
         return super().changelist_view(request, extra_context)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'description')
