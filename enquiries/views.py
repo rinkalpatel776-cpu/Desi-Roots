@@ -20,19 +20,32 @@ logger = logging.getLogger(__name__)
 # Auto-reply emails per visitor address per hour. Stops anyone using the form to make
 # our mailbox send emails to strangers (which could get support@desiroots.co.uk blocked).
 AUTO_REPLY_LIMIT_PER_HOUR = 3
+# Enquiries saved per visitor address per hour. Stops one visitor flooding the admin and the
+# business mailbox. (The cache is per Gunicorn worker, so the real ceiling is a few times this;
+# Nginx rate limiting on the server adds a second limit.)
+ENQUIRY_LIMIT_PER_HOUR = 5
+TOO_MANY_ENQUIRIES = ("You have sent several enquiries in the last hour. Please call or WhatsApp us, "
+                      "or try again a little later.")
 
 
-def _auto_reply_allowed(request):
-    ip = request.META.get('REMOTE_ADDR', '')
+def _visitor_ip(request):
     forwarded = request.META.get('HTTP_X_FORWARDED_FOR', '')
     if forwarded:
-        ip = forwarded.split(',')[-1].strip()  # the address Nginx saw
-    key = f'enquiry-auto-reply:{ip}'
+        return forwarded.split(',')[-1].strip()  # the address Nginx saw
+    return request.META.get('REMOTE_ADDR', '')
+
+
+def _within_hourly_limit(request, name, limit):
+    key = f'{name}:{_visitor_ip(request)}'
     count = cache.get(key, 0)
-    if count >= AUTO_REPLY_LIMIT_PER_HOUR:
+    if count >= limit:
         return False
     cache.set(key, count + 1, 3600)
     return True
+
+
+def _auto_reply_allowed(request):
+    return _within_hourly_limit(request, 'enquiry-auto-reply', AUTO_REPLY_LIMIT_PER_HOUR)
 
 def handle_enquiry_form(request, template_name):
     """Shows the enquiry form, saves valid submissions and sends the notification emails."""
@@ -41,6 +54,9 @@ def handle_enquiry_form(request, template_name):
         if form.is_valid() and form.is_spam:
             # Bots get the normal thank-you page, but nothing is saved or emailed
             return redirect('/wholesale/thank-you/')
+        if form.is_valid() and not _within_hourly_limit(request, 'enquiry-submit', ENQUIRY_LIMIT_PER_HOUR):
+            logger.warning("Enquiry not saved: hourly limit reached for one visitor")
+            form.add_error(None, TOO_MANY_ENQUIRIES)
         if form.is_valid():
             enquiry = form.save()
             

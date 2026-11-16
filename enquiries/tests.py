@@ -154,6 +154,52 @@ class EnquirySecurityTests(TestCase):
 
 
 @override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com')
+class EnquiryAttackTests(TestCase):
+    """Found in the attack pass (17 Nov 2026) and fixed."""
+
+    def setUp(self):
+        cache.clear()
+
+    def test_line_breaks_in_names_cannot_add_email_headers_or_hide_the_enquiry(self):
+        self.client.post('/contact/', data=good_payload(business_name='Evil\r\nBcc: victim@example.com',
+                                                        name='Asha\nPatel', phone='0117\t496 0000'))
+        enquiry = Enquiry.objects.get()
+        self.assertEqual(enquiry.business_name, 'Evil Bcc: victim@example.com')
+        self.assertEqual(enquiry.name, 'Asha Patel')
+        self.assertEqual(enquiry.phone, '0117 496 0000')
+        to_business = [m for m in mail.outbox if m.to == ['support@example.com']]
+        self.assertEqual(len(to_business), 1)            # the owner is still told about it
+        self.assertEqual(to_business[0].bcc, [])
+        self.assertNotIn('\n', to_business[0].subject)
+
+    def test_one_visitor_cannot_flood_enquiries(self):
+        from enquiries.views import ENQUIRY_LIMIT_PER_HOUR
+        for i in range(ENQUIRY_LIMIT_PER_HOUR + 3):
+            response = self.client.post('/contact/', data=good_payload(email=f'flood{i}@example.co.uk'))
+        self.assertEqual(Enquiry.objects.count(), ENQUIRY_LIMIT_PER_HOUR)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'several enquiries in the last hour')
+        to_business = [m for m in mail.outbox if m.to == ['support@example.com']]
+        self.assertEqual(len(to_business), ENQUIRY_LIMIT_PER_HOUR)
+        # A different visitor is not affected
+        self.client.post('/contact/', data=good_payload(email='other@example.co.uk'), REMOTE_ADDR='203.0.113.9')
+        self.assertTrue(Enquiry.objects.filter(email='other@example.co.uk').exists())
+
+    def test_old_form_must_be_sent_again(self):
+        response = self.client.post('/contact/', data=good_payload(form_started=started(seconds_ago=2 * 24 * 3600)))
+        self.assertEqual(Enquiry.objects.count(), 0)
+        self.assertContains(response, 'open for a long time')
+        # The re-shown form carries a fresh token, so sending it again works
+        import re
+        token = re.search(r'name="form_started" value="([^"]+)"', response.content.decode()).group(1)
+        import time as _t
+        from unittest import mock
+        with mock.patch('enquiries.forms.time.time', return_value=_t.time() + 10):
+            self.client.post('/contact/', data=good_payload(form_started=token))
+        self.assertEqual(Enquiry.objects.count(), 1)
+
+
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com')
 class EnquiryReferenceTests(TestCase):
     def setUp(self):
         cache.clear()

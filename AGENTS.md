@@ -167,6 +167,22 @@ Before you call a template finished, confirm all of it:
 
 ---
 
+## Testing and self-check (required for every change)
+
+An agent finishes tasks; it does not prove they are right. Every change follows these steps:
+
+1. **Tests come with the change.** Add or update tests in the same change:
+   - unit and integration tests (Django `TestCase`) for models, views, forms and admin behaviour;
+   - a browser test in `e2e/` (Playwright) when a page, form or user journey changes.
+2. **Everything passes before a commit.** Run the full suite (`python manage.py test --settings=config.settings.dev`), then the browser tests (`E2E=1 python manage.py test e2e --settings=config.settings.dev`; needs `requirements-dev.txt` and `python -m playwright install chromium`). Never commit with a failing or skipped-by-hand test.
+3. **Attack your own work.** After building, act as a security tester and try to break it: bad and oversized input, HTML/script in every text field, missing or forged CSRF tokens, header injection in emails, URLs for unpublished or other people's data, repeated submissions and brute force. Report what you tried and what you found.
+4. **Check under load when it matters.** For changes to the catalogue, search, home page or enquiry form, run `scripts/load_test.py` and compare the response times with the previous run.
+5. **Say what was not verified.** If something could not be tested here (live email, the real server), say so plainly.
+
+Development-only tools (Playwright, debug toolbar) live in `requirements-dev.txt` and are never installed on the live server.
+
+---
+
 ## How to work in this repo
 
 Work in small vertical slices and stop between them. Build the models first and wait for review before generating views or templates, because a schema mistake propagates into everything downstream. Then admin configuration. Then one template at a time.

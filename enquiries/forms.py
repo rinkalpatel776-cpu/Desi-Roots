@@ -14,6 +14,16 @@ import urllib.request
 logger = logging.getLogger(__name__)
 
 MESSAGE_MAX_LENGTH = 5000
+# A form left open longer than this must be sent again (stops one old page being reused by bots)
+FORM_MAX_AGE_SECONDS = 24 * 60 * 60
+
+
+def single_line(value):
+    """Collapse line breaks, tabs and other control characters into single spaces.
+
+    Names end up in email subjects, where a line break could add extra email headers.
+    """
+    return ' '.join(''.join(ch if ch.isprintable() else ' ' for ch in value or '').split())
 
 class EnquiryForm(forms.ModelForm):
     # Submissions sent sooner than this after the page loaded are treated as bots
@@ -77,6 +87,15 @@ class EnquiryForm(forms.ModelForm):
         # Set by clean(); the view quietly drops spam instead of telling the bot why
         self.is_spam = False
 
+    def clean_name(self):
+        return single_line(self.cleaned_data.get('name'))
+
+    def clean_business_name(self):
+        return single_line(self.cleaned_data.get('business_name'))
+
+    def clean_phone(self):
+        return single_line(self.cleaned_data.get('phone'))
+
     def looks_like_spam(self, cleaned_data):
         if cleaned_data.get('website'):
             return True
@@ -84,7 +103,13 @@ class EnquiryForm(forms.ModelForm):
             started = signing.loads(cleaned_data.get('form_started') or '', salt='enquiry-form')
         except signing.BadSignature:
             return True  # missing or forged: posted without loading the page
-        return time.time() - started < self.MIN_SECONDS_TO_SUBMIT
+        age = time.time() - started
+        if age > FORM_MAX_AGE_SECONDS:
+            # A real person may leave the page open overnight: ask them to send again with a fresh form
+            self.data = self.data.copy()
+            self.data['form_started'] = signing.dumps(int(time.time()), salt='enquiry-form')
+            raise forms.ValidationError("This form was open for a long time. Please check your details and press Send again.")
+        return age < self.MIN_SECONDS_TO_SUBMIT
 
 
     def clean(self):

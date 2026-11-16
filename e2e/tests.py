@@ -1,0 +1,153 @@
+"""Browser (end-to-end) tests: a real Chromium clicks through the site.
+
+Run on a development machine only:
+    E2E=1 python manage.py test e2e --settings=config.settings.dev
+Without E2E=1, or where Playwright is not installed (the live server), these tests are skipped.
+"""
+import os
+import time
+import unittest
+
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core import mail
+from django.test import override_settings, tag
+
+from catalogue.models import Brand, Category, PackSize, Product
+from enquiries.models import Enquiry
+
+try:
+    from playwright.sync_api import expect, sync_playwright
+except ImportError:  # not installed on the live server
+    sync_playwright = None
+
+RUN = os.environ.get('E2E') == '1' and sync_playwright is not None
+PHONE = {'width': 375, 'height': 812}
+DESKTOP = {'width': 1280, 'height': 900}
+
+
+@tag('e2e')
+@unittest.skipUnless(RUN, 'Browser tests run only with E2E=1 and Playwright installed')
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com')
+class BrowserJourneyTests(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Playwright runs its own event loop; let the test thread use the database alongside it
+        os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
+        super().setUpClass()
+        cls.pw = sync_playwright().start()
+        cls.browser = cls.pw.chromium.launch()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close()
+        cls.pw.stop()
+        super().tearDownClass()
+
+    def setUp(self):
+        spices = Category.objects.create(name='Spices & Masalas', slug='spices-masalas', display_order=1, show_on_home=True)
+        rice = Category.objects.create(name='Rice', slug='rice', display_order=2, show_on_home=True)
+        heera = Brand.objects.create(name='Heera', slug='heera', is_featured=True, home_order=1)
+        for i in range(8):
+            Brand.objects.create(name=f'Brand {i}', slug=f'brand-{i}', is_featured=True, home_order=i + 2)
+        self.chilli = Product.objects.create(name='Heera Chilli Powder', slug='heera-chilli-powder', category=spices,
+                                             brand=heera, is_published=True)
+        PackSize.objects.create(product=self.chilli, size='10 x 400 g')
+        Product.objects.create(name='Heera Basmati Rice', slug='heera-basmati-rice', category=rice, brand=heera,
+                               is_published=True)
+        Product.objects.create(name='Hidden Draft Rice', slug='hidden-draft', category=rice, brand=heera,
+                               is_published=False)
+
+    def page(self, viewport=DESKTOP):
+        context = self.browser.new_context(viewport=viewport)
+        context.add_init_script("try { localStorage.setItem('sp_cookie_notice_ok', '1') } catch (e) {}")
+        self.addCleanup(context.close)
+        page = context.new_page()
+        errors = []
+        page.on('pageerror', lambda e: errors.append(str(e)))
+        self.addCleanup(lambda: self.assertEqual(errors, [], 'JavaScript errors on the page'))
+        return page
+
+    def no_sideways_scroll(self, page):
+        width = page.evaluate('document.documentElement.scrollWidth')
+        self.assertLessEqual(width, page.viewport_size['width'], f'{page.url} scrolls sideways')
+
+    def test_every_main_page_loads_with_one_h1_on_phone_and_desktop(self):
+        for viewport in (DESKTOP, PHONE):
+            page = self.page(viewport)
+            for path in ('/', '/products/', '/brands/', '/about/', '/faq/', '/contact/',
+                         '/privacy/', '/cookies/', '/terms/'):
+                response = page.goto(self.live_server_url + path)
+                self.assertEqual(response.status, 200, path)
+                self.assertEqual(page.locator('h1').count(), 1, f'{path} at {viewport}')
+                self.no_sideways_scroll(page)
+
+    def test_home_category_circles_and_brand_arrows(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/')
+        expect(page.locator('.sp-cat-circle')).to_have_count(2)
+        track = page.locator('#brandTrack')
+        expect(page.locator('.sp-brand-badge')).to_have_count(9)
+        before = track.evaluate('t => t.scrollLeft')
+        page.locator('.sp-slide-next').click()
+        page.wait_for_function("document.getElementById('brandTrack').scrollLeft > 0")
+        self.assertGreater(track.evaluate('t => t.scrollLeft'), before)
+        page.locator('.sp-cat-circle', has_text='Rice').click()
+        expect(page).to_have_url(self.live_server_url + '/products/?category=rice')
+        expect(page.get_by_role('heading', name='Heera Basmati Rice')).to_be_visible()
+
+    def test_header_search_finds_products_and_hides_drafts(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/about/')
+        page.fill('#navSearch', 'rice')
+        page.press('#navSearch', 'Enter')
+        expect(page.get_by_role('heading', name='Heera Basmati Rice')).to_be_visible()
+        expect(page.get_by_role('heading', name='Hidden Draft Rice')).to_have_count(0)
+
+    def test_phone_menu_opens(self):
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/')
+        menu = page.locator('#navbarNav')
+        expect(menu).to_be_hidden()
+        page.locator('.navbar-toggler').click()
+        expect(menu.get_by_role('link', name='Catalogue')).to_be_visible()
+
+    def test_enquire_button_prefills_the_contact_form(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/products/?q=chilli')
+        page.get_by_role('link', name='Enquire').first.click()
+        expect(page.locator('#id_message')).to_have_value(
+            'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder.')
+
+    def test_contact_form_rejects_empty_then_sends_enquiry(self):
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/contact/')
+        page.get_by_role('button', name='Send Message').click()
+        expect(page).to_have_url(self.live_server_url + '/contact/')   # browser keeps you on the form
+        self.assertEqual(Enquiry.objects.count(), 0)
+
+        page.fill('#id_name', 'Asha Patel')
+        page.fill('#id_business_name', 'Asha Kitchen')
+        page.fill('#id_email', 'asha@kitchen.example')
+        page.fill('#id_phone', '0117 496 0000')
+        page.fill('#id_message', 'Please quote for 20 x 1 kg basmati.')
+        page.check('#id_consent_given')
+        time.sleep(3.2)  # the form ignores submissions faster than a person could type
+        page.get_by_role('button', name='Send Message').click()
+        expect(page).to_have_url(self.live_server_url + '/wholesale/thank-you/')
+
+        enquiry = Enquiry.objects.get()
+        self.assertEqual(enquiry.business_name, 'Asha Kitchen')
+        subjects = [m.subject for m in mail.outbox]
+        self.assertTrue(any(f'Ref {enquiry.reference}' in s for s in subjects), subjects)
+
+    def test_keyboard_users_can_reach_links_and_see_focus(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/')
+        for _ in range(3):
+            page.keyboard.press('Tab')
+        focused = page.evaluate("""() => {
+            const el = document.activeElement, s = getComputedStyle(el);
+            return {tag: el.tagName, outline: s.outlineStyle, shadow: s.boxShadow};
+        }""")
+        self.assertIn(focused['tag'], ('A', 'BUTTON', 'INPUT'))
+        self.assertTrue(focused['outline'] != 'none' or focused['shadow'] != 'none', focused)
