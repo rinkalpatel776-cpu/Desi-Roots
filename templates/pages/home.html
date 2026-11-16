@@ -62,54 +62,32 @@
   </div>
 </div>
 
-<!-- Product Categories Grid -->
-<div class="py-5 bg-light border-bottom border-sp">
-  <div class="container py-4">
-    <div class="text-center mb-5">
-      <span class="text-saffron fw-semibold small text-uppercase" style="letter-spacing: 0.1em;">Wholesale Range</span>
-      <h2 class="h3 fw-bold text-dark mt-1">Explore Our Categories</h2>
-      <p class="text-muted">Browse the full range by category.</p>
+<!-- Product Categories: "Everything You Need" circles -->
+<section class="py-5 sp-cats-section" aria-labelledby="home-categories">
+  <div class="container py-3">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-4">
+      <h2 id="home-categories" class="sp-cats-title mb-0">Everything <span>You Need</span></h2>
+      <a href="/products/" class="sp-cats-all">View all products <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </div>
-    
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+
+    {% if categories %}
+    <div class="sp-cat-circles">
       {% for cat in categories %}
-      <div class="col">
-        <a href="/products/?category={{ cat.slug }}" class="category-card">
-          {% if cat.image %}
-            <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'rice' %}
-            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=600&auto=format&fit=crop" alt="Wholesale Rice" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'spices' %}
-            <img src="https://images.unsplash.com/photo-1532336414038-cf19250c5757?q=80&w=600&auto=format&fit=crop" alt="Wholesale Spices" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'flour' %}
-            {# Bulk flour/wheat flour sacks — consistent raw-ingredient style #}
-            <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600&auto=format&fit=crop" alt="Wholesale Flour" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'oils' %}
-            <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=600&auto=format&fit=crop" alt="Wholesale Oils" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'lentils' %}
-            {# Red/green lentils — correct legume, not chickpeas #}
-            <img src="https://images.unsplash.com/photo-1611575619284-b52ed8ca6b27?q=80&w=600&auto=format&fit=crop" alt="Wholesale Lentils" class="category-card-img" width="300" height="200" loading="lazy">
-          {% elif cat.slug == 'pickles' %}
-            {# Pickled vegetables in jars — matches category label #}
-            <img src="https://images.unsplash.com/photo-1604935067681-0e1b45dd0aa8?q=80&w=600&auto=format&fit=crop" alt="Wholesale Pickles" class="category-card-img" width="300" height="200" loading="lazy">
-          {% else %}
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=600&auto=format&fit=crop" alt="{{ cat.name }}" class="category-card-img" width="300" height="200" loading="lazy">
-          {% endif %}
-          <div class="category-card-overlay">
-            <h3 class="category-card-title h5">{{ cat.name }}</h3>
-            <span class="category-card-action">Browse <i class="bi bi-arrow-right"></i></span>
-          </div>
-        </a>
-      </div>
-      {% empty %}
-      <!-- Static Fallbacks if DB is completely fresh -->
-      <div class="col-12 text-center">
-        <p class="text-muted">Product categories will be listed here once created in the admin panel.</p>
-      </div>
+      <a class="sp-cat-circle" href="/products/?category={{ cat.slug }}">
+        {% if cat.image %}
+          <img src="{{ cat.image.url }}" alt="{{ cat.name }} product packs" width="400" height="400"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
+        {% else %}
+          <span class="sp-cat-circle-blank" aria-hidden="true"><i class="bi bi-basket2"></i></span>
+        {% endif %}
+        <span class="sp-cat-circle-name">{{ cat.name }}</span>
+      </a>
       {% endfor %}
     </div>
+    {% else %}
+    <p class="text-muted text-center mb-0">Product categories will be listed here once created in the admin panel.</p>
+    {% endif %}
   </div>
-</div>
+</section>
 
 <!-- Featured Products Section -->
 {% if featured_products %}
@@ -309,17 +287,4 @@
 </div>
 {% endif %}
 
-<!-- Contact Call to Action Banner -->
-<div class="py-5 bg-olive text-white">
-  <div class="container py-4 text-center">
-    <h2 class="h3 fw-semibold mb-2">Open a Trade Account</h2>
-    <p class="mb-4 text-white-50 px-lg-5">Get in touch and we'll send you prices for the products your business uses.</p>
-    <div class="d-flex flex-wrap justify-content-center gap-3">
-      {% if site_settings.phone_number %}
-      <a href="tel:{{ site_settings.phone_number|cut:' ' }}" class="btn btn-light px-4"><i class="bi bi-telephone me-2"></i>Call Us</a>
-      {% endif %}
-      <a href="/contact/" class="btn btn-gold px-4 fw-semibold"><i class="bi bi-envelope me-2"></i>Submit Enquiry</a>
-    </div>
-  </div>
-</div>
 {% endblock %}

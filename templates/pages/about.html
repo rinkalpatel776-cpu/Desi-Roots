@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block meta_title %}About Us | Desi Roots{% endblock %}
 {% block meta_description %}Desi Roots is a Bristol-based wholesale supplier of Asian and Far Eastern spices and groceries for restaurants, takeaways, caterers and retailers.{% endblock %}
@@ -11,6 +12,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-9 text-center">
+        <img src="{% static 'images/logo.png' %}" alt="Desi Roots logo: We Supply The Spice, You Create The Magic" width="721" height="872" class="about-logo mb-4">
         <h1 class="h2 mb-3">Welcome to Desi Roots – Your Trusted Wholesale Partner for Authentic World Foods</h1>
         <p class="text-muted mb-0 about-lead">At Desi Roots, we are a Bristol-based wholesale supplier of high-quality Asian and Chinese ethnic spices and grocery products. Serving restaurants, takeaways, caterers, independent retailers, and households across Bristol and the surrounding areas, we are passionate about bringing the authentic and diverse flavours of India, Asia and Far East to your kitchen.</p>
       </div>

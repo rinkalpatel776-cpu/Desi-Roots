@@ -9,6 +9,11 @@
   --sp-border:     #E8E2D8;  /* borders, dividers */
   --sp-dark:       #221C17;  /* warm charcoal: footer, hero and tile backgrounds */
   --sp-whatsapp:   #25D366;  /* WhatsApp's own green, for WhatsApp buttons only */
+  --sp-turmeric:   #E8A317;  /* accent: badges, highlights (dark text on it) */
+  --sp-chilli:     #B8322A;  /* accent: offers, emphasis (white text on it) */
+  --sp-cardamom:   #4F7D3A;  /* accent: success, fresh (white text on it) */
+  --sp-masala:     #7A3E1D;  /* accent: deep warm sections (white text on it) */
+  --sp-cream:      #FDF4E7;  /* warm tint behind the category circles */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -1261,6 +1266,8 @@ footer .footer-bottom {
 }
 
 /* About Us page */
+.about-logo { display: block; width: 200px; max-width: 100%; height: auto; margin-left: auto; margin-right: auto; }
+@media (max-width: 575.98px) { .about-logo { width: 160px; } }
 .about-lead { font-size: 1.08rem; line-height: 1.7; }
 .about-list { padding-left: 1.2rem; margin-bottom: 1rem; }
 .about-list li { margin-bottom: .35rem; }
@@ -1269,3 +1276,21 @@ footer .footer-bottom {
 .about-card p { color: #5a5148; font-size: .95rem; margin: 0; }
 .about-tagline { font-family: var(--sp-font-head); font-size: 1.2rem; color: var(--sp-text); }
 .about-tagline strong { color: var(--sp-saffron); }
+
+/* Home: "Everything You Need" category circles */
+.sp-cats-section { background: var(--sp-cream); }
+.sp-cats-title { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.6rem, 3.2vw, 2.4rem); color: var(--sp-text); letter-spacing: -0.01em; }
+.sp-cats-title span { color: var(--sp-chilli); }
+.sp-cats-all { color: var(--sp-chilli); font-weight: 600; text-decoration: none; }
+.sp-cats-all:hover { text-decoration: underline; }
+.sp-cat-circles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 26px 18px; }
+.sp-cat-circle { display: block; text-align: center; text-decoration: none; color: var(--sp-text); border-radius: 12px; }
+.sp-cat-circle img { display: block; width: 100%; height: auto; transition: transform .25s ease; }
+.sp-cat-circle:hover img { transform: translateY(-4px) scale(1.03); }
+.sp-cat-circle-blank { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--sp-card); border: 1px solid var(--sp-border); color: var(--sp-saffron); font-size: 2.5rem; }
+.sp-cat-circle-name { display: block; margin-top: 8px; font-family: var(--sp-font-head); font-weight: 600; font-size: .95rem; line-height: 1.35; }
+.sp-cat-circle:hover .sp-cat-circle-name { color: var(--sp-chilli); }
+.sp-cat-circle:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .sp-cat-circle img { transition: none; } .sp-cat-circle:hover img { transform: none; } }
+@media (max-width: 991.98px) { .sp-cat-circles { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 575.98px) { .sp-cat-circles { grid-template-columns: repeat(3, 1fr); gap: 16px 10px; } .sp-cat-circle-name { font-size: .8rem; } }

@@ -3,8 +3,8 @@ from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
 def home(request):
-    # Up to 6 categories ticked "Show on home page" in the admin, in display order
-    # (the first 6 with published products if none are ticked)
+    # Up to 24 categories ticked "Show on home page" in the admin, in display order
+    # (the first 24 with published products if none are ticked)
     categories = Category.for_home_page()[:Category.HOME_PAGE_LIMIT]
     
     # Retrieve featured products (published + featured) with optimizations
