@@ -106,6 +106,16 @@ Visual direction (updated 2026-11-14 at the owner's request): colourful, vibrant
 }
 ```
 
+Saffron (`--sp-saffron`, 2.9:1 on white) is too light for text or buttons. Use it only for decoration (borders, rings, backgrounds without text). For text and buttons use the text-safe shades, added 2026-11-17 after a contrast check:
+
+```css
+:root {
+  --sp-saffron-text: #8F5E14;  /* gold text, links, outline buttons (5.6:1 on white) */
+  --sp-cta:          #B35A12;  /* main buttons, white text (4.8:1) */
+  --sp-cta-dark:     #9C4D10;  /* main buttons' darker end and hover (6.0:1) */
+}
+```
+
 ---
 
 ## Project structure

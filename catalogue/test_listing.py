@@ -128,3 +128,39 @@ class CatalogueListingTests(TestCase):
         self.assertContains(response, '/products/live-one/')
         self.assertNotContains(response, '/products/draft-one/')
         self.assertNotContains(response, 'category=old')
+
+
+class PreLaunchPolishTests(TestCase):
+    """Fixes from the design review on 17 Nov 2026."""
+
+    def setUp(self):
+        self.cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+
+    def test_page_numbers_show_last_page_gap_and_count(self):
+        brand = Brand.objects.create(name='Heera', slug='heera')
+        make_products(self.cat, brand, 24 * 9)            # 9 pages
+        response = self.client.get('/products/')
+        self.assertContains(response, 'href="?page=9"')
+        self.assertContains(response, '&hellip;')
+        self.assertContains(response, 'Page 1 of 9')
+        self.assertNotContains(response, 'href="?page=5"')  # middle pages are folded away
+        middle = self.client.get('/products/?page=5')
+        self.assertContains(middle, 'Page 5 of 9')
+        self.assertContains(middle, 'aria-current="page"><span class="page-link">5</span>')
+
+    def test_brands_page_title_and_coming_soon_for_brands_without_products(self):
+        live = Brand.objects.create(name='Heera', slug='heera')
+        Brand.objects.create(name='Grace', slug='grace')
+        Product.objects.create(name='Heera Rice', slug='heera-rice', category=self.cat, brand=live, is_published=True)
+        response = self.client.get('/brands/')
+        self.assertContains(response, '<h1 class="h2 mb-2">Our Brands</h1>', html=False)
+        self.assertNotContains(response, 'Featured Brands')
+        self.assertContains(response, 'View Heera Products')
+        self.assertNotContains(response, 'View Grace Products')
+        self.assertContains(response, 'Coming soon. Ask us about this range.')
+
+    def test_faq_page_has_no_developer_wording(self):
+        response = self.client.get('/faq/')
+        for text in ('No FAQ Data', 'admin panel', 'support desk', 'accounts'):
+            self.assertNotContains(response, text)
+        self.assertContains(response, 'Answers coming soon')

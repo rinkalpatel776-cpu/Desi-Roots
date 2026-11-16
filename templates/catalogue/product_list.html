@@ -196,12 +196,14 @@
             {% endif %}
 
             <!-- Numbered Pages -->
-            {% for num in page_obj.paginator.page_range %}
-              {% if page_obj.number == num %}
-                <li class="page-item active" aria-current="page"><span class="page-link bg-saffron border-saffron">{{ num }}</span></li>
-              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            {% for num in page_numbers %}
+              {% if num == ellipsis %}
+                <li class="page-item disabled sp-page-gap" aria-hidden="true"><span class="page-link">&hellip;</span></li>
+              {% elif page_obj.number == num %}
+                <li class="page-item active" aria-current="page"><span class="page-link">{{ num }}</span></li>
+              {% else %}
                 <li class="page-item">
-                  <a class="page-link" href="?page={{ num }}{% if page_query %}&{{ page_query }}{% endif %}">{{ num }}</a>
+                  <a class="page-link" href="?page={{ num }}{% if page_query %}&{{ page_query }}{% endif %}" aria-label="Page {{ num }}">{{ num }}</a>
                 </li>
               {% endif %}
             {% endfor %}
@@ -218,6 +220,7 @@
             {% endif %}
             
           </ul>
+          <p class="sp-page-count text-center mt-2 mb-0">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
         </nav>
         {% endif %}
 

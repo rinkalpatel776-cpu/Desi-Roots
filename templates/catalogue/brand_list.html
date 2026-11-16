@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block meta_title %}Featured Brands | Desi Roots{% endblock %}
+{% block meta_title %}Our Brands | Desi Roots{% endblock %}
 {% block meta_description %}The spice and grocery brands Desi Roots supplies wholesale, including Heera, TRS, East End, Fudco, MDH and Shan.{% endblock %}
-{% block og_title %}Featured Brands | Desi Roots{% endblock %}
+{% block og_title %}Our Brands | Desi Roots{% endblock %}
 {% block og_description %}The spice and grocery brands Desi Roots supplies wholesale, including Heera, TRS, East End, Fudco, MDH and Shan.{% endblock %}
 
 {% block content %}
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
-    <h1 class="h2 mb-2">Featured Brands</h1>
+    <h1 class="h2 mb-2">Our Brands</h1>
     <p class="text-muted mb-0">We supply high-quality products from leading grocery and spice brands.</p>
   </div>
 </div>
@@ -37,9 +37,13 @@
             </p>
           </div>
           
+          {% if brand.published_count %}
           <a href="/products/?brand={{ brand.slug }}" class="btn btn-outline-primary w-100">
             View {{ brand.name }} Products
           </a>
+          {% else %}
+          <p class="small text-muted text-center mb-0">Coming soon. Ask us about this range.</p>
+          {% endif %}
         </div>
       </div>
       {% empty %}
