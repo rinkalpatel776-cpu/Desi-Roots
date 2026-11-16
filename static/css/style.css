@@ -1259,3 +1259,13 @@ footer .footer-bottom {
 .navbar-collapse {
   order: 4;
 }
+
+/* About Us page */
+.about-lead { font-size: 1.08rem; line-height: 1.7; }
+.about-list { padding-left: 1.2rem; margin-bottom: 1rem; }
+.about-list li { margin-bottom: .35rem; }
+.about-card { height: 100%; background: var(--sp-card); border: 1px solid var(--sp-border); border-radius: 12px; padding: 18px 20px; }
+.about-card h3 { font-family: var(--sp-font-head); font-weight: 600; color: var(--sp-text); margin-bottom: 6px; }
+.about-card p { color: #5a5148; font-size: .95rem; margin: 0; }
+.about-tagline { font-family: var(--sp-font-head); font-size: 1.2rem; color: var(--sp-text); }
+.about-tagline strong { color: var(--sp-saffron); }
