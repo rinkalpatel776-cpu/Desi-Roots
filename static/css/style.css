@@ -1335,3 +1335,7 @@ footer .footer-bottom {
 .pagination .page-link:focus { box-shadow: 0 0 0 .2rem rgba(143, 94, 20, .3); }
 .pagination .page-item.sp-page-gap .page-link { border-color: transparent; background: transparent; }
 .sp-page-count { color: #5a5148; font-size: .9rem; }
+
+/* Catalogue sidebar search: slimmer button and padding so the box isn't squeezed on tablets */
+.sp-filter-panel .input-group .btn { padding-left: .85rem; padding-right: .85rem; }
+.sp-filter-panel .input-group .form-control { padding-left: .75rem; padding-right: .75rem; }

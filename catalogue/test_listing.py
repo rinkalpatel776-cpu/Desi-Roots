@@ -164,3 +164,9 @@ class PreLaunchPolishTests(TestCase):
         for text in ('No FAQ Data', 'admin panel', 'support desk', 'accounts'):
             self.assertNotContains(response, text)
         self.assertContains(response, 'Answers coming soon')
+
+    def test_product_count_reads_naturally(self):
+        Product.objects.create(name='Only One', slug='only-one', category=self.cat, is_published=True)
+        self.assertRegex(self.client.get('/products/?q=only').content.decode(), r'>\s*1 product\s*<')
+        self.assertContains(self.client.get('/products/?q=nothing-matches'), '0 products')
+        self.assertNotContains(self.client.get('/products/?q=only'), '1–1 of 1')

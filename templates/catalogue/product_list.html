@@ -26,7 +26,7 @@
       
       <!-- Sidebar Filters (Col 3 on Large Screens) -->
       <div class="col-lg-3">
-        <div class="card p-3 p-lg-4 sp-filter-panel">
+        <div class="card p-3 p-xl-4 sp-filter-panel">
           <h5 class="mb-4 border-bottom pb-2 border-sp d-none d-lg-block"><i class="bi bi-funnel me-2 text-olive"></i>Filters</h5>
           
           <!-- Search Form -->
@@ -103,7 +103,7 @@
         <!-- Result count, removable filter chips and sort -->
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3 mb-md-4">
           <span class="text-muted small me-1">
-            {% if page_obj.paginator.count %}{{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} products{% else %}0 products{% endif %}
+            {% if page_obj.paginator.num_pages > 1 %}{{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} products{% else %}{{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize }}{% endif %}
           </span>
           {% if active_filters.q %}
             <a href="{{ remove_filter_urls.q }}" class="sp-filter-chip" aria-label="Remove search {{ active_filters.q }}">“{{ active_filters.q }}” <i class="bi bi-x" aria-hidden="true"></i></a>
