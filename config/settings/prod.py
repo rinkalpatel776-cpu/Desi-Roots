@@ -51,6 +51,14 @@ AXES_IPWARE_PROXY_COUNT = 1
 AXES_IPWARE_META_PRECEDENCE_ORDER = ['HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR']
 AXES_LOCKOUT_PARAMETERS = [['username', 'ip_address']]
 
+# ---- Error alerts by email ----
+# If a page crashes (a "500" error), Django's built-in mail_admins handler emails the details
+# to the business mailbox, so problems aren't first heard about from a customer.
+# SERVER_EMAIL must be the real mailbox: Hostinger refuses mail "from" any other address.
+ADMINS = [('Desi Roots website', NOTIFICATION_EMAIL)]
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_SUBJECT_PREFIX = '[desiroots.co.uk] '
+
 # ---- Logging: problems go to the Gunicorn log (journalctl -u gunicorn) ----
 LOGGING = {
     'version': 1,

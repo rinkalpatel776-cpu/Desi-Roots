@@ -16,7 +16,8 @@ PROBE = (
     "print(json.dumps({k: getattr(s, k) for k in ("
     "'DEBUG', 'SECURE_SSL_REDIRECT', 'SESSION_COOKIE_SECURE', 'CSRF_COOKIE_SECURE', "
     "'SESSION_COOKIE_HTTPONLY', 'SECURE_HSTS_SECONDS', 'SECURE_CONTENT_TYPE_NOSNIFF', "
-    "'X_FRAME_OPTIONS', 'ADMIN_URL_PATH', 'SECURE_HSTS_PRELOAD')}))"
+    "'X_FRAME_OPTIONS', 'ADMIN_URL_PATH', 'SECURE_HSTS_PRELOAD', 'ADMINS', 'SERVER_EMAIL', "
+    "'DEFAULT_FROM_EMAIL')}))"
 )
 
 
@@ -53,3 +54,13 @@ class ProductionSettingsTests(SimpleTestCase):
         self.assertIs(values['SECURE_CONTENT_TYPE_NOSNIFF'], True)
         self.assertEqual(values['X_FRAME_OPTIONS'], 'DENY')
         self.assertNotEqual(values['ADMIN_URL_PATH'], 'admin')
+
+    def test_crash_alerts_go_to_the_business_mailbox(self):
+        result = load_prod(SECRET_KEY=GOOD_KEY, ADMIN_URL_PATH='private-admin-xyz', SENTRY_DSN='')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        values = json.loads(result.stdout.strip().splitlines()[-1])
+        self.assertEqual(len(values['ADMINS']), 1)
+        self.assertIn('@', values['ADMINS'][0][1])
+        # Hostinger only accepts mail sent from the real mailbox, not Django's default root@localhost
+        self.assertEqual(values['SERVER_EMAIL'], values['DEFAULT_FROM_EMAIL'])
+        self.assertNotIn('localhost', values['SERVER_EMAIL'])
