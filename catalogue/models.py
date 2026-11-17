@@ -28,8 +28,8 @@ def trim_logo_border(img):
 
 
 class Category(models.Model):
-    # How many categories the home page Explore Our Categories section shows (one row of 6)
-    HOME_PAGE_LIMIT = 6
+    # How many categories the home page "Everything You Need" circles show (up to 4 rows of 6)
+    HOME_PAGE_LIMIT = 24
 
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
@@ -39,8 +39,9 @@ class Category(models.Model):
     is_active = models.BooleanField(default=True, db_index=True)
     show_on_home = models.BooleanField(
         "Show on home page", default=False, db_index=True,
-        help_text="Tick to show this category in the Explore Our Categories section of the home page "
-                  "(up to 6, in display order). Categories with no published products are never shown.",
+        help_text="Tick to show this category in the Everything You Need circles on the home page "
+                  "(up to 24, in display order). For the best look, upload a square picture of packs "
+                  "on a soft coloured circle with a transparent background. Categories with no published products are never shown.",
     )
 
     class Meta:
@@ -64,8 +65,8 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
-    # How many brands the home page Featured Brands section shows (one row of 4)
-    HOME_PAGE_LIMIT = 4
+    # How many brands the home page "Shop by Brand" slider shows
+    HOME_PAGE_LIMIT = 40
 
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, unique=True, db_index=True)
@@ -73,7 +74,7 @@ class Brand(models.Model):
     description = models.TextField(blank=True)
     is_featured = models.BooleanField(
         "Show on home page", default=False, db_index=True,
-        help_text="Tick to show this brand in the Featured Brands section of the home page.",
+        help_text="Tick to show this brand in the Shop by Brand slider on the home page.",
     )
     home_order = models.PositiveIntegerField(
         "Home page order", default=0,

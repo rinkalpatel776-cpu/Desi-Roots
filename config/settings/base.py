@@ -142,11 +142,13 @@ ADMIN_URL_PATH = env('ADMIN_URL_PATH', default='sp-control-pantry')
 
 # Email Backend Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('BREVO_API_KEY', default='')
-EMAIL_HOST_PASSWORD = env('BREVO_API_KEY', default='')
+# Sent through the business's own Hostinger Mail box, so the domain's email (MX/SPF) records stay unchanged
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.hostinger.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=465)
+EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = 15  # don't keep a visitor waiting if the mail server is slow
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='support@desiroots.co.uk')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='support@desiroots.co.uk')
 NOTIFICATION_EMAIL = env('NOTIFICATION_EMAIL', default='support@desiroots.co.uk')
 

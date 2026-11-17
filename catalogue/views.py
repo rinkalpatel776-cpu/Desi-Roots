@@ -7,12 +7,15 @@ from .models import Category, Brand, Product
 
 # Catalogue sort options: ?sort= value -> (label, ordering). The first one is the default.
 SORT_OPTIONS = {
+    # Default: key staples first (spices, lentils, rice, flour...), following the category
+    # "Display order" set in the admin, then A–Z within each category
+    'recommended': ('Recommended', ('category__display_order', 'category__name', 'name', 'pk')),
     'name': ('Name A–Z', ('name',)),
     'name-desc': ('Name Z–A', ('-name',)),
     'brand': ('Brand', ('brand__name', 'name')),
     'category': ('Category', ('category__name', 'name')),
 }
-DEFAULT_SORT = 'name'
+DEFAULT_SORT = 'recommended'
 
 
 def product_list(request):
@@ -82,8 +85,13 @@ def product_list(request):
     def query_without(*names):
         return urlencode({k: v for k, v in params.items() if v and k not in names})
 
+    # Page numbers to show: first, last and two either side of the current one (1 2 3 … 81)
+    page_numbers = list(paginator.get_elided_page_range(page_obj.number, on_each_side=2, on_ends=1))
+
     context = {
         'page_obj': page_obj,
+        'page_numbers': page_numbers,
+        'ellipsis': Paginator.ELLIPSIS,
         'categories': categories,
         'brands': brands,
         'active_filters': active_filters,
@@ -126,7 +134,10 @@ def product_detail(request, slug):
 
 
 def brand_list(request):
-    brands = Brand.objects.all().order_by('name')
+    # Count published products so brands with none yet show "coming soon" instead of an empty link
+    brands = Brand.objects.annotate(
+        published_count=Count('products', filter=Q(products__is_published=True))
+    ).order_by('name')
     context = {
         'brands': brands
     }

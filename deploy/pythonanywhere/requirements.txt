@@ -1,3 +1,0 @@
-# PythonAnywhere free plan: the project's packages plus the MySQL driver (no PostgreSQL there)
--r ../../requirements.txt
-mysqlclient>=2.2

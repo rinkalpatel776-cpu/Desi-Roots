@@ -1,4 +1,4 @@
-/* Spice Pantry — Main CSS */
+/* Desi Roots — Main CSS */
 
 :root {
   --sp-saffron:    #C98A2B;  /* primary */
@@ -9,6 +9,16 @@
   --sp-border:     #E8E2D8;  /* borders, dividers */
   --sp-dark:       #221C17;  /* warm charcoal: footer, hero and tile backgrounds */
   --sp-whatsapp:   #25D366;  /* WhatsApp's own green, for WhatsApp buttons only */
+  --sp-turmeric:   #E8A317;  /* accent: badges, highlights (dark text on it) */
+  --sp-chilli:     #B8322A;  /* accent: offers, emphasis (white text on it) */
+  --sp-cardamom:   #4F7D3A;  /* accent: success, fresh (white text on it) */
+  --sp-masala:     #7A3E1D;  /* accent: deep warm sections (white text on it) */
+  --sp-cream:      #FDF4E7;  /* warm tint behind the category circles */
+  /* Darker shades for TEXT and BUTTONS so they meet WCAG 2.2 AA (4.5:1) on white and cream.
+     Saffron itself (2.9:1 on white) stays for decorative backgrounds, borders and accents only. */
+  --sp-saffron-text: #8F5E14;  /* gold text, outline buttons, active links (5.6:1 on white) */
+  --sp-cta:          #B35A12;  /* main buttons, white text on it (4.8:1) */
+  --sp-cta-dark:     #9C4D10;  /* main buttons: darker end and hover (6.0:1) */
   --sp-font-head:  'Poppins', sans-serif;
   --sp-font-body:  'Inter', sans-serif;
 }
@@ -37,12 +47,12 @@ a {
 }
 
 a:hover {
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
 }
 
 /* Custom Announcement Bar */
 .announcement-bar {
-  background-color: var(--sp-saffron);
+  background-color: var(--sp-masala);
   color: #ffffff;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -91,7 +101,7 @@ a:hover {
 }
 
 .navbar-brand span {
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
 }
 
 .nav-link {
@@ -105,13 +115,13 @@ a:hover {
 }
 
 .nav-link:hover, .nav-link.active {
-  color: var(--sp-saffron) !important;
+  color: var(--sp-saffron-text) !important;
 }
 
 /* Issue 11: visible active-page indicator (underline) for better wayfinding */
 .nav-link.active {
   text-decoration: underline;
-  text-decoration-color: var(--sp-saffron);
+  text-decoration-color: var(--sp-saffron-text);
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
 }
@@ -133,18 +143,18 @@ a:hover {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #E07A28 0%, #D4691B 100%);
-  border-color: #D4691B;
+  background: linear-gradient(135deg, var(--sp-cta) 0%, var(--sp-cta-dark) 100%);
+  border-color: var(--sp-cta-dark);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(224, 122, 40, 0.25);
+  box-shadow: 0 4px 14px rgba(156, 77, 16, 0.25);
 }
 
 .btn-primary:hover, .btn-primary:focus {
-  background: linear-gradient(135deg, #F4A261 0%, #E07A28 100%);
-  border-color: #E07A28;
+  background: linear-gradient(135deg, var(--sp-cta-dark) 0%, var(--sp-masala) 100%);
+  border-color: var(--sp-masala);
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(224, 122, 40, 0.35);
+  box-shadow: 0 6px 18px rgba(156, 77, 16, 0.35);
 }
 
 .btn-secondary {
@@ -179,14 +189,14 @@ a:hover {
 }
 
 .btn-outline-primary {
-  color: var(--sp-saffron);
-  border-color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
+  border-color: var(--sp-saffron-text);
   background-color: transparent;
 }
 
 .btn-outline-primary:hover, .btn-outline-primary:focus {
-  background-color: var(--sp-saffron);
-  border-color: var(--sp-saffron);
+  background-color: var(--sp-saffron-text);
+  border-color: var(--sp-saffron-text);
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(224, 122, 40, 0.25);
 }
@@ -240,7 +250,7 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-radius: 2px;
-  background-color: var(--sp-saffron);
+  background-color: var(--sp-saffron-text);
   color: #ffffff;
 }
 
@@ -268,7 +278,7 @@ a:hover {
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: var(--sp-saffron);
+  border-color: var(--sp-saffron-text);
   box-shadow: 0 0 0 3px rgba(201, 138, 43, 0.1);
   background-color: #ffffff;
   color: var(--sp-text);
@@ -294,7 +304,7 @@ a:hover {
 }
 
 .accordion-button:not(.collapsed) {
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
   background-color: var(--sp-card);
   border-bottom: 1px solid var(--sp-border) !important;
 }
@@ -458,10 +468,10 @@ footer .footer-bottom {
 }
 
 /* Utilities */
-.text-saffron { color: var(--sp-saffron); }
+.text-saffron { color: var(--sp-saffron-text); }
 .text-gold { color: var(--sp-gold); }
 .text-olive { color: var(--sp-olive); }
-.bg-saffron { background-color: var(--sp-saffron); }
+.bg-saffron { background-color: var(--sp-saffron-text); }
 .bg-gold { background-color: var(--sp-gold); }
 .bg-olive { background-color: var(--sp-olive); }
 .border-sp { border-color: var(--sp-border) !important; }
@@ -636,16 +646,16 @@ footer .footer-bottom {
 }
 
 .quick-nav-link:hover {
-  color: var(--sp-saffron);
-  border-color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
+  border-color: var(--sp-saffron-text);
   background-color: #ffffff;
   transform: translateX(4px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
 }
 
 .quick-nav-link.active {
-  color: var(--sp-saffron);
-  border-color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
+  border-color: var(--sp-saffron-text);
   background-color: #ffffff;
 }
 
@@ -666,7 +676,7 @@ footer .footer-bottom {
   transform: scale(1.1);
 }
 
-.bg-saffron-light { background-color: rgba(224, 122, 40, 0.12); color: var(--sp-saffron); }
+.bg-saffron-light { background-color: rgba(224, 122, 40, 0.12); color: var(--sp-saffron-text); }
 .bg-blue-light { background-color: rgba(13, 110, 253, 0.10); color: #0d6efd; }
 .bg-green-light { background-color: rgba(102, 122, 62, 0.14); color: var(--sp-olive); }
 .bg-gold-light { background-color: rgba(233, 196, 106, 0.22); color: #A67208; }
@@ -704,7 +714,7 @@ footer .footer-bottom {
   gap: 6px;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.btn-contact-call { background-color: var(--sp-saffron); }
+.btn-contact-call { background-color: var(--sp-saffron-text); }
 .btn-contact-email { background-color: var(--sp-olive); }
 .btn-contact-call:hover,
 .btn-contact-email:hover {
@@ -846,7 +856,7 @@ footer .footer-bottom {
 }
 
 .sp-brands-title .accent-word {
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
 }
 
 .sp-brands-subtitle {
@@ -1000,8 +1010,8 @@ footer .footer-bottom {
 }
 .sp-filter-chip:hover,
 .sp-filter-chip:focus-visible {
-  border-color: var(--sp-saffron);
-  color: var(--sp-saffron);
+  border-color: var(--sp-saffron-text);
+  color: var(--sp-saffron-text);
 }
 
 .sp-sort-form .form-select {
@@ -1085,7 +1095,7 @@ footer .footer-bottom {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 .sp-whatsapp-float:focus-visible {
-  outline: 3px solid var(--sp-saffron);
+  outline: 3px solid var(--sp-saffron-text);
   outline-offset: 3px;
 }
 @media (max-width: 575.98px) {
@@ -1109,7 +1119,7 @@ footer .footer-bottom {
   border: 1px solid var(--sp-border);
   border-radius: 6px;
   background-color: var(--sp-bg);
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
   font-family: var(--sp-font-head);
   font-weight: 700;
   font-size: 1.15rem;
@@ -1148,7 +1158,7 @@ footer .footer-bottom {
   line-height: 1.6;
 }
 .sp-cookie-notice__text a {
-  color: var(--sp-saffron);
+  color: var(--sp-saffron-text);
   font-weight: 600;
 }
 .sp-cookie-notice__details {
@@ -1223,3 +1233,109 @@ footer .footer-bottom {
     display: none;
   }
 }
+
+/* Phones: Bootstrap's wide g-5 gutter is wider than the page padding and
+   made About, Contact and product pages scroll sideways. */
+@media (max-width: 575.98px) {
+  .row.g-5 {
+    --bs-gutter-x: 1.5rem;
+  }
+}
+
+/* Search box in the top bar */
+.sp-nav-search {
+  flex: 1 1 auto;
+  max-width: 300px;
+}
+.sp-nav-search .form-control {
+  border-color: var(--sp-border);
+  background-color: var(--sp-bg);
+  font-family: var(--sp-font-body);
+}
+.sp-nav-search .form-control:focus {
+  border-color: var(--sp-saffron-text);
+  box-shadow: 0 0 0 0.2rem rgba(201, 138, 43, 0.2);
+}
+/* Phones and tablets: a full-width row under the logo */
+.sp-nav-search--mobile {
+  flex-basis: 100%;
+  max-width: none;
+  order: 3;
+  margin-top: 10px;
+}
+.sp-nav-search--mobile .form-control {
+  font-size: 16px; /* 16px or more stops iPhones zooming in when the box is tapped */
+}
+.navbar-collapse {
+  order: 4;
+}
+
+/* About Us page */
+.about-logo { display: block; width: 200px; max-width: 100%; height: auto; margin-left: auto; margin-right: auto; }
+@media (max-width: 575.98px) { .about-logo { width: 160px; } }
+.about-lead { font-size: 1.08rem; line-height: 1.7; }
+.about-list { padding-left: 1.2rem; margin-bottom: 1rem; }
+.about-list li { margin-bottom: .35rem; }
+.about-card { height: 100%; background: var(--sp-card); border: 1px solid var(--sp-border); border-radius: 12px; padding: 18px 20px; }
+.about-card h3 { font-family: var(--sp-font-head); font-weight: 600; color: var(--sp-text); margin-bottom: 6px; }
+.about-card p { color: #5a5148; font-size: .95rem; margin: 0; }
+.about-tagline { font-family: var(--sp-font-head); font-size: 1.2rem; color: var(--sp-text); }
+.about-tagline strong { color: var(--sp-saffron-text); }
+
+/* Home: "Everything You Need" category circles */
+.sp-cats-section { background: var(--sp-cream); }
+.sp-cats-title { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.6rem, 3.2vw, 2.4rem); color: var(--sp-text); letter-spacing: -0.01em; }
+.sp-cats-title span { color: var(--sp-chilli); }
+.sp-cats-all { color: var(--sp-chilli); font-weight: 600; text-decoration: none; }
+.sp-cats-all:hover { text-decoration: underline; }
+.sp-cat-circles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 26px 18px; }
+.sp-cat-circle { display: block; text-align: center; text-decoration: none; color: var(--sp-text); border-radius: 12px; }
+.sp-cat-circle img { display: block; width: 100%; height: auto; transition: transform .25s ease; }
+.sp-cat-circle:hover img { transform: translateY(-4px) scale(1.03); }
+.sp-cat-circle-blank { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--sp-card); border: 1px solid var(--sp-border); color: var(--sp-saffron-text); font-size: 2.5rem; }
+.sp-cat-circle-name { display: block; margin-top: 8px; font-family: var(--sp-font-head); font-weight: 600; font-size: .95rem; line-height: 1.35; }
+.sp-cat-circle:hover .sp-cat-circle-name { color: var(--sp-chilli); }
+.sp-cat-circle:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .sp-cat-circle img { transition: none; } .sp-cat-circle:hover img { transform: none; } }
+@media (max-width: 991.98px) { .sp-cat-circles { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 575.98px) { .sp-cat-circles { grid-template-columns: repeat(3, 1fr); gap: 16px 10px; } .sp-cat-circle-name { font-size: .8rem; } }
+
+/* Home: "Shop by Brand" slider of round logo badges */
+.sp-brand-slider { position: relative; }
+.sp-brand-track { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scroll-padding: 0 10px; padding: 12px 10px 10px; margin: 0 -10px; scrollbar-width: none; }
+.sp-brand-track::-webkit-scrollbar { display: none; }
+.sp-brand-badge { flex: 0 0 calc((100% - 5 * 22px) / 6); scroll-snap-align: start; text-align: center; text-decoration: none; color: var(--sp-text); border-radius: 12px; }
+.sp-badge-ring { display: flex; align-items: center; justify-content: center; width: calc(100% - 14px); max-width: 160px; aspect-ratio: 1; margin: 9px auto 14px; padding: 26px; border-radius: 50%; background: var(--sp-card); border: 3px solid var(--sp-olive); box-shadow: 0 0 0 5px var(--sp-card), 0 0 0 7px var(--sp-saffron); transition: transform .2s ease; }
+.sp-badge-ring img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.sp-badge-letter { font-family: var(--sp-font-head); font-size: 2.6rem; font-weight: 700; color: var(--sp-masala); }
+.sp-badge-name { display: block; font-family: var(--sp-font-head); font-weight: 500; font-size: .92rem; text-transform: uppercase; letter-spacing: .02em; }
+.sp-brand-badge:hover .sp-badge-ring { transform: scale(1.05); }
+.sp-brand-badge:hover .sp-badge-name { color: var(--sp-chilli); }
+.sp-brand-badge:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
+.sp-slide-btn { position: absolute; top: 88px; transform: translateY(-50%); z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--sp-olive); color: #fff; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .4); }
+.sp-slide-btn:hover { background: var(--sp-cardamom); }
+.sp-slide-btn:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
+.sp-slide-prev { left: -14px; }
+.sp-slide-next { right: -14px; }
+@media (min-width: 1200px) { .sp-slide-prev { left: -34px; } .sp-slide-next { right: -34px; } }
+@media (max-width: 991.98px) { .sp-brand-badge { flex-basis: calc((100% - 3 * 22px) / 4); } }
+@media (prefers-reduced-motion: reduce) { .sp-brand-track { scroll-behavior: auto; } .sp-badge-ring { transition: none; } .sp-brand-badge:hover .sp-badge-ring { transform: none; } }
+@media (max-width: 575.98px) {
+  .sp-brand-track { gap: 14px; }
+  .sp-brand-badge { flex-basis: calc((100% - 2 * 14px) / 3); }
+  .sp-badge-ring { padding: 14px; }
+  .sp-badge-name { font-size: .78rem; }
+  .sp-slide-btn { display: none; }
+}
+
+/* Catalogue page numbers in brand colours, with a page count */
+.pagination .page-link { color: var(--sp-text); }
+.pagination .page-link:hover { color: var(--sp-saffron-text); }
+.pagination .page-item.active .page-link { background-color: var(--sp-saffron-text); border-color: var(--sp-saffron-text); color: #fff; }
+.pagination .page-link:focus { box-shadow: 0 0 0 .2rem rgba(143, 94, 20, .3); }
+.pagination .page-item.sp-page-gap .page-link { border-color: transparent; background: transparent; }
+.sp-page-count { color: #5a5148; font-size: .9rem; }
+
+/* Catalogue sidebar search: slimmer button and padding so the box isn't squeezed on tablets */
+.sp-filter-panel .input-group .btn { padding-left: .85rem; padding-right: .85rem; }
+.sp-filter-panel .input-group .form-control { padding-left: .75rem; padding-right: .75rem; }

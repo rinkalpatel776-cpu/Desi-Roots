@@ -27,8 +27,8 @@ def robots_txt(request):
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
 # Admin Branding
-admin.site.site_header = "Spice Pantry Admin Portal"
-admin.site.site_title = "Spice Pantry"
+admin.site.site_header = "Desi Roots Admin Portal"
+admin.site.site_title = "Desi Roots"
 admin.site.index_title = "Wholesale Catalogue & Operations Management"
 
 urlpatterns = [

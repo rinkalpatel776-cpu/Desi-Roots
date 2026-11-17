@@ -25,6 +25,11 @@ class Enquiry(models.Model):
         verbose_name_plural = "Enquiries"
         ordering = ['-created_at']
 
+    @property
+    def reference(self):
+        """Short reference shown in emails, e.g. DR-123, so replies can be matched to this enquiry."""
+        return f"DR-{self.pk}" if self.pk else ""
+
     def __str__(self):
         if self.business_name:
             return f"Enquiry from {self.business_name} ({self.name})"

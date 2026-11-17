@@ -46,4 +46,4 @@ class SiteSettings(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return "Spice Pantry Site Settings"
+        return "Desi Roots Site Settings"

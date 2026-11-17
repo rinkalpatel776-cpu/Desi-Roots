@@ -95,7 +95,26 @@ Define once as CSS custom properties in `:root` and reference them everywhere. N
 }
 ```
 
-Visual direction: premium, minimal, modern, spacious, warm, trustworthy. Generous whitespace, restrained colour, saffron used as an accent rather than a flood. It must read as a professional wholesale supplier, **not** a consumer grocery store. Avoid anything flashy, cluttered, neon, or heavily gradient.
+Visual direction (updated 2026-11-14 at the owner's request): colourful, vibrant and attractive, while staying professional, trustworthy and easy to use, to the standard of leading UK food and wholesale websites. Use the spice accent colours below for sections, badges and icons; show real product packs and food photography generously. It must still read as a professional wholesale supplier. Avoid neon, clutter, and anything that hurts readability: every text/background pair must meet WCAG 2.2 AA contrast.
+
+```css
+:root {
+  --sp-turmeric:   #E8A317;  /* accent: badges, highlights (dark text on it) */
+  --sp-chilli:     #B8322A;  /* accent: offers, emphasis (white text on it) */
+  --sp-cardamom:   #4F7D3A;  /* accent: success, fresh (white text on it) */
+  --sp-masala:     #7A3E1D;  /* accent: deep warm sections (white text on it) */
+}
+```
+
+Saffron (`--sp-saffron`, 2.9:1 on white) is too light for text or buttons. Use it only for decoration (borders, rings, backgrounds without text). For text and buttons use the text-safe shades, added 2026-11-17 after a contrast check:
+
+```css
+:root {
+  --sp-saffron-text: #8F5E14;  /* gold text, links, outline buttons (5.6:1 on white) */
+  --sp-cta:          #B35A12;  /* main buttons, white text (4.8:1) */
+  --sp-cta-dark:     #9C4D10;  /* main buttons' darker end and hover (6.0:1) */
+}
+```
 
 ---
 
@@ -155,6 +174,22 @@ Before you call a template finished, confirm all of it:
 - No hardcoded contact details, no invented content, no `lorem ipsum`.
 - No N+1 queries.
 - Keyboard reachable, with visible focus states on links and buttons.
+
+---
+
+## Testing and self-check (required for every change)
+
+An agent finishes tasks; it does not prove they are right. Every change follows these steps:
+
+1. **Tests come with the change.** Add or update tests in the same change:
+   - unit and integration tests (Django `TestCase`) for models, views, forms and admin behaviour;
+   - a browser test in `e2e/` (Playwright) when a page, form or user journey changes.
+2. **Everything passes before a commit.** Run the full suite (`python manage.py test --settings=config.settings.dev`), then the browser tests (`E2E=1 python manage.py test e2e --settings=config.settings.dev`; needs `requirements-dev.txt` and `python -m playwright install chromium`). Never commit with a failing or skipped-by-hand test.
+3. **Attack your own work.** After building, act as a security tester and try to break it: bad and oversized input, HTML/script in every text field, missing or forged CSRF tokens, header injection in emails, URLs for unpublished or other people's data, repeated submissions and brute force. Report what you tried and what you found.
+4. **Check under load when it matters.** For changes to the catalogue, search, home page or enquiry form, run `scripts/load_test.py` and compare the response times with the previous run.
+5. **Say what was not verified.** If something could not be tested here (live email, the real server), say so plainly.
+
+Development-only tools (Playwright, debug toolbar) live in `requirements-dev.txt` and are never installed on the live server.
 
 ---
 

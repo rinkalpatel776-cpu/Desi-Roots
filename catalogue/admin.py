@@ -260,7 +260,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
 
 
-from django.utils.html import mark_safe
+from django.utils.html import format_html, mark_safe
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
@@ -282,7 +282,7 @@ class BrandAdmin(admin.ModelAdmin):
             elif shown:
                 messages.info(request, f"Home page shows: {', '.join(shown)}.")
             else:
-                messages.info(request, "No brands are ticked, so the Featured Brands section is hidden on the home page.")
+                messages.info(request, "No brands are ticked, so the Shop by Brand slider is hidden on the home page.")
         return super().changelist_view(request, extra_context)
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'description')
@@ -290,13 +290,13 @@ class BrandAdmin(admin.ModelAdmin):
 
     def logo_preview(self, obj):
         if obj.logo:
-            return mark_safe(f'<img src="{obj.logo.url}" style="max-height: 36px; max-width: 80px; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; border: 1px solid #ddd;" />')
+            return format_html('<img src="{}" style="max-height: 36px; max-width: 80px; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; border: 1px solid #ddd;" />', obj.logo.url)
         return mark_safe('<span style="color: #999; font-style: italic;">No logo</span>')
     logo_preview.short_description = "Logo"
 
     def logo_display(self, obj):
         if obj.logo:
-            return mark_safe(f'<img src="{obj.logo.url}" style="max-height: 100px; max-width: 220px; object-fit: contain; border-radius: 6px; padding: 6px; border: 1px solid #ccc; background: #fff;" />')
+            return format_html('<img src="{}" style="max-height: 100px; max-width: 220px; object-fit: contain; border-radius: 6px; padding: 6px; border: 1px solid #ccc; background: #fff;" />', obj.logo.url)
         return "No logo uploaded yet."
     logo_display.short_description = "Current Logo"
 
