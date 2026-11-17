@@ -6,28 +6,69 @@
 {% block og_title %}Desi Roots | Wholesale Spices &amp; Groceries Bristol{% endblock %}
 {% block og_description %}Desi Roots supplies wholesale spices, lentils, rice, flour and ethnic groceries to restaurants and retailers in Bristol and nearby areas.{% endblock %}
 
+{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=1" rel="stylesheet">{% endblock %}
+
 {% block content %}
-<!-- Hero Section -->
-<div class="sp-hero-wrapper overflow-hidden text-white">
-  <h1 class="visually-hidden">Desi Roots | Wholesale Spices & Groceries Bristol</h1>
-  <div class="container sp-hero-container">
-    <div class="row">
-      {# The buttons line up under the text on the left of the photo; centred on phones #}
-      <div class="col-12 text-center text-md-start">
-        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start gap-3 sp-hero-actions">
-          {# Primary action: the highest-value conversion goal #}
-          <a href="/contact/" class="btn btn-primary btn-lg text-white px-4 shadow">
-            <i class="bi bi-chat-left-dots me-2"></i>Request Wholesale Quote
-          </a>
-          {# Secondary action: outlined so it does not compete with primary #}
-          <a href="/products/" class="btn btn-hero-outline btn-lg px-4 shadow">
-            <i class="bi bi-grid-3x3-gap me-2"></i>Browse Products
-          </a>
-        </div>
+<!-- Hero slider: slide 1 welcome, slide 2 MDH; moves every 5 seconds (static/js/hero-slider.js) -->
+<section class="hs" aria-roledescription="carousel" aria-label="Desi Roots highlights">
+ <div class="hs-viewport">
+  <div class="hs-track">
+   <div class="hs-slide h10" role="group" aria-roledescription="slide" aria-label="1 of 2">
+    <span class="h10-blob b1" aria-hidden="true"></span><span class="h10-blob b2" aria-hidden="true"></span><span class="h10-blob b3" aria-hidden="true"></span>
+    <div class="container position-relative"><div class="row align-items-center g-4">
+     <div class="col-lg-6">
+      <p class="h10-tag"><span class="dot"></span>Wholesale supplier · Bristol</p>
+      {# Headline wording from the business's "About US" document #}
+      <h1 id="hx-t">Welcome to <span class="c1">Desi Roots</span> – Your Trusted Wholesale Partner for <span class="c2">Authentic World Foods</span></h1>
+      <p class="h10-lead">Spices, rice, lentils, flours, oils and snacks from the brands your customers know, supplied to restaurants, takeaways, caterers and shops.</p>
+      <div class="h10-actions">
+       <a href="/contact/" class="h10-btn h10-primary"><i class="bi bi-chat-square-text" aria-hidden="true"></i> Request a trade quote</a>
+       <a href="/products/" class="h10-btn h10-ghost"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Browse the catalogue</a>
       </div>
-    </div>
+      {# Counted from the live catalogue, rounded down #}
+      <ul class="h10-chips" aria-label="At a glance">
+       <li class="k1"><strong>{{ hero_stats.products }}</strong> products</li><li class="k2"><strong>{{ hero_stats.brands }}</strong> brands</li><li class="k3"><strong>{{ hero_stats.categories }}</strong> categories</li>
+      </ul>
+     </div>
+     <div class="col-lg-6"><div class="h10-art">
+      <img src="{% static 'images/hero/hero-packs-1400.webp' %}" srcset="{% static 'images/hero/hero-packs-700.webp' %} 700w, {% static 'images/hero/hero-packs-1400.webp' %} 1400w"
+           sizes="(min-width: 992px) 50vw, (min-width: 576px) 520px, 330px" width="1400" height="1020" fetchpriority="high"
+           alt="Packs from TRS, East End, MDH and Heera with bowls of turmeric, chilli, garam masala, cumin, coriander and cardamom">
+     </div></div>
+    </div></div>
+   </div>
+   <div class="hs-slide hs-mdh" role="group" aria-roledescription="slide" aria-label="2 of 2">
+    <img class="hs-mdh-bg" src="{% static 'images/hero/mdh-slide-1600.webp' %}" srcset="{% static 'images/hero/mdh-slide-1000.webp' %} 1000w, {% static 'images/hero/mdh-slide-1600.webp' %} 1600w"
+         sizes="100vw" width="1600" height="900" loading="lazy"
+         alt="MDH Deggi Mirch, Chunky Chat Masala, Kitchen King, Garam Masala and Pav Bhaji Masala packs in front of sacks of lentils and rice">
+    <img class="hs-mdh-phone" src="{% static 'images/hero/mdh-slide-phone-900.webp' %}" width="900" height="454" loading="lazy"
+         alt="MDH Deggi Mirch, Chunky Chat Masala, Kitchen King, Garam Masala and Pav Bhaji Masala packs">
+    <div class="container position-relative"><div class="hs-mdh-text">
+     <p class="hs-mdh-brand">Desi Roots</p>
+     <p class="hs-mdh-sub">Ethnic grocery supplier</p>
+     <span class="hs-mdh-rule" aria-hidden="true"></span>
+     {# "Largest MDH supplier" claim: the business confirmed on 18 Nov 2026 that it can back this up #}
+     <h2 class="hs-mdh-title"><span class="l1">The Largest</span> <span class="l2">MDH Supplier</span> <span class="l3">in South West England</span></h2>
+     <p class="hs-mdh-areas">Bristol <span aria-hidden="true">|</span> Bath <span aria-hidden="true">|</span> Cardiff<br>&amp; surrounding areas</p>
+     <div class="hs-mdh-actions">
+      <a href="/contact/" class="hs-mdh-btn hs-mdh-primary">Request Wholesale Quote</a>
+      <a href="/products/?brand=mdh" class="hs-mdh-btn hs-mdh-ghost">Browse MDH Range</a>
+     </div>
+    </div></div>
+   </div>
   </div>
-</div>
+  <button type="button" class="hs-arrow hs-prev" aria-label="Previous slide"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+  <button type="button" class="hs-arrow hs-next" aria-label="Next slide"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+  <div class="hs-dots">
+   <button type="button" class="hs-dot" aria-label="Show slide 1" aria-current="true"></button>
+   <button type="button" class="hs-dot" aria-label="Show slide 2" aria-current="false"></button>
+   <button type="button" class="hs-pause" aria-label="Pause slides"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
+  </div>
+ </div>
+ {% if featured_brands %}
+ <div class="hs-brandbar"><div class="h10-brands"><div class="container"><span>Brands we stock:</span> {% for brand in featured_brands|slice:":8" %}{{ brand.name }}{% if not forloop.last %} · {% endif %}{% endfor %}{% if featured_brands|length > 8 %} and more{% endif %}</div></div></div>
+ {% endif %}
+</section>
 
 <!-- Why Choose Desi Roots -->
 <div class="py-5 bg-white border-bottom border-sp">
@@ -273,6 +314,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/hero-slider.js' %}?v=1" defer></script>
 <script>
   // Shop by Brand arrows: move by as many whole badges as fit, so no logo is left half-shown
   function brandStep(track) {

@@ -81,6 +81,37 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
                 self.assertEqual(page.locator('h1').count(), 1, f'{path} at {viewport}')
                 self.no_sideways_scroll(page)
 
+    def test_hero_slider_moves_by_itself_pauses_and_works_by_keyboard(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/')
+        page.mouse.move(1, 899)  # pointer away from the slider (hovering pauses it)
+        current = lambda: page.evaluate(
+            "[...document.querySelectorAll('.hs-dot')].findIndex(d => d.getAttribute('aria-current') === 'true')")
+        self.assertEqual(current(), 0)
+        expect(page.locator('.hs-slide').nth(1)).to_have_attribute('aria-hidden', 'true')
+        page.wait_for_timeout(5600)
+        self.assertEqual(current(), 1, 'slide did not move after 5 seconds')
+        page.get_by_role('button', name='Pause slides').click()
+        page.mouse.move(1, 899)
+        page.wait_for_timeout(5600)
+        self.assertEqual(current(), 1, 'paused slider still moved')
+        page.get_by_role('button', name='Previous slide').focus()
+        page.keyboard.press('Enter')
+        self.assertEqual(current(), 0)
+        # Links on the hidden slide can't be reached by Tab
+        self.assertTrue(page.evaluate("document.querySelectorAll('.hs-slide')[1].inert"))
+        self.no_sideways_scroll(page)
+
+    def test_hero_slider_does_not_move_for_reduced_motion_users(self):
+        context = self.browser.new_context(viewport=PHONE, reduced_motion='reduce')
+        self.addCleanup(context.close)
+        page = context.new_page()
+        page.goto(self.live_server_url + '/')
+        page.wait_for_timeout(5600)
+        self.assertEqual(page.evaluate(
+            "[...document.querySelectorAll('.hs-dot')].findIndex(d => d.getAttribute('aria-current') === 'true')"), 0)
+        self.no_sideways_scroll(page)
+
     def test_home_category_circles_and_brand_arrows(self):
         page = self.page()
         page.goto(self.live_server_url + '/')
