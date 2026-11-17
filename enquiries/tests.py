@@ -255,3 +255,65 @@ class TurnstileTests(TestCase):
             response = self.client.post('/contact/', data=good_payload(**{'cf-turnstile-response': 'token'}))
         self.assertRedirects(response, '/wholesale/thank-you/')
         self.assertEqual(Enquiry.objects.count(), 1)
+
+
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com')
+class RepeatEnquiryTests(TestCase):
+    """A double click, slow-internet retry or page refresh must not save or email an enquiry twice (18 Nov 2026)."""
+
+    def setUp(self):
+        cache.clear()
+
+    def business_emails(self):
+        return [m for m in mail.outbox if m.to == ['support@example.com']]
+
+    def test_sending_the_same_enquiry_twice_saves_and_emails_once(self):
+        first = self.client.post('/contact/', data=good_payload())
+        second = self.client.post('/contact/', data=good_payload())
+        self.assertRedirects(first, '/wholesale/thank-you/', fetch_redirect_response=False)
+        self.assertRedirects(second, '/wholesale/thank-you/', fetch_redirect_response=False)  # visitor sees success
+        self.assertEqual(Enquiry.objects.count(), 1)
+        self.assertEqual(len(self.business_emails()), 1)
+        self.assertEqual(len([m for m in mail.outbox if m.to == ['asha@kitchen.co.uk']]), 1)
+
+    def test_same_message_with_different_capitals_or_spaces_in_email_is_still_a_repeat(self):
+        self.client.post('/contact/', data=good_payload())
+        self.client.post('/contact/', data=good_payload(email=' Asha@Kitchen.co.uk '))
+        self.assertEqual(Enquiry.objects.count(), 1)
+
+    def test_two_copies_arriving_at_the_same_moment_save_once(self):
+        # Simulate the second copy arriving before the first is in the database
+        from enquiries import views
+        with mock.patch.object(views, '_already_received', return_value=False):
+            self.client.post('/contact/', data=good_payload())
+            self.client.post('/contact/', data=good_payload())
+        self.assertEqual(Enquiry.objects.count(), 1)
+        self.assertEqual(len(self.business_emails()), 1)
+
+    def test_a_different_message_is_a_new_enquiry(self):
+        self.client.post('/contact/', data=good_payload())
+        self.client.post('/contact/', data=good_payload(message='Also 10 x 5 kg chapatti flour, please.'))
+        self.assertEqual(Enquiry.objects.count(), 2)
+        self.assertEqual(len(self.business_emails()), 2)
+
+    def test_the_same_message_after_ten_minutes_is_accepted(self):
+        from datetime import timedelta
+        from django.utils import timezone
+        self.client.post('/contact/', data=good_payload())
+        Enquiry.objects.update(created_at=timezone.now() - timedelta(minutes=11))
+        cache.clear()
+        self.client.post('/contact/', data=good_payload())
+        self.assertEqual(Enquiry.objects.count(), 2)
+
+    def test_repeats_do_not_use_up_the_hourly_limit(self):
+        from enquiries.views import ENQUIRY_LIMIT_PER_HOUR
+        for _ in range(ENQUIRY_LIMIT_PER_HOUR + 2):
+            self.client.post('/contact/', data=good_payload())          # one real + repeats
+        response = self.client.post('/contact/', data=good_payload(message='A genuinely new question.'))
+        self.assertRedirects(response, '/wholesale/thank-you/', fetch_redirect_response=False)
+        self.assertEqual(Enquiry.objects.count(), 2)
+
+    def test_contact_page_loads_the_send_once_script(self):
+        response = self.client.get('/contact/')
+        self.assertContains(response, 'data-send-once')
+        self.assertContains(response, '/static/js/enquiry-form.js')

@@ -140,6 +140,21 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         subjects = [m.subject for m in mail.outbox]
         self.assertTrue(any(f'Ref {enquiry.reference}' in s for s in subjects), subjects)
 
+    def test_double_clicking_send_saves_the_enquiry_once(self):
+        page = self.page(DESKTOP)
+        page.goto(self.live_server_url + '/contact/')
+        page.fill('#id_name', 'Ravi Shah')
+        page.fill('#id_email', 'ravi@shop.example')
+        page.fill('#id_phone', '0117 496 0001')
+        page.fill('#id_message', 'Price for 10 x 5 kg chapatti flour please.')
+        page.check('#id_consent_given')
+        time.sleep(3.2)
+        page.get_by_role('button', name='Send Message').dblclick()
+        expect(page).to_have_url(self.live_server_url + '/wholesale/thank-you/')
+        self.assertEqual(Enquiry.objects.filter(email='ravi@shop.example').count(), 1)
+        to_business = [m for m in mail.outbox if 'Ravi Shah' in m.subject]
+        self.assertEqual(len(to_business), 1, [m.subject for m in mail.outbox])
+
     def test_keyboard_users_can_reach_links_and_see_focus(self):
         page = self.page()
         page.goto(self.live_server_url + '/')

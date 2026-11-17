@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags static %}
 
 {% block meta_title %}Contact Us | Desi Roots{% endblock %}
 {% block meta_description %}Contact Desi Roots by phone, WhatsApp or email, or send a wholesale enquiry for trade pricing.{% endblock %}
@@ -106,7 +106,7 @@
           <h3 class="h4 fw-bold text-dark mb-1">Send a Message</h3>
           <p class="text-muted small mb-4">Please fill out your details below and our team will get back to you promptly.</p>
           
-          <form method="POST" action="{% url 'pages:contact' %}" novalidate>
+          <form method="POST" action="{% url 'pages:contact' %}" novalidate data-send-once>
             {% csrf_token %}
             
             {{ form|crispy }}
@@ -129,6 +129,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/enquiry-form.js' %}?v=1" defer></script>
 {% if turnstile_site_key %}
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 {% endif %}

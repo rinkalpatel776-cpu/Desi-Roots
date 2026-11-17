@@ -11,9 +11,12 @@ from django.core.validators import validate_email
 from .forms import EnquiryForm
 from .models import Enquiry
 from catalogue.models import Product
+import hashlib
 import logging
+from datetime import timedelta
 
 from django.core.cache import cache
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,25 @@ def _within_hourly_limit(request, name, limit):
 def _auto_reply_allowed(request):
     return _within_hourly_limit(request, 'enquiry-auto-reply', AUTO_REPLY_LIMIT_PER_HOUR)
 
+
+# The same email address sending the same message again within this time is a double click,
+# a browser retry on slow internet, or a page refresh: show the thank-you page, but don't save
+# or email it a second time.
+REPEAT_WINDOW_SECONDS = 10 * 60
+
+
+def _repeat_key(form):
+    data = form.cleaned_data
+    fingerprint = f"{data['email'].strip().lower()}\n{data['message'].strip()}"
+    return 'enquiry-repeat:' + hashlib.sha256(fingerprint.encode()).hexdigest()
+
+
+def _already_received(form):
+    data = form.cleaned_data
+    since = timezone.now() - timedelta(seconds=REPEAT_WINDOW_SECONDS)
+    return Enquiry.objects.filter(email__iexact=data['email'].strip(), message=data['message'],
+                                  created_at__gte=since).exists()
+
 def handle_enquiry_form(request, template_name):
     """Shows the enquiry form, saves valid submissions and sends the notification emails."""
     if request.method == 'POST':
@@ -54,9 +76,16 @@ def handle_enquiry_form(request, template_name):
         if form.is_valid() and form.is_spam:
             # Bots get the normal thank-you page, but nothing is saved or emailed
             return redirect('/wholesale/thank-you/')
+        if form.is_valid() and _already_received(form):
+            logger.info("Repeat of an enquiry received in the last few minutes; not saved again")
+            return redirect('/wholesale/thank-you/')
         if form.is_valid() and not _within_hourly_limit(request, 'enquiry-submit', ENQUIRY_LIMIT_PER_HOUR):
             logger.warning("Enquiry not saved: hourly limit reached for one visitor")
             form.add_error(None, TOO_MANY_ENQUIRIES)
+        if form.is_valid() and not cache.add(_repeat_key(form), 1, REPEAT_WINDOW_SECONDS):
+            # Two copies arriving at the same moment (double click): only the first is saved
+            logger.info("Simultaneous repeat of an enquiry; not saved again")
+            return redirect('/wholesale/thank-you/')
         if form.is_valid():
             enquiry = form.save()
             

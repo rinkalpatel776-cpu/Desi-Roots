@@ -44,3 +44,6 @@ Thumbs.db
 
 # ── Local data exports (may contain user records) ───────────
 backups/
+
+# ── Claude Code local settings (can contain commands with secrets; never commit) ──
+.claude/
