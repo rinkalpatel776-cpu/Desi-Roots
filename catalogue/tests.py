@@ -1,6 +1,9 @@
+import re
 
 import os
 import csv
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.test import TestCase, Client
 from django.utils.text import slugify
 from .models import Category, Brand, Product, PackSize, ProductImage
@@ -694,12 +697,63 @@ class ProductCardEnquireTests(TestCase):
         cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
         p = Product.objects.create(name='Allinson Yeast', slug='allinson-yeast', category=cat, is_published=True, badge='Trending')
         response = self.client.get('/products/')
-        self.assertContains(response, f'href="/contact/?product_id={p.id}"')
+        # Enquire is now a small GET form to the contact page carrying the product (and chosen size)
+        self.assertContains(response, '<form action="/contact/" method="get" class="sp-enquire-form">', html=False)
+        self.assertContains(response, f'<input type="hidden" name="product_id" value="{p.id}">', html=False)
         self.assertContains(response, 'Enquire')
         self.assertNotContains(response, 'View Details')
         # Cards don't open the product page: neither the photo nor the name is a link
         self.assertNotContains(response, 'href="/products/allinson-yeast/"')
         self.assertContains(response, 'class="sp-badge sp-card-badge"')
+
+
+class PackSizeDropdownTests(TestCase):
+    def setUp(self):
+        self.cat = Category.objects.create(name='Spices & Masalas', slug='spices-masalas')
+
+    def make(self, name, sizes):
+        from django.utils.text import slugify
+        p = Product.objects.create(name=name, slug=slugify(name), category=self.cat, is_published=True)
+        for i, s in enumerate(sizes):
+            PackSize.objects.create(product=p, size=s, display_order=i)
+        return p
+
+    def test_several_sizes_show_a_labelled_dropdown_in_order(self):
+        p = self.make('East End Ajwain Seeds', ['6 x 1 kg', '20 x 300 g', '20 x 100 g'])
+        html = self.client.get('/products/').content.decode()
+        self.assertIn(f'<label for="size-{p.id}"', html)
+        self.assertIn(f'<select id="size-{p.id}" name="size"', html)
+        ids = list(p.pack_sizes.order_by('display_order').values_list('id', flat=True))
+        opts = re.findall(r'<option value="(\d+)">([^<]+)</option>', html)
+        self.assertEqual([int(i) for i, _ in opts], ids)
+        self.assertEqual([t for _, t in opts], ['6 x 1 kg', '20 x 300 g', '20 x 100 g'])
+        self.assertNotIn('options)', html)  # the owner asked for just 'Pack size'
+
+    def test_one_size_is_also_a_dropdown(self):
+        p = self.make('East End Amchoor Powder', ['1 x 25 kg'])
+        html = self.client.get('/products/').content.decode()
+        self.assertIn(f'<select id="size-{p.id}" name="size"', html)
+        self.assertIn(f'<option value="{p.pack_sizes.get().id}">1 x 25 kg</option>', html)
+
+    def test_no_sizes_asks_buyers_to_contact_us(self):
+        self.make('Mystery Spice', [])
+        html = self.client.get('/products/').content.decode()
+        self.assertNotIn('sp-size-select', html)
+        self.assertIn('Contact us for pack sizes', html)
+
+    def test_size_names_are_escaped(self):
+        self.make('Odd', ['<b>5 kg</b>'])
+        html = self.client.get('/products/').content.decode()
+        self.assertNotIn('<b>5 kg</b>', html)
+        self.assertIn('&lt;b&gt;5 kg&lt;/b&gt;', html)
+
+    def test_dropdowns_do_not_add_a_query_per_card(self):
+        for i in range(24):
+            self.make(f'Product {i:02d}', ['1 kg', '5 kg', '10 kg'])
+        self.client.get('/products/')  # warm caches
+        with CaptureQueriesContext(connection) as ctx:
+            self.client.get('/products/')
+        self.assertLess(len(ctx.captured_queries), 20, [q['sql'][:80] for q in ctx.captured_queries])
 
 
 class CatalogueSidebarCountTests(TestCase):

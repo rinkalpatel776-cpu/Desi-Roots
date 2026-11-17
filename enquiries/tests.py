@@ -41,6 +41,22 @@ class EnquiryTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'wholesale pricing and availability for Turmeric Powder')
 
+    def test_chosen_pack_size_is_added_to_the_prefilled_message(self):
+        from catalogue.models import PackSize
+        size = PackSize.objects.create(product=self.product, size='20 x 300 g')
+        response = self.client.get(f'/contact/?product_id={self.product.id}&size={size.id}')
+        self.assertContains(response, 'availability for Turmeric Powder (20 x 300 g).')
+
+    def test_pack_size_of_another_product_or_rubbish_is_ignored(self):
+        from catalogue.models import PackSize
+        other = Product.objects.create(name='Other', slug='other', category=self.category, is_published=True)
+        foreign = PackSize.objects.create(product=other, size='1 x 25 kg')
+        for bad in (str(foreign.id), 'abc', '-1', '1 OR 1=1', '<script>', '9' * 40):
+            response = self.client.get('/contact/', {'product_id': self.product.id, 'size': bad})
+            self.assertEqual(response.status_code, 200, bad)
+            self.assertContains(response, 'availability for Turmeric Powder.', msg_prefix=bad)
+            self.assertNotContains(response, '25 kg', msg_prefix=bad)
+
     def test_old_wholesale_url_redirects_permanently_to_contact(self):
         response = self.client.get('/wholesale/')
         self.assertRedirects(response, '/contact/', status_code=301)

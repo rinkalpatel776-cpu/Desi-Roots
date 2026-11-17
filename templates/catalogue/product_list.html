@@ -158,21 +158,21 @@
                   <p class="text-muted small mb-3">{{ product.description|truncatechars:85 }}</p>
                 </div>
                 
-                <div>
-                  <!-- Pack Sizes -->
-                  <div class="mb-3">
-                    <span class="d-none d-sm-block small text-muted mb-1 fw-medium">Available sizes:</span>
-                    <div class="d-flex flex-wrap gap-1">
-                      {% for size in product.pack_sizes.all %}
-                        <span class="badge bg-white text-muted border border-sp py-1 px-2 font-monospace">{{ size.size }}</span>
-                      {% empty %}
-                        <span class="text-muted small italic">Contact for sizes</span>
-                      {% endfor %}
-                    </div>
-                  </div>
-                  
-                  <a href="/contact/?product_id={{ product.id }}" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-chat-left-text me-2" aria-hidden="true"></i>Enquire</a>
-                </div>
+                {# Pack size: always a dropdown (even for one size, so cards look the same); the Enquire button sends the chosen size to the enquiry form (no JavaScript) #}
+                {% with sizes=product.pack_sizes.all %}
+                <form action="/contact/" method="get" class="sp-enquire-form">
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  {% if sizes %}
+                    <label for="size-{{ product.id }}" class="small text-muted mb-1 fw-medium d-block">Pack size</label>
+                    <select id="size-{{ product.id }}" name="size" class="form-select form-select-sm sp-size-select mb-3">
+                      {% for size in sizes %}<option value="{{ size.id }}">{{ size.size }}</option>{% endfor %}
+                    </select>
+                  {% else %}
+                    <p class="text-muted small mb-3">Contact us for pack sizes</p>
+                  {% endif %}
+                  <button type="submit" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-chat-left-text me-2" aria-hidden="true"></i>Enquire</button>
+                </form>
+                {% endwith %}
               </div>
             </div>
           </div>

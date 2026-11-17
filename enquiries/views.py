@@ -144,7 +144,13 @@ def handle_enquiry_form(request, template_name):
         if product_id:
             try:
                 product = Product.objects.get(id=product_id, is_published=True)
-                initial_data['message'] = f"Hello, I am interested in wholesale pricing and availability for {product.name}."
+                label = product.name
+                # ?size= is a PackSize id chosen in the card's dropdown; only sizes of this product count
+                size = product.pack_sizes.filter(id=request.GET.get('size', '')).first() \
+                    if request.GET.get('size', '').isdigit() else None
+                if size:
+                    label = f"{product.name} ({size.size})"
+                initial_data['message'] = f"Hello, I am interested in wholesale pricing and availability for {label}."
             except (Product.DoesNotExist, ValueError):
                 pass
                 
