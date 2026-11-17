@@ -8,8 +8,8 @@
 .h10-tag { display: inline-flex; align-items: center; gap: .5rem; background: #fff; color: #7A3E1D; font-weight: 700; font-size: .8rem;
   letter-spacing: .08em; text-transform: uppercase; padding: .45rem .9rem; border-radius: 999px; box-shadow: 0 6px 16px -10px rgba(122,62,29,.6); }
 .h10-tag .dot { width: 8px; height: 8px; border-radius: 50%; background: #4F7D3A; }
-.h10 h1 { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.9rem, 3.4vw, 2.75rem); line-height: 1.15; margin: 1rem 0; color: #2a1406; }
-.h10 h1 .c1 { color: #B8322A; } .h10 h1 .c2 { color: #3E7A2E; }
+.h10 h1, .h10 .h10-title { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.9rem, 3.4vw, 2.75rem); line-height: 1.15; margin: 1rem 0; color: #2a1406; }
+.h10 .h10-title .c1 { color: #B8322A; } .h10 .h10-title .c2 { color: #3E7A2E; }
 .h10-lead { font-size: 1.12rem; line-height: 1.65; color: #5a4636; max-width: 520px; margin-bottom: 1.6rem; }
 .h10-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.6rem; }
 .h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 999px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
@@ -40,7 +40,7 @@
   .h10-art { max-width: 330px; }
   .h10-art img { filter: drop-shadow(0 14px 18px rgba(122,62,29,.25)); }
   .h10-tag { font-size: .7rem; padding: .35rem .75rem; }
-  .h10 h1 { font-size: 1.6rem; margin: .7rem 0 .6rem; }
+  .h10 h1, .h10 .h10-title { font-size: 1.6rem; margin: .7rem 0 .6rem; }
   .h10-lead { font-size: .98rem; line-height: 1.55; margin: 0 auto 1.1rem; }
   .h10-actions { flex-direction: column; gap: .6rem; margin-bottom: 1.1rem; }
   .h10-btn { justify-content: center; width: 100%; padding: .8rem 1rem; font-size: .98rem; }
@@ -101,3 +101,15 @@
   .hs-arrow { display: none; }  /* phones: swipe or use the dots */
 }
 @media (prefers-reduced-motion: reduce) { .hs-track { transition: none; } }
+
+/* Slide 1 is the original spice-merchant photo hero (styles in style.css). Use min-height instead of
+   a fixed height so all three slides share the tallest slide's height. */
+.hs .sp-hero-wrapper { height: auto; min-height: clamp(520px, 56.25vw, 900px); border-bottom: 0; }
+.hs .h10 { display: flex; flex-direction: column; justify-content: center; }
+@media (min-width: 768px) and (max-width: 991.98px) { .hs .sp-hero-wrapper { min-height: 75vw; } }
+@media (max-width: 767.98px) {
+  /* Phones: the slide is as tall as the welcome slide, so the photo stays at the top and the
+     buttons sit in the middle of the dark band below it (clear of the slide dots) */
+  .hs .sp-hero-wrapper { min-height: 0; align-items: center; }
+  .hs .sp-hero-container { padding-bottom: 3rem !important; }
+}

@@ -62,7 +62,7 @@ class BrandAdminHomePageMessageTests(TestCase):
 
 
 class HomeHeroSliderTests(TestCase):
-    """Home hero is a 2-slide slider (18 Nov 2026): welcome slide, then the MDH slide."""
+    """Home hero slider (18 Nov 2026): spice-merchant photo, welcome slide, then the MDH slide."""
 
     def setUp(self):
         from catalogue.models import Category, Product
@@ -77,10 +77,15 @@ class HomeHeroSliderTests(TestCase):
     def test_one_h1_and_both_slides_with_controls(self):
         html = self.html()
         self.assertEqual(html.count('<h1'), 1)
+        # The one h1 sits outside the slides, so it is never hidden when a slide moves away
+        h1 = html.index('<h1'); first_slide = html.index('class="hs-slide')
+        self.assertLess(h1, first_slide)
         self.assertIn('Your Trusted Wholesale Partner for', html)
         self.assertIn('MDH Supplier', html)
-        self.assertEqual(html.count('aria-roledescription="slide"'), 2)
-        for label in ('Previous slide', 'Next slide', 'Show slide 1', 'Show slide 2', 'Pause slides'):
+        self.assertEqual(html.count('aria-roledescription="slide"'), 3)
+        self.assertLess(html.index('sp-hero-wrapper'), html.index('h10-title'))  # old photo hero is slide 1
+        self.assertLess(html.index('h10-title'), html.index('hs-mdh-title'))
+        for label in ('Previous slide', 'Next slide', 'Show slide 1', 'Show slide 2', 'Show slide 3', 'Pause slides'):
             self.assertIn(f'aria-label="{label}"', html)
         self.assertIn('href="/products/?brand=mdh"', html)
 
@@ -88,7 +93,7 @@ class HomeHeroSliderTests(TestCase):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
         self.assertIn('/static/js/hero-slider.js?v=1', html)
-        self.assertIn('/static/css/home-hero.css?v=1', html)
+        self.assertIn('/static/css/home-hero.css?v=3', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):
