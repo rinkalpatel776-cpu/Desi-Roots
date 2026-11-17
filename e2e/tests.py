@@ -114,9 +114,19 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
     def test_enquire_button_prefills_the_contact_form(self):
         page = self.page()
         page.goto(self.live_server_url + '/products/?q=chilli')
-        page.get_by_role('link', name='Enquire').first.click()
+        page.get_by_role('button', name='Enquire').first.click()
+        # The product's only pack size now travels with the enquiry
         expect(page.locator('#id_message')).to_have_value(
-            'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder.')
+            'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder (10 x 400 g).')
+
+    def test_choosing_a_pack_size_sends_it_to_the_enquiry_form_on_phone(self):
+        PackSize.objects.create(product=self.chilli, size='6 x 1 kg', display_order=1)
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/products/?q=chilli')
+        page.get_by_label('Pack size').first.select_option(label='6 x 1 kg')
+        page.get_by_role('button', name='Enquire').first.click()
+        expect(page.locator('#id_message')).to_have_value(
+            'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder (6 x 1 kg).')
 
     def test_contact_form_rejects_empty_then_sends_enquiry(self):
         page = self.page(PHONE)
