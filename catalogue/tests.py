@@ -723,23 +723,38 @@ class PackSizeDropdownTests(TestCase):
         html = self.client.get('/products/').content.decode()
         self.assertIn(f'<label for="size-{p.id}"', html)
         self.assertIn(f'<select id="size-{p.id}" name="size"', html)
-        ids = list(p.pack_sizes.order_by('display_order').values_list('id', flat=True))
+        # Owner's request: just the pack weight, smallest first; each option still points at its own size
+        by_size = dict(p.pack_sizes.values_list('size', 'id'))
         opts = re.findall(r'<option value="(\d+)">([^<]+)</option>', html)
-        self.assertEqual([int(i) for i, _ in opts], ids)
-        self.assertEqual([t for _, t in opts], ['6 x 1 kg', '20 x 300 g', '20 x 100 g'])
+        self.assertEqual([t for _, t in opts], ['100 g', '300 g', '1 kg'])
+        self.assertEqual([int(i) for i, _ in opts], [by_size['20 x 100 g'], by_size['20 x 300 g'], by_size['6 x 1 kg']])
         self.assertNotIn('options)', html)  # the owner asked for just 'Pack size'
+        # The closed box reads 'Pack size' (a placeholder that can't be sent), then the real sizes
+        self.assertIn('<option value="" selected disabled>Pack size</option><option', html.replace('\n', '').replace('  ', ''))
 
     def test_one_size_is_also_a_dropdown(self):
         p = self.make('East End Amchoor Powder', ['1 x 25 kg'])
         html = self.client.get('/products/').content.decode()
         self.assertIn(f'<select id="size-{p.id}" name="size"', html)
-        self.assertIn(f'<option value="{p.pack_sizes.get().id}">1 x 25 kg</option>', html)
+        self.assertIn(f'<option value="{p.pack_sizes.get().id}">25 kg</option>', html)
 
     def test_no_sizes_asks_buyers_to_contact_us(self):
         self.make('Mystery Spice', [])
         html = self.client.get('/products/').content.decode()
         self.assertNotIn('sp-size-select', html)
         self.assertIn('Contact us for pack sizes', html)
+
+    def test_same_weight_in_two_cases_keeps_the_full_wording(self):
+        self.make('Rice', ['10 x 100 g', '20 x 100 g', '1 x 5 kg'])
+        html = self.client.get('/products/').content.decode()
+        opts = re.findall(r'<option value="\d+">([^<]+)</option>', html)
+        self.assertEqual(opts, ['10 x 100 g', '20 x 100 g', '5 kg'])
+
+    def test_litres_pounds_and_other_units_sort_sensibly(self):
+        self.make('Oil', ['12 x 30 sticks', '4 x 5 ltr', '12 x 500 ml', '6 x 1 lb'])
+        html = self.client.get('/products/').content.decode()
+        opts = re.findall(r'<option value="\d+">([^<]+)</option>', html)
+        self.assertEqual(opts, ['1 lb', '500 ml', '5 ltr', '30 sticks'])
 
     def test_size_names_are_escaped(self):
         self.make('Odd', ['<b>5 kg</b>'])

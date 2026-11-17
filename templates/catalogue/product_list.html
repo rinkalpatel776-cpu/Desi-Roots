@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static catalogue_extras %}
 
 {% block meta_title %}{% if active_filters.category %}{{ active_filters.category.name }} | {% elif active_filters.brand %}{{ active_filters.brand.name }} | {% endif %}Wholesale Product Catalogue | Desi Roots{% endblock %}
 {% block meta_description %}{% if active_filters.category %}Wholesale {{ active_filters.category.name|lower }} for restaurants and retailers in Bristol and nearby areas. Browse the range and request a quote from Desi Roots.{% elif active_filters.brand %}{{ active_filters.brand.name }} products available wholesale from Desi Roots in Bristol. Browse the range and request a quote.{% else %}Browse Desi Roots' wholesale catalogue of spices, lentils, rice, flour, snacks and ethnic groceries. Request a quote for trade pricing.{% endif %}{% endblock %}
@@ -163,9 +163,11 @@
                 <form action="/contact/" method="get" class="sp-enquire-form">
                   <input type="hidden" name="product_id" value="{{ product.id }}">
                   {% if sizes %}
-                    <label for="size-{{ product.id }}" class="small text-muted mb-1 fw-medium d-block">Pack size</label>
+                    {# The box reads "Pack size" until opened, so buyers can tell there are sizes inside (owner's request) #}
+                    <label for="size-{{ product.id }}" class="visually-hidden">Pack size for {{ product.name }}</label>
                     <select id="size-{{ product.id }}" name="size" class="form-select form-select-sm sp-size-select mb-3">
-                      {% for size in sizes %}<option value="{{ size.id }}">{{ size.size }}</option>{% endfor %}
+                      <option value="" selected disabled>Pack size</option>
+                      {% for choice in sizes|pack_choices %}<option value="{{ choice.id }}">{{ choice.label }}</option>{% endfor %}
                     </select>
                   {% else %}
                     <p class="text-muted small mb-3">Contact us for pack sizes</p>
