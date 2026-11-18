@@ -6,7 +6,7 @@
 {% block og_title %}Desi Roots | Wholesale Spices &amp; Groceries Bristol{% endblock %}
 {% block og_description %}Desi Roots supplies wholesale spices, lentils, rice, flour and ethnic groceries to restaurants and retailers in Bristol and nearby areas.{% endblock %}
 
-{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=3" rel="stylesheet">{% endblock %}
+{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=4" rel="stylesheet">{% endblock %}
 
 {% block content %}
 <!-- Hero slider: slide 1 spice-merchant photo, slide 2 welcome, slide 3 MDH; moves every 5 seconds (static/js/hero-slider.js) -->
@@ -78,7 +78,6 @@
    <button type="button" class="hs-dot" aria-label="Show slide 1" aria-current="true"></button>
    <button type="button" class="hs-dot" aria-label="Show slide 2" aria-current="false"></button>
    <button type="button" class="hs-dot" aria-label="Show slide 3" aria-current="false"></button>
-   <button type="button" class="hs-pause" aria-label="Pause slides"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
   </div>
  </div>
  {% if featured_brands %}
@@ -330,7 +329,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/hero-slider.js' %}?v=1" defer></script>
+<script src="{% static 'js/hero-slider.js' %}?v=2" defer></script>
 <script>
   // Shop by Brand arrows: move by as many whole badges as fit, so no logo is left half-shown
   function brandStep(track) {
