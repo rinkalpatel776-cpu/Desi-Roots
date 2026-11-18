@@ -125,6 +125,21 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
             "[...document.querySelectorAll('.hs-dot')].findIndex(d => d.getAttribute('aria-current') === 'true')"), 0)
         self.no_sideways_scroll(page)
 
+    def test_top_bar_shows_messages_in_turn_on_phone(self):
+        from core.models import SiteSettings
+        s = SiteSettings.objects.first() or SiteSettings()
+        s.announcement_bar = 'FIRST MESSAGE\nWe deliver across the South West of England.'
+        s.save()
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/')
+        first, second = page.locator('.announcement-msg').nth(0), page.locator('.announcement-msg').nth(1)
+        expect(first).to_be_visible()
+        expect(second).to_be_hidden()
+        page.wait_for_timeout(5800)
+        expect(second).to_be_visible()
+        expect(first).to_be_hidden()
+        self.no_sideways_scroll(page)
+
     def test_home_category_circles_and_brand_arrows(self):
         page = self.page()
         page.goto(self.live_server_url + '/')

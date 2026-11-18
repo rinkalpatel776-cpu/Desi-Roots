@@ -60,6 +60,12 @@ a:hover {
   padding: 7px 0;
   text-align: center;
 }
+/* Several messages sit on top of each other and fade in turn, so the bar keeps the height of the longest */
+.announcement-track { display: grid; }
+.announcement-msg { grid-area: 1 / 1; margin: 0; align-self: center; opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s; }
+.announcement-msg.is-active { opacity: 1; visibility: visible; }
+@media (max-width: 575.98px) { .announcement-bar { font-size: 0.75rem; letter-spacing: 0.03em; } }
+@media (prefers-reduced-motion: reduce) { .announcement-msg { transition: none; } }
 
 /* Custom Sticky Navigation */
 .navbar {
