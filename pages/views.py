@@ -2,6 +2,23 @@ from django.shortcuts import render
 from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
+def _rounded(n, step):
+    """1931 -> '1,900+' so the hero never over-states; small numbers are shown exactly."""
+    if n < step:
+        return str(n)
+    return f"{(n // step) * step:,}+"
+
+
+def _hero_stats():
+    """Counts for the home hero chips, taken from the live catalogue (published products only)."""
+    published = Product.objects.filter(is_published=True)
+    return {
+        'products': _rounded(published.count(), 100),
+        'brands': _rounded(Brand.objects.filter(products__is_published=True).distinct().count(), 10),
+        'categories': Category.objects.filter(is_active=True, products__is_published=True).distinct().count(),
+    }
+
+
 def home(request):
     # Up to 24 categories ticked "Show on home page" in the admin, in display order
     # (the first 24 with published products if none are ticked)
@@ -25,6 +42,7 @@ def home(request):
     faqs = FAQ.objects.filter(is_active=True).order_by('display_order', 'id')[:4]
 
     context = {
+        'hero_stats': _hero_stats(),
         'categories': categories,
         'featured_products': featured_products,
         'featured_brands': featured_brands,

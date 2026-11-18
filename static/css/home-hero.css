@@ -1,0 +1,115 @@
+/* Home page hero slider (18 Nov 2026): slide 1 = colourful welcome, slide 2 = MDH.
+   Loaded on the home page only. Colours meet WCAG AA on their backgrounds. */
+.h10 { position: relative; overflow: hidden; background: linear-gradient(135deg, #FFF8EC 0%, #FFEFD8 45%, #FDE6DC 100%); color: #2a1406; padding: 56px 0 0; }
+.h10-blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; pointer-events: none; }
+.h10-blob.b1 { width: 420px; height: 420px; background: #FFD36B; right: 6%; top: -80px; }
+.h10-blob.b2 { width: 360px; height: 360px; background: #F7A8A0; right: 32%; bottom: -120px; }
+.h10-blob.b3 { width: 300px; height: 300px; background: #CFE6B8; left: -80px; top: 40%; }
+.h10-tag { display: inline-flex; align-items: center; gap: .5rem; background: #fff; color: #7A3E1D; font-weight: 700; font-size: .8rem;
+  letter-spacing: .08em; text-transform: uppercase; padding: .45rem .9rem; border-radius: 999px; box-shadow: 0 6px 16px -10px rgba(122,62,29,.6); }
+.h10-tag .dot { width: 8px; height: 8px; border-radius: 50%; background: #4F7D3A; }
+.h10 h1, .h10 .h10-title { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.9rem, 3.4vw, 2.75rem); line-height: 1.15; margin: 1rem 0; color: #2a1406; }
+.h10 .h10-title .c1 { color: #B8322A; } .h10 .h10-title .c2 { color: #3E7A2E; }
+.h10-lead { font-size: 1.12rem; line-height: 1.65; color: #5a4636; max-width: 520px; margin-bottom: 1.6rem; }
+.h10-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.6rem; }
+.h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 999px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.h10-btn:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
+.h10-primary { background: #B8322A; color: #fff; box-shadow: 0 12px 22px -12px rgba(184,50,42,.9); }
+.h10-primary:hover { background: #9c2a23; color: #fff; transform: translateY(-2px); }
+.h10-ghost { background: #fff; color: #2a1406; border: 2px solid #2a1406; }
+.h10-ghost:hover { background: #2a1406; color: #fff; }
+.h10-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.h10-chips li { padding: .45rem .9rem; border-radius: 12px; font-size: .92rem; color: #2a1406; }
+.h10-chips strong { font-family: var(--sp-font-head); }
+.h10-chips .k1 { background: #FFE2A0; } .h10-chips .k2 { background: #FBD0CB; } .h10-chips .k3 { background: #D6EBC6; }
+.h10-art { position: relative; }
+.h10-art::before { content: ""; position: absolute; inset: 8% 6% 4%; border-radius: 50%; background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0) 70%); }
+.h10-art img { position: relative; width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 30px rgba(122,62,29,.25)); }
+.h10-brands { position: relative; margin-top: 28px; background: rgba(255,255,255,.75); border-top: 1px solid #F1DFC6; padding: 14px 0; font-weight: 600; color: #5a4636; font-size: .95rem; }
+.h10-brands span { color: #B8322A; margin-right: .3rem; }
+@media (max-width: 991.98px) {
+  .h10 { padding-top: 18px; }
+  .h10 .row > .col-lg-6:last-child { order: -1; }          /* packs first on tablets and phones */
+  .h10-art { max-width: 520px; margin: 0 auto; }
+}
+@media (max-width: 575.98px) {
+  .h10 { padding-top: 12px; text-align: center; }
+  .h10-blob.b1 { width: 260px; height: 260px; right: -60px; top: -60px; }
+  .h10-blob.b2 { width: 220px; height: 220px; right: 20%; bottom: -80px; }
+  .h10-blob.b3 { width: 200px; height: 200px; left: -90px; }
+  .h10-art { max-width: 330px; }
+  .h10-art img { filter: drop-shadow(0 14px 18px rgba(122,62,29,.25)); }
+  .h10-tag { font-size: .7rem; padding: .35rem .75rem; }
+  .h10 h1, .h10 .h10-title { font-size: 1.6rem; margin: .7rem 0 .6rem; }
+  .h10-lead { font-size: .98rem; line-height: 1.55; margin: 0 auto 1.1rem; }
+  .h10-actions { flex-direction: column; gap: .6rem; margin-bottom: 1.1rem; }
+  .h10-btn { justify-content: center; width: 100%; padding: .8rem 1rem; font-size: .98rem; }
+  .h10-chips { justify-content: center; flex-wrap: nowrap; gap: .4rem; }
+  .h10-chips li { padding: .4rem .6rem; font-size: .8rem; white-space: nowrap; }
+  .h10-brands { margin-top: 18px; font-size: .85rem; text-align: center; padding: 10px 0; }
+  .h10-brands span { display: block; margin: 0 0 2px; }
+}
+
+/* ---- Slider ---- */
+.hs { position: relative; }
+.hs-viewport { position: relative; overflow: hidden; }
+.hs-track { display: flex; transition: transform .7s ease; }
+.hs-slide { flex: 0 0 100%; min-width: 0; }
+.hs .h10 { padding-bottom: 56px; }
+.hs-brandbar { background: linear-gradient(135deg, #FFF8EC 0%, #FDE6DC 100%); }
+.hs-brandbar .h10-brands { margin-top: 0; }
+.hs-mdh { position: relative; background: #18100b; color: #FAF3E6; display: flex; align-items: center; }
+.hs-mdh-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
+.hs-mdh-phone { display: none; }
+.hs-mdh-text { position: relative; max-width: 560px; padding: 48px 0 64px; }
+.hs-mdh-brand { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1; color: #D6B67A; margin: 0; }
+.hs-mdh-sub { letter-spacing: .32em; text-transform: uppercase; font-size: .8rem; margin: .5rem 0 1.2rem; color: #FAF3E6; }
+.hs-mdh-rule { display: block; width: 64px; height: 2px; background: #D6B67A; margin-bottom: 1.3rem; }
+.hs-mdh-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; line-height: 1.05; margin: 0 0 1.2rem; color: #FAF3E6; }
+.hs-mdh-title span { display: block; }
+.hs-mdh-title .l1 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+.hs-mdh-title .l2 { font-size: clamp(2.8rem, 5.6vw, 4.6rem); color: #E8A317; font-weight: 700; }
+.hs-mdh-title .l3 { font-size: clamp(1.7rem, 3vw, 2.5rem); }
+.hs-mdh-areas { text-transform: uppercase; letter-spacing: .06em; font-weight: 500; font-size: 1rem; line-height: 1.7; margin-bottom: 1.6rem; }
+.hs-mdh-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+.hs-mdh-btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--sp-font-head); font-weight: 600; padding: .8rem 1.4rem; border-radius: 8px; text-decoration: none; }
+.hs-mdh-primary { background: #B35A12; color: #fff; } .hs-mdh-primary:hover { background: #9C4D10; color: #fff; }
+.hs-mdh-ghost { border: 2px solid #FAF3E6; color: #FAF3E6; } .hs-mdh-ghost:hover { background: #FAF3E6; color: #18100b; }
+.hs-mdh-btn:focus-visible, .hs-arrow:focus-visible, .hs-dot:focus-visible, .hs-pause:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
+.hs-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92);
+  color: #2a1406; box-shadow: 0 4px 14px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 3; }
+.hs-prev { left: 12px; } .hs-next { right: 12px; }
+.hs-dots { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; z-index: 3;
+  background: rgba(255,255,255,.9); padding: 6px 10px; border-radius: 999px; box-shadow: 0 2px 10px rgba(0,0,0,.2); }
+.hs-dot { width: 24px; height: 24px; border: 0; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center; }
+.hs-dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #B9A58E; transition: width .2s; }
+.hs-dot[aria-current="true"]::before { width: 22px; border-radius: 6px; background: #B35A12; }
+.hs-pause { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #2a1406; color: #fff; display: flex; align-items: center; justify-content: center; font-size: .95rem; padding: 0; }
+@media (max-width: 991.98px) {
+  .hs-mdh { display: flex; flex-direction: column; align-items: stretch; }
+  .hs-mdh > .container { flex: 1; display: flex; align-items: center; justify-content: center; }
+  .hs-mdh-bg { display: none; }
+  .hs-mdh-phone { display: block; width: 100%; height: auto; }
+  .hs-mdh-text { max-width: none; text-align: center; padding: 20px 0 64px; }
+  .hs-mdh-rule { margin: 0 auto 1rem; }
+  .hs-mdh-actions { justify-content: center; }
+  .hs-arrow { top: 30%; width: 40px; height: 40px; }
+}
+@media (max-width: 575.98px) {
+  .hs-mdh-actions { flex-direction: column; }
+  .hs-mdh-btn { width: 100%; }
+  .hs-arrow { display: none; }  /* phones: swipe or use the dots */
+}
+@media (prefers-reduced-motion: reduce) { .hs-track { transition: none; } }
+
+/* Slide 1 is the original spice-merchant photo hero (styles in style.css). Use min-height instead of
+   a fixed height so all three slides share the tallest slide's height. */
+.hs .sp-hero-wrapper { height: auto; min-height: clamp(520px, 56.25vw, 900px); border-bottom: 0; }
+.hs .h10 { display: flex; flex-direction: column; justify-content: center; }
+@media (min-width: 768px) and (max-width: 991.98px) { .hs .sp-hero-wrapper { min-height: 75vw; } }
+@media (max-width: 767.98px) {
+  /* Phones: the slide is as tall as the welcome slide, so the photo stays at the top and the
+     buttons sit in the middle of the dark band below it (clear of the slide dots) */
+  .hs .sp-hero-wrapper { min-height: 0; align-items: center; }
+  .hs .sp-hero-container { padding-bottom: 3rem !important; }
+}
