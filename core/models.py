@@ -2,10 +2,10 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class SiteSettings(models.Model):
-    announcement_bar = models.CharField(
-        max_length=255, 
-        blank=True, 
-        help_text="Text shown in the announcement bar at the top of every page."
+    announcement_bar = models.TextField(
+        blank=True,
+        help_text="Text shown in the bar at the top of every page. Put each message on its own line: "
+                  "with more than one line, the bar shows them in turn, changing every 5 seconds."
     )
     phone_number = models.CharField(
         max_length=50, 
@@ -35,6 +35,11 @@ class SiteSettings(models.Model):
     class Meta:
         verbose_name = "Site Settings"
         verbose_name_plural = "Site Settings"
+
+    @property
+    def announcement_messages(self):
+        """The top-bar messages, one per non-empty line, in order."""
+        return [line.strip() for line in self.announcement_bar.splitlines() if line.strip()]
 
     def clean(self):
         # Prevent creating multiple instances of SiteSettings
