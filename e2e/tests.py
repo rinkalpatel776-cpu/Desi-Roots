@@ -128,7 +128,7 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
     def test_top_bar_shows_messages_in_turn_on_phone(self):
         from core.models import SiteSettings
         s = SiteSettings.objects.first() or SiteSettings()
-        s.announcement_bar = 'FIRST MESSAGE\nWe deliver across the South West of England.'
+        s.announcement_bar = 'WE SUPPLY THE SPICE, YOU CREATE THE MAGIC.\nWE DELIVER ACROSS BRISTOL & SOUTH WEST ENGLAND'
         s.save()
         page = self.page(PHONE)
         page.goto(self.live_server_url + '/')
@@ -139,6 +139,12 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         expect(second).to_be_visible()
         expect(first).to_be_hidden()
         self.no_sideways_scroll(page)
+        # Owner's request: each message stays on one line, even on a small 320px phone
+        for width in (320, 375):
+            page.set_viewport_size({'width': width, 'height': 700})
+            for msg in page.locator('.announcement-msg').all():
+                self.assertFalse(msg.evaluate('m => m.scrollWidth > m.clientWidth + 1'), f'cut off at {width}px')
+                self.assertLess(msg.evaluate('m => m.getBoundingClientRect().height'), 24, f'wraps at {width}px')
 
     def test_home_category_circles_and_brand_arrows(self):
         page = self.page()
