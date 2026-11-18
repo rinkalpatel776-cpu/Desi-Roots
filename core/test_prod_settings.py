@@ -64,3 +64,28 @@ class ProductionSettingsTests(SimpleTestCase):
         # Hostinger only accepts mail sent from the real mailbox, not Django's default root@localhost
         self.assertEqual(values['SERVER_EMAIL'], values['DEFAULT_FROM_EMAIL'])
         self.assertNotIn('localhost', values['SERVER_EMAIL'])
+
+
+BAD_HOST_PROBE = (
+    "import django; django.setup(); "
+    "from django.test.utils import setup_test_environment; setup_test_environment(); "
+    "import logging; from django.core import mail; from django.test import Client; "
+    "c = Client(); "
+    "codes = [c.get('/', HTTP_HOST=h, secure=True).status_code for h in ('2.57.90.91', 'evil.example.com')]; "
+    "refused_mails = len(mail.outbox); "
+    "logging.getLogger('django.request').error('real crash'); "
+    "print(codes, refused_mails, len(mail.outbox))"
+)
+
+
+class BadHostAlertTests(SimpleTestCase):
+    def test_fake_host_visits_are_refused_without_emailing_but_crashes_still_email(self):
+        full_env = {**os.environ, 'DJANGO_SETTINGS_MODULE': 'config.settings.prod', 'SECRET_KEY': GOOD_KEY,
+                    'ADMIN_URL_PATH': 'private-admin-xyz', 'SENTRY_DSN': '', 'ALLOWED_HOSTS': 'desiroots.co.uk'}
+        result = subprocess.run([sys.executable, '-c', BAD_HOST_PROBE], cwd=str(settings.BASE_DIR), env=full_env,
+                                capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        codes, refused_mails, total_mails = result.stdout.strip().splitlines()[-1].rsplit(' ', 2)
+        self.assertEqual(codes, '[400, 400]')        # still refused
+        self.assertEqual(refused_mails, '0')        # no email for them
+        self.assertEqual(total_mails, '1')          # a real crash still emails the business

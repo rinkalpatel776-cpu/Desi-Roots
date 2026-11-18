@@ -63,8 +63,13 @@ EMAIL_SUBJECT_PREFIX = '[desiroots.co.uk] '
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'handlers': {'console': {'class': 'logging.StreamHandler'}, 'null': {'class': 'logging.NullHandler'}},
     'root': {'handlers': ['console'], 'level': 'WARNING'},
+    'loggers': {
+        # Bots visit by the server's bare IP or a fake name; Django already refuses them (400).
+        # Don't email the business about each one; real crash alerts still go out.
+        'django.security.DisallowedHost': {'handlers': ['null'], 'propagate': False},
+    },
 }
 
 # Sentry integration (free plan: keep performance tracing low so the quota lasts)
