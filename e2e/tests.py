@@ -81,26 +81,39 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
                 self.assertEqual(page.locator('h1').count(), 1, f'{path} at {viewport}')
                 self.no_sideways_scroll(page)
 
-    def test_hero_slider_moves_by_itself_pauses_and_works_by_keyboard(self):
+    def test_hero_slider_keeps_moving_after_clicks_and_hover(self):
         page = self.page()
         page.goto(self.live_server_url + '/')
-        page.mouse.move(1, 899)  # pointer away from the slider (hovering pauses it)
         current = lambda: page.evaluate(
             "[...document.querySelectorAll('.hs-dot')].findIndex(d => d.getAttribute('aria-current') === 'true')")
         self.assertEqual(current(), 0)
+        self.assertEqual(page.locator('.hs-pause').count(), 0)  # no pause button (owner's request)
         expect(page.locator('.hs-slide').nth(1)).to_have_attribute('aria-hidden', 'true')
+        # Mouse resting on the slider does not stop it
+        page.mouse.move(640, 400)
         page.wait_for_timeout(5600)
-        self.assertEqual(current(), 1, 'slide did not move after 5 seconds')
-        page.get_by_role('button', name='Pause slides').click()
-        page.mouse.move(1, 899)
+        self.assertEqual(current(), 1, 'slide did not move after 5 seconds with the mouse over it')
+        # Clicking an arrow does not stop it either
+        page.get_by_role('button', name='Next slide').click()
+        self.assertEqual(current(), 2)
         page.wait_for_timeout(5600)
-        self.assertEqual(current(), 1, 'paused slider still moved')
-        page.get_by_role('button', name='Previous slide').focus()
-        page.keyboard.press('Enter')
-        self.assertEqual(current(), 0)
-        # Links on the hidden slide can't be reached by Tab
+        self.assertEqual(current(), 0, 'slider stopped after a click')
         self.assertTrue(page.evaluate("document.querySelectorAll('.hs-slide')[1].inert"))
         self.no_sideways_scroll(page)
+
+    def test_hero_slider_waits_while_a_keyboard_user_is_inside(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/')
+        page.mouse.move(1, 1)
+        current = lambda: page.evaluate(
+            "[...document.querySelectorAll('.hs-dot')].findIndex(d => d.getAttribute('aria-current') === 'true')")
+        page.locator('.hs-slide').first.get_by_role('link').first.focus()
+        page.keyboard.press('Tab')   # keyboard focus inside the slide
+        page.wait_for_timeout(5600)
+        self.assertEqual(current(), 0, 'slide moved away from a keyboard user')
+        page.get_by_role('button', name='Next slide').focus()
+        page.keyboard.press('Enter')
+        self.assertEqual(current(), 1)
 
     def test_hero_slider_does_not_move_for_reduced_motion_users(self):
         context = self.browser.new_context(viewport=PHONE, reduced_motion='reduce')

@@ -85,15 +85,16 @@ class HomeHeroSliderTests(TestCase):
         self.assertEqual(html.count('aria-roledescription="slide"'), 3)
         self.assertLess(html.index('sp-hero-wrapper'), html.index('h10-title'))  # old photo hero is slide 1
         self.assertLess(html.index('h10-title'), html.index('hs-mdh-title'))
-        for label in ('Previous slide', 'Next slide', 'Show slide 1', 'Show slide 2', 'Show slide 3', 'Pause slides'):
+        for label in ('Previous slide', 'Next slide', 'Show slide 1', 'Show slide 2', 'Show slide 3'):
             self.assertIn(f'aria-label="{label}"', html)
         self.assertIn('href="/products/?brand=mdh"', html)
+        self.assertNotIn('hs-pause', html)  # owner asked for no pause button
 
     def test_slider_code_and_styles_are_files_not_inline(self):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
-        self.assertIn('/static/js/hero-slider.js?v=1', html)
-        self.assertIn('/static/css/home-hero.css?v=3', html)
+        self.assertIn('/static/js/hero-slider.js?v=2', html)
+        self.assertIn('/static/css/home-hero.css?v=4', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):
@@ -103,6 +104,9 @@ class HomeHeroSliderTests(TestCase):
         self.assertIn('5000', js)
         self.assertIn('prefers-reduced-motion', js)
         self.assertIn("'inert'", js)  # hidden slide's links can't be tabbed to
+        # Keeps moving after mouse clicks and hover: only keyboard focus waits
+        self.assertNotIn('mouseenter', js)
+        self.assertIn(':focus-visible', js)
 
     def test_counts_come_from_the_catalogue_and_never_overstate(self):
         from pages.views import _rounded
