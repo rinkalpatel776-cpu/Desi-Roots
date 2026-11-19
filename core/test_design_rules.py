@@ -45,3 +45,9 @@ class DesignRuleTests(TestCase):
         self.assertIn('<meta name="theme-color" content="#7A3E1D">', html)
         for page in ('/about/', '/privacy/', '/cookies/', '/terms/'):
             self.assertRegex(self.client.get(page).content.decode(), r'sp-prose', page)
+
+    def test_main_buttons_share_one_shape(self):
+        style = CSS[0].read_text(); hero = CSS[1].read_text()
+        self.assertRegex(style, r'\.btn \{[^}]*border-radius: 8px', 'site buttons: 8px corners')
+        self.assertRegex(hero, r'\.h10-btn \{[^}]*border-radius: 8px', 'hero buttons: 8px corners')
+        self.assertRegex(hero, r'\.hs-mdh-btn \{[^}]*border-radius: 8px', 'MDH slide buttons: 8px corners')
