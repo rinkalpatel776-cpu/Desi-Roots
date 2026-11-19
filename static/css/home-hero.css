@@ -12,7 +12,7 @@
 .h10 .h10-title .c1 { color: #B8322A; } .h10 .h10-title .c2 { color: #3E7A2E; }
 .h10-lead { font-size: 1.12rem; line-height: 1.65; color: #5a4636; max-width: 520px; margin-bottom: 1.6rem; }
 .h10-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.6rem; }
-.h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 999px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+.h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 8px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
 .h10-btn:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
 .h10-primary { background: linear-gradient(135deg, var(--sp-cta) 0%, var(--sp-cta-dark) 100%); color: #fff; box-shadow: 0 12px 22px -12px rgba(156,77,16,.9); }  /* same colour as every other main button */
 @media (hover: hover) and (pointer: fine) { .h10-primary:hover { background: linear-gradient(135deg, var(--sp-cta-dark) 0%, var(--sp-masala) 100%); color: #fff; transform: translateY(-2px); } }

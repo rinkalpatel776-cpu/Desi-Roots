@@ -151,7 +151,7 @@ a {
   font-family: var(--sp-font-head);
   font-weight: 500;
   padding: 10px 24px;
-  border-radius: 4px;
+  border-radius: 8px;  /* one button shape across the site: header, catalogue, hero and MDH slide (Floto review) */
   /* Named properties only (not "all"), quick enough to feel responsive */
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -1433,3 +1433,24 @@ button, .btn, [role="button"], .hs-dot, .hs-arrow { -webkit-user-select: none; u
 
 /* Header search: 40px tall to line up with the menu links (Floto review, 19 Nov 2026) */
 .sp-nav-search .form-control, .sp-nav-search .btn { height: 40px; }
+
+/* Floto review 2 (19 Nov 2026) */
+/* The search box's left corners match the 8px button beside it */
+.sp-nav-search .input-group > .form-control { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+/* Big screens have room: a wider search for a 1,900-product catalogue */
+@media (min-width: 1400px) { .sp-nav-search { max-width: 400px; } }
+/* Brand slider: keep the arrows in their own space beside the logos instead of on top of them */
+@media (min-width: 576px) {
+  .sp-brand-slider { padding: 0 52px; }
+  .sp-slide-prev { left: 0; }
+  .sp-slide-next { right: 0; }
+}
+/* Laptops 1200-1399px: the longer "Request a trade quote" button squeezed the search box to 195px.
+   Slightly tighter menu spacing gives the search room again (words stay 14px+ apart). */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .navbar .nav-link { padding-left: 7px !important; padding-right: 7px !important; }
+  .navbar .sp-nav-search { margin-left: 16px !important; min-width: 240px; }
+  .navbar .navbar-nav .btn-sm { padding-left: 16px; padding-right: 16px; }
+}
+/* Clear space between the search button and the first menu link (Floto review 2) */
+@media (min-width: 1200px) { .navbar .sp-nav-search { margin-right: 20px; } }

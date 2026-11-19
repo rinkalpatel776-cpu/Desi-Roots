@@ -92,13 +92,17 @@ class HomeHeroSliderTests(TestCase):
         self.assertIn('>Send Enquiry</h3>', html)
         self.assertIn('>Receive Delivery</h3>', html)
         self.assertIn('>Request a trade quote</a>', html)
+        # Floto review 2: one name for contact in the footer, and a benefit line under Why Choose
+        self.assertIn('<h2 class="h5">Contact Us</h2>', html)
+        self.assertNotIn('Contact Wholesale', html)
+        self.assertIn('Reliable sourcing and local delivery for food businesses across the South West.', html)
         self.assertNotIn('hs-pause', html)  # owner asked for no pause button
 
     def test_slider_code_and_styles_are_files_not_inline(self):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
         self.assertIn('/static/js/hero-slider.js?v=2', html)
-        self.assertIn('/static/css/home-hero.css?v=7', html)
+        self.assertIn('/static/css/home-hero.css?v=8', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):
