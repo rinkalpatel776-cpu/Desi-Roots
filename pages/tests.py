@@ -88,13 +88,17 @@ class HomeHeroSliderTests(TestCase):
         for label in ('Previous slide', 'Next slide', 'Show slide 1', 'Show slide 2', 'Show slide 3'):
             self.assertIn(f'aria-label="{label}"', html)
         self.assertIn('href="/products/?brand=mdh"', html)
+        # Floto review (19 Nov 2026): steps start with a verb; the header button matches the hero wording
+        self.assertIn('>Send Enquiry</h3>', html)
+        self.assertIn('>Receive Delivery</h3>', html)
+        self.assertIn('>Request a trade quote</a>', html)
         self.assertNotIn('hs-pause', html)  # owner asked for no pause button
 
     def test_slider_code_and_styles_are_files_not_inline(self):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
         self.assertIn('/static/js/hero-slider.js?v=2', html)
-        self.assertIn('/static/css/home-hero.css?v=6', html)
+        self.assertIn('/static/css/home-hero.css?v=7', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):
