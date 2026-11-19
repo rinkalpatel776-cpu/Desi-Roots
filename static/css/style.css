@@ -77,7 +77,6 @@ a {
   background-color: var(--sp-card);
   border-bottom: 1px solid var(--sp-border);
   padding: 12px 0;
-  transition: all 0.3s ease;
 }
 
 .navbar-brand {
@@ -153,7 +152,8 @@ a {
   font-weight: 500;
   padding: 10px 24px;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  /* Named properties only (not "all"), quick enough to feel responsive */
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .btn-primary {
@@ -248,7 +248,7 @@ a {
   border: 1px solid var(--sp-border);
   border-radius: 6px;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 @media (hover: hover) and (pointer: fine) { .card:hover {
@@ -530,7 +530,7 @@ footer .footer-bottom {
   text-decoration: none;
   background-color: var(--sp-dark);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 @media (hover: hover) and (pointer: fine) { .category-card:hover {
@@ -543,7 +543,7 @@ footer .footer-bottom {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), filter 0.25s ease;
   filter: brightness(0.82);
 }
 
@@ -688,7 +688,7 @@ footer .footer-bottom {
   border-radius: 8px;
   background-color: var(--sp-bg);
   border: 1px solid var(--sp-border);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) and (pointer: fine) { .quick-nav-link:hover {
@@ -978,7 +978,7 @@ footer .footer-bottom {
   padding: 8px 22px;
   border-radius: 6px;
   text-decoration: none;
-  transition: all 0.22s ease-in-out;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) and (pointer: fine) { .btn-outline-brand-view:hover {
@@ -1422,3 +1422,11 @@ a, button, .btn, [role="button"] { touch-action: manipulation; }
   .btn:active, .sp-whatsapp-float:active { transform: none; }
   .sp-slide-btn:active { transform: translateY(-50%); }
 }
+
+/* Comfortable reading width on long text pages (About, Privacy, Cookies, Terms): about 60-70 letters a line */
+.sp-prose { max-width: 62ch; }
+.sp-prose-box { max-width: calc(62ch + 6.5rem); }  /* the white box adds its padding on both sides */
+
+/* Long-press on a button shouldn't select its label (normal text stays selectable) */
+button, .btn, [role="button"], .hs-dot, .hs-arrow { -webkit-user-select: none; user-select: none; }
+.about-lead { max-width: 62ch; margin-left: auto; margin-right: auto; }
