@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+from core.page_cache import cache_public_page
 from catalogue.models import Category, Brand, Product
 from .models import FAQ, Testimonial
 
@@ -19,6 +21,7 @@ def _hero_stats():
     }
 
 
+@cache_public_page
 def home(request):
     # Up to 24 categories ticked "Show on home page" in the admin, in display order
     # (the first 24 with published products if none are ticked)
@@ -54,6 +57,7 @@ def home(request):
 
 from enquiries.views import handle_enquiry_form
 
+@cache_public_page
 def about(request):
     return render(request, 'pages/about.html')
 
@@ -62,6 +66,7 @@ def contact(request):
     return handle_enquiry_form(request, 'pages/contact.html')
 
 
+@cache_public_page
 def faq_list(request):
     faqs = FAQ.objects.filter(is_active=True).order_by('display_order', 'id')
     context = {
@@ -70,13 +75,16 @@ def faq_list(request):
     return render(request, 'pages/faq.html', context)
 
 
+@cache_public_page
 def privacy(request):
     return render(request, 'pages/legal/privacy.html')
 
 
+@cache_public_page
 def cookies(request):
     return render(request, 'pages/legal/cookies.html')
 
 
+@cache_public_page
 def terms(request):
     return render(request, 'pages/legal/terms.html')

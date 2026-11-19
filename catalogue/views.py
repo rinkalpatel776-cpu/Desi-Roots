@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
 from .models import Category, Brand, Product
+from core.page_cache import cache_public_page
 
 # Catalogue sort options: ?sort= value -> (label, ordering). The first one is the default.
 SORT_OPTIONS = {
@@ -18,6 +19,7 @@ SORT_OPTIONS = {
 DEFAULT_SORT = 'recommended'
 
 
+@cache_public_page
 def product_list(request):
     # Base query containing optimizations to prevent N+1 queries
     queryset = Product.objects.filter(is_published=True).select_related('category', 'brand').prefetch_related('images', 'pack_sizes')
@@ -104,6 +106,7 @@ def product_list(request):
     return render(request, 'catalogue/product_list.html', context)
 
 
+@cache_public_page
 def product_detail(request, slug):
     product = get_object_or_404(
         Product.objects.filter(is_published=True)
@@ -133,6 +136,7 @@ def product_detail(request, slug):
     return render(request, 'catalogue/product_detail.html', context)
 
 
+@cache_public_page
 def brand_list(request):
     # Count published products so brands with none yet show "coming soon" instead of an empty link
     brands = Brand.objects.annotate(
