@@ -146,6 +146,38 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
                 self.assertFalse(msg.evaluate('m => m.scrollWidth > m.clientWidth + 1'), f'cut off at {width}px')
                 self.assertLess(msg.evaluate('m => m.getBoundingClientRect().height'), 24, f'wraps at {width}px')
 
+    def test_phone_taps_do_not_zoom_flash_or_leave_hover_stuck(self):
+        context = self.browser.new_context(viewport=PHONE, is_mobile=True, has_touch=True)
+        self.addCleanup(context.close)
+        context.add_init_script("try { localStorage.setItem('sp_cookie_notice_ok', '1') } catch (e) {}")
+        page = context.new_page()
+        page.goto(self.live_server_url + '/products/?q=chilli')
+        # iPhones zoom the page into any box under 16px
+        for size in page.locator('select').evaluate_all('els => els.map(e => getComputedStyle(e).fontSize)'):
+            self.assertEqual(size, '16px')
+        self.assertEqual(page.evaluate('getComputedStyle(document.documentElement).webkitTapHighlightColor'),
+                         'rgba(0, 0, 0, 0)')
+        card = page.locator('.card').first
+        card.tap()
+        page.wait_for_timeout(500)
+        self.assertEqual(card.evaluate('e => getComputedStyle(e).transform'), 'none', 'hover lift stuck after a tap')
+        self.no_sideways_scroll(page)
+
+    def test_mouse_still_gets_hover_and_press_feedback(self):
+        page = self.page()
+        page.goto(self.live_server_url + '/products/?q=chilli')
+        card = page.locator('.card').first
+        card.hover()
+        page.wait_for_timeout(500)
+        self.assertNotEqual(card.evaluate('e => getComputedStyle(e).transform'), 'none')
+        button = page.get_by_role('button', name='Enquire').first
+        box = button.bounding_box()
+        page.mouse.move(box['x'] + 10, box['y'] + 10)
+        page.mouse.down()
+        page.wait_for_timeout(200)
+        self.assertIn('0.97', button.evaluate('e => getComputedStyle(e).transform'))
+        page.mouse.up()
+
     def test_home_category_circles_and_brand_arrows(self):
         page = self.page()
         page.goto(self.live_server_url + '/')

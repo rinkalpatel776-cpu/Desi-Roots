@@ -46,9 +46,9 @@ a {
   transition: color 0.2s ease-in-out;
 }
 
-a:hover {
+@media (hover: hover) and (pointer: fine) { a:hover {
   color: var(--sp-saffron-text);
-}
+} }
 
 /* Custom Announcement Bar */
 .announcement-bar {
@@ -106,10 +106,10 @@ a:hover {
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.08));
 }
 
-.navbar-brand:hover .navbar-brand-logo,
+@media (hover: hover) and (pointer: fine) { .navbar-brand:hover .navbar-brand-logo,
 .navbar-brand:hover img {
   transform: scale(1.08);
-}
+} }
 
 .navbar-brand span {
   color: var(--sp-saffron-text);
@@ -125,9 +125,12 @@ a:hover {
   transition: color 0.2s ease;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link.active {
   color: var(--sp-saffron-text) !important;
 }
+@media (hover: hover) and (pointer: fine) { .nav-link:hover {
+  color: var(--sp-saffron-text) !important;
+} }
 
 /* Issue 11: visible active-page indicator (underline) for better wayfinding */
 .nav-link.active {
@@ -160,13 +163,20 @@ a:hover {
   box-shadow: 0 4px 14px rgba(156, 77, 16, 0.25);
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:focus-visible {
   background: linear-gradient(135deg, var(--sp-cta-dark) 0%, var(--sp-masala) 100%);
   border-color: var(--sp-masala);
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(156, 77, 16, 0.35);
 }
+@media (hover: hover) and (pointer: fine) { .btn-primary:hover {
+  background: linear-gradient(135deg, var(--sp-cta-dark) 0%, var(--sp-masala) 100%);
+  border-color: var(--sp-masala);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(156, 77, 16, 0.35);
+} }
 
 .btn-secondary {
   background-color: var(--sp-olive);
@@ -175,13 +185,20 @@ a:hover {
   box-shadow: 0 4px 12px rgba(107, 112, 92, 0.2);
 }
 
-.btn-secondary:hover, .btn-secondary:focus {
+.btn-secondary:focus-visible {
   background-color: #555949;
   border-color: #555949;
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(107, 112, 92, 0.3);
 }
+@media (hover: hover) and (pointer: fine) { .btn-secondary:hover {
+  background-color: #555949;
+  border-color: #555949;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 112, 92, 0.3);
+} }
 
 .btn-gold {
   background: linear-gradient(135deg, var(--sp-gold) 0%, #d4aa48 100%);
@@ -191,13 +208,20 @@ a:hover {
   box-shadow: 0 4px 14px rgba(233, 196, 106, 0.3);
 }
 
-.btn-gold:hover, .btn-gold:focus {
+.btn-gold:focus-visible {
   background: linear-gradient(135deg, #f2d488 0%, var(--sp-gold) 100%);
   border-color: var(--sp-gold);
   color: #1A1A1B;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(233, 196, 106, 0.45);
 }
+@media (hover: hover) and (pointer: fine) { .btn-gold:hover {
+  background: linear-gradient(135deg, #f2d488 0%, var(--sp-gold) 100%);
+  border-color: var(--sp-gold);
+  color: #1A1A1B;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(233, 196, 106, 0.45);
+} }
 
 .btn-outline-primary {
   color: var(--sp-saffron-text);
@@ -205,12 +229,18 @@ a:hover {
   background-color: transparent;
 }
 
-.btn-outline-primary:hover, .btn-outline-primary:focus {
+.btn-outline-primary:focus-visible {
   background-color: var(--sp-saffron-text);
   border-color: var(--sp-saffron-text);
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(224, 122, 40, 0.25);
 }
+@media (hover: hover) and (pointer: fine) { .btn-outline-primary:hover {
+  background-color: var(--sp-saffron-text);
+  border-color: var(--sp-saffron-text);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(224, 122, 40, 0.25);
+} }
 
 /* Card Styling */
 .card {
@@ -221,11 +251,11 @@ a:hover {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card:hover {
+@media (hover: hover) and (pointer: fine) { .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 32px rgba(26, 26, 27, 0.08);
   border-color: var(--sp-gold);
-}
+} }
 
 .card-img-top-wrapper {
   /* White, like the product pack shots, so photo edges don't show as a box */
@@ -357,10 +387,12 @@ footer a {
   text-decoration: none;
 }
 
-footer a:hover,
 footer a:focus-visible {
   color: #ffffff;
 }
+@media (hover: hover) and (pointer: fine) { footer a:hover {
+  color: #ffffff;
+} }
 
 /* Link columns and the contact list share the same spacing */
 .footer-link-list,
@@ -501,11 +533,11 @@ footer .footer-bottom {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 
-.category-card:hover {
+@media (hover: hover) and (pointer: fine) { .category-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 14px 28px rgba(20, 20, 21, 0.2);
   border-color: var(--sp-gold);
-}
+} }
 
 .category-card-img {
   width: 100%;
@@ -515,10 +547,10 @@ footer .footer-bottom {
   filter: brightness(0.82);
 }
 
-.category-card:hover .category-card-img {
+@media (hover: hover) and (pointer: fine) { .category-card:hover .category-card-img {
   transform: scale(1.08);
   filter: brightness(0.92);
-}
+} }
 
 .category-card-overlay {
   position: absolute;
@@ -532,9 +564,9 @@ footer .footer-bottom {
   transition: background 0.3s ease;
 }
 
-.category-card:hover .category-card-overlay {
+@media (hover: hover) and (pointer: fine) { .category-card:hover .category-card-overlay {
   background: linear-gradient(180deg, rgba(20, 20, 21, 0.05) 0%, rgba(20, 20, 21, 0.4) 45%, rgba(20, 20, 21, 0.95) 100%);
-}
+} }
 
 .category-card-title {
   color: #ffffff;
@@ -558,10 +590,10 @@ footer .footer-bottom {
   transition: gap 0.2s ease, color 0.2s ease;
 }
 
-.category-card:hover .category-card-action {
+@media (hover: hover) and (pointer: fine) { .category-card:hover .category-card-action {
   gap: 8px;
   color: #ffffff;
-}
+} }
 
 /* Mobile button styling & tap targets */
 @media (max-width: 768px) {
@@ -583,9 +615,9 @@ footer .footer-bottom {
   transition: transform 0.25s ease;
 }
 
-.footer-brand:hover .footer-logo-img {
+@media (hover: hover) and (pointer: fine) { .footer-brand:hover .footer-logo-img {
   transform: scale(1.06);
-}
+} }
 
 /* Issue 16: social icon links — minimum 44×44 px tap target, comfortable spacing */
 .footer-social-link {
@@ -598,11 +630,14 @@ footer .footer-bottom {
   border-radius: 50%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.footer-social-link:hover,
 .footer-social-link:focus-visible {
   background-color: rgba(255, 255, 255, 0.08);
   color: #ffffff;
 }
+@media (hover: hover) and (pointer: fine) { .footer-social-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+} }
 
 @media (max-width: 576px) {
   .navbar-brand-logo,
@@ -656,13 +691,13 @@ footer .footer-bottom {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.quick-nav-link:hover {
+@media (hover: hover) and (pointer: fine) { .quick-nav-link:hover {
   color: var(--sp-saffron-text);
   border-color: var(--sp-saffron-text);
   background-color: #ffffff;
   transform: translateX(4px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
-}
+} }
 
 .quick-nav-link.active {
   color: var(--sp-saffron-text);
@@ -683,9 +718,9 @@ footer .footer-bottom {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-.contact-icon-badge:hover {
+@media (hover: hover) and (pointer: fine) { .contact-icon-badge:hover {
   transform: scale(1.1);
-}
+} }
 
 .bg-saffron-light { background-color: rgba(224, 122, 40, 0.12); color: var(--sp-saffron-text); }
 .bg-blue-light { background-color: rgba(13, 110, 253, 0.10); color: #0d6efd; }
@@ -705,11 +740,11 @@ footer .footer-bottom {
   gap: 6px;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.btn-social-wa:hover {
+@media (hover: hover) and (pointer: fine) { .btn-social-wa:hover {
   color: #ffffff !important;
   opacity: 0.9;
   transform: translateY(-1px);
-}
+} }
 
 /* Contact page Call and Email buttons, same shape as the WhatsApp button */
 .btn-contact-call,
@@ -727,12 +762,12 @@ footer .footer-bottom {
 }
 .btn-contact-call { background-color: var(--sp-saffron-text); }
 .btn-contact-email { background-color: var(--sp-olive); }
-.btn-contact-call:hover,
+@media (hover: hover) and (pointer: fine) { .btn-contact-call:hover,
 .btn-contact-email:hover {
   color: #ffffff !important;
   opacity: 0.9;
   transform: translateY(-1px);
-}
+} }
 
 /* 404 page search box */
 .sp-error-search {
@@ -784,13 +819,18 @@ footer .footer-bottom {
   letter-spacing: 0.02em;
   transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
 }
-.btn-hero-outline:hover,
-.btn-hero-outline:focus {
+.btn-hero-outline:focus-visible {
   background-color: rgba(255, 255, 255, 0.15);
   border-color: #ffffff;
   color: #ffffff;
   transform: translateY(-2px);
 }
+@media (hover: hover) and (pointer: fine) { .btn-hero-outline:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: translateY(-2px);
+} }
 
 /* Tablets: a taller banner so the buttons sit below the badges in the photo */
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -893,11 +933,11 @@ footer .footer-bottom {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.brand-showcase-card:hover {
+@media (hover: hover) and (pointer: fine) { .brand-showcase-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07) !important;
   border-color: #DFD5C6 !important;
-}
+} }
 
 .brand-showcase-logo-wrap {
   width: 100%;
@@ -919,9 +959,9 @@ footer .footer-bottom {
   transition: transform 0.25s ease;
 }
 
-.brand-showcase-card:hover .brand-showcase-logo {
+@media (hover: hover) and (pointer: fine) { .brand-showcase-card:hover .brand-showcase-logo {
   transform: scale(1.03);
-}
+} }
 
 /* Outlined CTA Button */
 .btn-outline-brand-view {
@@ -941,13 +981,13 @@ footer .footer-bottom {
   transition: all 0.22s ease-in-out;
 }
 
-.btn-outline-brand-view:hover {
+@media (hover: hover) and (pointer: fine) { .btn-outline-brand-view:hover {
   color: #FFFFFF;
   background-color: var(--sp-olive);
   border-color: var(--sp-olive);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(102, 122, 62, 0.25);
-}
+} }
 
 @media (max-width: 767.98px) {
   .sp-featured-brands-section {
@@ -1019,11 +1059,14 @@ footer .footer-bottom {
   font-size: 0.85rem;
   text-decoration: none;
 }
-.sp-filter-chip:hover,
 .sp-filter-chip:focus-visible {
   border-color: var(--sp-saffron-text);
   color: var(--sp-saffron-text);
 }
+@media (hover: hover) and (pointer: fine) { .sp-filter-chip:hover {
+  border-color: var(--sp-saffron-text);
+  color: var(--sp-saffron-text);
+} }
 
 .sp-sort-form .form-select {
   width: auto;
@@ -1099,12 +1142,16 @@ footer .footer-bottom {
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.sp-whatsapp-float:hover,
 .sp-whatsapp-float:focus-visible {
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
+@media (hover: hover) and (pointer: fine) { .sp-whatsapp-float:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+} }
 .sp-whatsapp-float:focus-visible {
   outline: 3px solid var(--sp-saffron-text);
   outline-offset: 3px;
@@ -1298,14 +1345,14 @@ footer .footer-bottom {
 .sp-cats-title { font-family: var(--sp-font-head); font-weight: 700; font-size: clamp(1.6rem, 3.2vw, 2.4rem); color: var(--sp-text); letter-spacing: -0.01em; }
 .sp-cats-title span { color: var(--sp-chilli); }
 .sp-cats-all { color: var(--sp-chilli); font-weight: 600; text-decoration: none; }
-.sp-cats-all:hover { text-decoration: underline; }
+@media (hover: hover) and (pointer: fine) { .sp-cats-all:hover { text-decoration: underline; } }
 .sp-cat-circles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 26px 18px; }
 .sp-cat-circle { display: block; text-align: center; text-decoration: none; color: var(--sp-text); border-radius: 12px; }
 .sp-cat-circle img { display: block; width: 100%; height: auto; transition: transform .25s ease; }
-.sp-cat-circle:hover img { transform: translateY(-4px) scale(1.03); }
+@media (hover: hover) and (pointer: fine) { .sp-cat-circle:hover img { transform: translateY(-4px) scale(1.03); } }
 .sp-cat-circle-blank { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; border-radius: 50%; background: var(--sp-card); border: 1px solid var(--sp-border); color: var(--sp-saffron-text); font-size: 2.5rem; }
 .sp-cat-circle-name { display: block; margin-top: 8px; font-family: var(--sp-font-head); font-weight: 600; font-size: .95rem; line-height: 1.35; }
-.sp-cat-circle:hover .sp-cat-circle-name { color: var(--sp-chilli); }
+@media (hover: hover) and (pointer: fine) { .sp-cat-circle:hover .sp-cat-circle-name { color: var(--sp-chilli); } }
 .sp-cat-circle:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .sp-cat-circle img { transition: none; } .sp-cat-circle:hover img { transform: none; } }
 @media (max-width: 991.98px) { .sp-cat-circles { grid-template-columns: repeat(4, 1fr); } }
@@ -1320,11 +1367,11 @@ footer .footer-bottom {
 .sp-badge-ring img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .sp-badge-letter { font-family: var(--sp-font-head); font-size: 2.6rem; font-weight: 700; color: var(--sp-masala); }
 .sp-badge-name { display: block; font-family: var(--sp-font-head); font-weight: 500; font-size: .92rem; text-transform: uppercase; letter-spacing: .02em; }
-.sp-brand-badge:hover .sp-badge-ring { transform: scale(1.05); }
-.sp-brand-badge:hover .sp-badge-name { color: var(--sp-chilli); }
+@media (hover: hover) and (pointer: fine) { .sp-brand-badge:hover .sp-badge-ring { transform: scale(1.05); } }
+@media (hover: hover) and (pointer: fine) { .sp-brand-badge:hover .sp-badge-name { color: var(--sp-chilli); } }
 .sp-brand-badge:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
 .sp-slide-btn { position: absolute; top: 88px; transform: translateY(-50%); z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--sp-olive); color: #fff; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .4); }
-.sp-slide-btn:hover { background: var(--sp-cardamom); }
+@media (hover: hover) and (pointer: fine) { .sp-slide-btn:hover { background: var(--sp-cardamom); } }
 .sp-slide-btn:focus-visible { outline: 3px solid var(--sp-masala); outline-offset: 2px; }
 .sp-slide-prev { left: -14px; }
 .sp-slide-next { right: -14px; }
@@ -1341,7 +1388,7 @@ footer .footer-bottom {
 
 /* Catalogue page numbers in brand colours, with a page count */
 .pagination .page-link { color: var(--sp-text); }
-.pagination .page-link:hover { color: var(--sp-saffron-text); }
+@media (hover: hover) and (pointer: fine) { .pagination .page-link:hover { color: var(--sp-saffron-text); } }
 .pagination .page-item.active .page-link { background-color: var(--sp-saffron-text); border-color: var(--sp-saffron-text); color: #fff; }
 .pagination .page-link:focus { box-shadow: 0 0 0 .2rem rgba(143, 94, 20, .3); }
 .pagination .page-item.sp-page-gap .page-link { border-color: transparent; background: transparent; }
@@ -1350,3 +1397,28 @@ footer .footer-bottom {
 /* Catalogue sidebar search: slimmer button and padding so the box isn't squeezed on tablets */
 .sp-filter-panel .input-group .btn { padding-left: .85rem; padding-right: .85rem; }
 .sp-filter-panel .input-group .form-control { padding-left: .75rem; padding-right: .75rem; }
+
+/* ==========================================================================
+   Phones and touch screens (19 Nov 2026, from Emil Kowalski's mobile-native rules)
+   ========================================================================== */
+/* No grey/blue flash over whatever is tapped; buttons show their own press state instead */
+html { -webkit-tap-highlight-color: transparent; }
+
+/* iPhones zoom the whole page into any box with text under 16px (the pack-size and sort dropdowns) */
+@media (pointer: coarse) {
+  input, select, textarea, .form-control, .form-select, .form-select-sm { font-size: 16px; }
+}
+
+/* Taps register straight away (no double-tap-zoom wait) */
+a, button, .btn, [role="button"] { touch-action: manipulation; }
+
+/* Press feedback the moment a finger or mouse goes down */
+.btn:active, .sp-whatsapp-float:active {
+  transform: scale(0.97);
+  transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sp-slide-btn:active { transform: translateY(-50%) scale(0.94); transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .btn:active, .sp-whatsapp-float:active { transform: none; }
+  .sp-slide-btn:active { transform: translateY(-50%); }
+}

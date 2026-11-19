@@ -15,9 +15,9 @@
 .h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 999px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
 .h10-btn:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
 .h10-primary { background: #B8322A; color: #fff; box-shadow: 0 12px 22px -12px rgba(184,50,42,.9); }
-.h10-primary:hover { background: #9c2a23; color: #fff; transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) { .h10-primary:hover { background: #9c2a23; color: #fff; transform: translateY(-2px); } }
 .h10-ghost { background: #fff; color: #2a1406; border: 2px solid #2a1406; }
-.h10-ghost:hover { background: #2a1406; color: #fff; }
+@media (hover: hover) and (pointer: fine) { .h10-ghost:hover { background: #2a1406; color: #fff; } }
 .h10-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
 .h10-chips li { padding: .45rem .9rem; border-radius: 12px; font-size: .92rem; color: #2a1406; }
 .h10-chips strong { font-family: var(--sp-font-head); }
@@ -73,8 +73,8 @@
 .hs-mdh-areas { text-transform: uppercase; letter-spacing: .06em; font-weight: 500; font-size: 1rem; line-height: 1.7; margin-bottom: 1.6rem; }
 .hs-mdh-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
 .hs-mdh-btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--sp-font-head); font-weight: 600; padding: .8rem 1.4rem; border-radius: 8px; text-decoration: none; }
-.hs-mdh-primary { background: #B35A12; color: #fff; } .hs-mdh-primary:hover { background: #9C4D10; color: #fff; }
-.hs-mdh-ghost { border: 2px solid #FAF3E6; color: #FAF3E6; } .hs-mdh-ghost:hover { background: #FAF3E6; color: #18100b; }
+.hs-mdh-primary { background: #B35A12; color: #fff; } @media (hover: hover) and (pointer: fine) { .hs-mdh-primary:hover { background: #9C4D10; color: #fff; } }
+.hs-mdh-ghost { border: 2px solid #FAF3E6; color: #FAF3E6; } @media (hover: hover) and (pointer: fine) { .hs-mdh-ghost:hover { background: #FAF3E6; color: #18100b; } }
 .hs-mdh-btn:focus-visible, .hs-arrow:focus-visible, .hs-dot:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
 .hs-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92);
   color: #2a1406; box-shadow: 0 4px 14px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 3; }
@@ -111,4 +111,12 @@
      buttons sit in the middle of the dark band below it (clear of the slide dots) */
   .hs .sp-hero-wrapper { min-height: 0; align-items: center; }
   .hs .sp-hero-container { padding-bottom: 3rem !important; }
+}
+
+/* Press feedback (19 Nov 2026): hover effects above only apply with a mouse, so phones get this instead */
+.h10-btn:active, .hs-mdh-btn:active { transform: scale(0.97); transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
+.hs-arrow:active { transform: translateY(-50%) scale(0.94); transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .h10-btn:active, .hs-mdh-btn:active { transform: none; }
+  .hs-arrow:active { transform: translateY(-50%); }
 }
