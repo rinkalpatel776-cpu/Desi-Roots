@@ -7,6 +7,7 @@ from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin
 from .models import Category, Brand, Product, PackSize, ProductImage
+from core.page_cache import bump_version
 
 class ProductResource(resources.ModelResource):
     image_filename = fields.Field(column_name='image_filename', readonly=True)
@@ -348,6 +349,7 @@ class ProductAdmin(ImportExportModelAdmin):
     def make_published(self, request, queryset):
         ids = list(queryset.filter(photo_count__gt=0).values_list('pk', flat=True))
         published = Product.objects.filter(pk__in=ids).update(is_published=True)
+        bump_version()  # .update() skips save signals; refresh the cached public pages ourselves
         skipped = queryset.count() - len(ids)
         messages.success(request, f"Published {published} product(s).")
         if skipped:
@@ -356,4 +358,5 @@ class ProductAdmin(ImportExportModelAdmin):
 
     def make_unpublished(self, request, queryset):
         queryset.update(is_published=False)
+        bump_version()
     make_unpublished.short_description = "Unpublish selected products"

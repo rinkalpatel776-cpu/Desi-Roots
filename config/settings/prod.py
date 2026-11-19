@@ -80,3 +80,8 @@ if SENTRY_DSN:
         traces_sample_rate=env.float('SENTRY_TRACES_SAMPLE_RATE', default=0.05),
         send_default_pii=False,
     )
+
+# Public pages served from the shared cache for 10 minutes; any content change refreshes them at once
+PAGE_CACHE_SECONDS = env.int('PAGE_CACHE_SECONDS', default=600)
+# The cache lives outside the code folder, so a deploy never ships or wipes it
+CACHES['default']['LOCATION'] = env('CACHE_DIR', default='/srv/desiroots/cache')

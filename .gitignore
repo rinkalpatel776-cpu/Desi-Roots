@@ -47,3 +47,6 @@ backups/
 
 # ── Claude Code local settings (can contain commands with secrets; never commit) ──
 .claude/
+
+# Django file cache (local)
+.cache/

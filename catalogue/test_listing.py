@@ -48,6 +48,7 @@ class CatalogueListingTests(TestCase):
     # ---- no N+1 queries ----
     def test_query_count_does_not_grow_with_products(self):
         make_products(self.spices, self.heera, 3)
+        self.client.get('/products/')  # warm the shared footer cache so both counts compare cards only
         with CaptureQueriesContext(connection) as small:
             self.client.get('/products/')
         make_products(self.rice, self.trs, 21, start=100)
@@ -57,6 +58,7 @@ class CatalogueListingTests(TestCase):
 
     def test_home_page_query_count_does_not_grow(self):
         make_products(self.spices, self.heera, 2)
+        self.client.get('/')  # warm the shared footer cache so both counts compare the page only
         with CaptureQueriesContext(connection) as small:
             self.client.get('/')
         for i in range(10):

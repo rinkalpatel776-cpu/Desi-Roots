@@ -155,3 +155,18 @@ NOTIFICATION_EMAIL = env('NOTIFICATION_EMAIL', default='support@desiroots.co.uk'
 # Cloudflare Turnstile Settings
 TURNSTILE_SITE_KEY = env('TURNSTILE_SITE_KEY', default='')
 TURNSTILE_SECRET_KEY = env('TURNSTILE_SECRET_KEY', default='')
+
+
+# Shared file cache (20 Nov 2026): one cache for all Gunicorn workers, so enquiry
+# limits are exact and the page cache refreshes everywhere the moment content changes.
+# Built into Django, free, kept on the server's own disk (no Redis or paid service).
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': env('CACHE_DIR', default=str(BASE_DIR / '.cache')),
+        'TIMEOUT': 600,
+        'OPTIONS': {'MAX_ENTRIES': 3000},
+    }
+}
+# Whole public pages are cached this many seconds (0 = off). Off in development and tests.
+PAGE_CACHE_SECONDS = 0

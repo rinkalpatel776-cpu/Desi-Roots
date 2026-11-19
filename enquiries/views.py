@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # our mailbox send emails to strangers (which could get support@desiroots.co.uk blocked).
 AUTO_REPLY_LIMIT_PER_HOUR = 3
 # Enquiries saved per visitor address per hour. Stops one visitor flooding the admin and the
-# business mailbox. (The cache is per Gunicorn worker, so the real ceiling is a few times this;
+# business mailbox. (The file cache is shared by all Gunicorn workers since 20 Nov 2026, so this is the real limit;
 # Nginx rate limiting on the server adds a second limit.)
 ENQUIRY_LIMIT_PER_HOUR = 5
 TOO_MANY_ENQUIRIES = ("You have sent several enquiries in the last hour. Please call or WhatsApp us, "

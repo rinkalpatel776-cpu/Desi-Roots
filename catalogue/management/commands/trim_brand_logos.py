@@ -47,5 +47,8 @@ class Command(BaseCommand):
             Brand.objects.filter(pk=brand.pk).update(logo=saved_name)
             storage.delete(name)
 
+        if not dry_run:
+            from core.page_cache import bump_version
+            bump_version()  # logos were updated without save(); refresh cached pages
         verb = 'Would trim' if dry_run else 'Trimmed'
         self.stdout.write(self.style.SUCCESS(f"{verb} {trimmed}; skipped {skipped}."))
