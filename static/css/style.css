@@ -1430,3 +1430,6 @@ a, button, .btn, [role="button"] { touch-action: manipulation; }
 /* Long-press on a button shouldn't select its label (normal text stays selectable) */
 button, .btn, [role="button"], .hs-dot, .hs-arrow { -webkit-user-select: none; user-select: none; }
 .about-lead { max-width: 62ch; margin-left: auto; margin-right: auto; }
+
+/* Header search: 40px tall to line up with the menu links (Floto review, 19 Nov 2026) */
+.sp-nav-search .form-control, .sp-nav-search .btn { height: 40px; }

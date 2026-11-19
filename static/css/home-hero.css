@@ -14,8 +14,8 @@
 .h10-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.6rem; }
 .h10-btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--sp-font-head); font-weight: 600; border-radius: 999px; padding: .85rem 1.5rem; text-decoration: none; transition: transform .15s, box-shadow .15s; }
 .h10-btn:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 3px; }
-.h10-primary { background: #B8322A; color: #fff; box-shadow: 0 12px 22px -12px rgba(184,50,42,.9); }
-@media (hover: hover) and (pointer: fine) { .h10-primary:hover { background: #9c2a23; color: #fff; transform: translateY(-2px); } }
+.h10-primary { background: linear-gradient(135deg, var(--sp-cta) 0%, var(--sp-cta-dark) 100%); color: #fff; box-shadow: 0 12px 22px -12px rgba(156,77,16,.9); }  /* same colour as every other main button */
+@media (hover: hover) and (pointer: fine) { .h10-primary:hover { background: linear-gradient(135deg, var(--sp-cta-dark) 0%, var(--sp-masala) 100%); color: #fff; transform: translateY(-2px); } }
 .h10-ghost { background: #fff; color: #2a1406; border: 2px solid #2a1406; }
 @media (hover: hover) and (pointer: fine) { .h10-ghost:hover { background: #2a1406; color: #fff; } }
 .h10-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
@@ -119,4 +119,13 @@
 @media (prefers-reduced-motion: reduce) {
   .h10-btn:active, .hs-mdh-btn:active { transform: none; }
   .hs-arrow:active { transform: translateY(-50%); }
+}
+
+/* Wide screens: the arrows join the slide dots at the bottom centre instead of being stranded at the far
+   screen edges (Floto review, 19 Nov 2026). Not pulled in at mid-height: slide 1's words are part of its photo. */
+@media (min-width: 1400px) {
+  .hs-arrow { top: auto; bottom: 10px; transform: none; width: 40px; height: 40px; }
+  .hs-prev { left: auto; right: calc(50% + 62px); }
+  .hs-next { right: auto; left: calc(50% + 62px); }
+  .hs-arrow:active { transform: scale(0.94); }
 }
