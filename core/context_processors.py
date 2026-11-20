@@ -38,3 +38,13 @@ def footer_categories(request):
     except Exception:
         categories = []
     return {'footer_categories': categories}
+
+
+def analytics(request):
+    """Google Analytics ID for the cookie pop-up; empty (off) for signed-in staff so their visits are not counted."""
+    from django.conf import settings
+    ga_id = getattr(settings, 'GA_MEASUREMENT_ID', '')
+    user = getattr(request, 'user', None)
+    if user is not None and user.is_authenticated:
+        ga_id = ''
+    return {'ga_measurement_id': ga_id}

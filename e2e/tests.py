@@ -5,6 +5,7 @@ Run on a development machine only:
 Without E2E=1, or where Playwright is not installed (the live server), these tests are skipped.
 """
 import os
+import re
 import time
 import unittest
 
@@ -23,6 +24,9 @@ except ImportError:  # not installed on the live server
 RUN = os.environ.get('E2E') == '1' and sync_playwright is not None
 PHONE = {'width': 375, 'height': 812}
 DESKTOP = {'width': 1280, 'height': 900}
+# Tests that are not about the privacy pop-up start with it answered ("Reject All")
+HIDE_COOKIE_POP_UP = "try { localStorage.setItem('dr_cookie_consent', 'denied') } catch (e) {}"
+GA = 'G-TEST12345'
 
 
 @tag('e2e')
@@ -59,7 +63,7 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
 
     def page(self, viewport=DESKTOP):
         context = self.browser.new_context(viewport=viewport)
-        context.add_init_script("try { localStorage.setItem('sp_cookie_notice_ok', '1') } catch (e) {}")
+        context.add_init_script(HIDE_COOKIE_POP_UP)
         self.addCleanup(context.close)
         page = context.new_page()
         errors = []
@@ -149,7 +153,7 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
     def test_phone_taps_do_not_zoom_flash_or_leave_hover_stuck(self):
         context = self.browser.new_context(viewport=PHONE, is_mobile=True, has_touch=True)
         self.addCleanup(context.close)
-        context.add_init_script("try { localStorage.setItem('sp_cookie_notice_ok', '1') } catch (e) {}")
+        context.add_init_script(HIDE_COOKIE_POP_UP)
         page = context.new_page()
         page.goto(self.live_server_url + '/products/?q=chilli')
         # iPhones zoom the page into any box under 16px
@@ -274,3 +278,88 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         }""")
         self.assertIn(focused['tag'], ('A', 'BUTTON', 'INPUT'))
         self.assertTrue(focused['outline'] != 'none' or focused['shadow'] != 'none', focused)
+
+
+@tag('e2e')
+@unittest.skipUnless(RUN, 'Browser tests run only with E2E=1 and Playwright installed')
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='', NOTIFICATION_EMAIL='support@example.com',
+                   GA_MEASUREMENT_ID=GA)
+class CookieConsentTests(StaticLiveServerTestCase):
+    """Google Analytics must not load, or set a cookie, until the visitor agrees."""
+
+    @classmethod
+    def setUpClass(cls):
+        os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
+        super().setUpClass()
+        cls.pw = sync_playwright().start()
+        cls.browser = cls.pw.chromium.launch()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close()
+        cls.pw.stop()
+        super().tearDownClass()
+
+    def fresh_visitor(self, viewport=DESKTOP):
+        context = self.browser.new_context(viewport=viewport)
+        self.addCleanup(context.close)
+        google = []
+        # Record (and block) any request to Google, so the test needs no internet and sees exactly what loads
+        context.route(re.compile(r'^https://[^/]*google'), lambda route: (google.append(route.request.url), route.abort()))
+        page = context.new_page()
+        errors = []
+        page.on('pageerror', lambda e: errors.append(str(e)))
+        self.addCleanup(lambda: self.assertEqual(errors, [], 'JavaScript errors on the page'))
+        return context, page, google
+
+    def test_nothing_from_google_loads_before_a_choice_or_after_reject(self):
+        context, page, google = self.fresh_visitor(PHONE)
+        page.goto(self.live_server_url + '/')
+        notice = page.locator('#cookieNotice')
+        expect(notice).to_be_visible()
+        page.wait_for_timeout(500)
+        self.assertEqual(google, [])
+        page.get_by_role('button', name='Reject All').click()
+        expect(notice).to_be_hidden()
+        page.goto(self.live_server_url + '/products/')
+        expect(notice).to_be_hidden()                       # the choice is remembered
+        page.wait_for_timeout(500)
+        self.assertEqual(google, [])
+        self.assertFalse([c for c in context.cookies() if c['name'].startswith('_ga')])
+
+    def test_accept_loads_analytics_and_the_thank_you_page_counts_a_lead(self):
+        context, page, google = self.fresh_visitor()
+        page.goto(self.live_server_url + '/')
+        page.get_by_role('button', name='Accept All').click()
+        expect(page.locator('#cookieNotice')).to_be_hidden()
+        page.wait_for_function('window.dataLayer && window.dataLayer.length > 0')
+        self.assertTrue(any(f'googletagmanager.com/gtag/js?id={GA}' in url for url in google), google)
+        page.goto(self.live_server_url + '/wholesale/thank-you/')
+        page.wait_for_function('window.dataLayer && window.dataLayer.length > 0')
+        events = page.evaluate('window.dataLayer.map(a => Array.from(a))')
+        self.assertIn(['event', 'generate_lead'], [e[:2] for e in events])
+
+    def test_customise_switch_and_footer_cookie_settings_change_the_choice(self):
+        context, page, google = self.fresh_visitor()
+        page.goto(self.live_server_url + '/')
+        page.get_by_role('button', name='Customise').click()
+        switch = page.get_by_role('switch', name='Analytics cookies (Google Analytics)')
+        expect(switch).not_to_be_checked()                  # off unless the visitor switches it on
+        switch.check()
+        page.get_by_role('button', name='Save my choices').click()
+        expect(page.locator('#cookieNotice')).to_be_hidden()
+        page.wait_for_function('window.dataLayer && window.dataLayer.length > 0')
+
+        # Later: change of mind from the footer link, using only the keyboard
+        context.add_cookies([{'name': '_ga', 'value': 'GA1.1.1.1', 'url': self.live_server_url}])
+        page.get_by_role('button', name='Cookie settings').first.focus()
+        page.keyboard.press('Enter')
+        expect(switch).to_be_checked()
+        expect(switch).to_be_focused()
+        page.keyboard.press('Space')
+        page.get_by_role('button', name='Save my choices').click()
+        self.assertTrue(page.evaluate(f'window["ga-disable-{GA}"]'))
+        self.assertFalse([c for c in context.cookies() if c['name'].startswith('_ga')])
+        page.reload()
+        expect(page.locator('#cookieNotice')).to_be_hidden()
+        self.assertEqual(page.evaluate('localStorage.getItem("dr_cookie_consent")'), 'denied')

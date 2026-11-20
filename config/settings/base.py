@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 import environ
 
@@ -71,6 +72,7 @@ TEMPLATES = [
                 # Core custom context processor for settings
                 'core.context_processors.site_settings',
                 'core.context_processors.footer_categories',
+                'core.context_processors.analytics',
             ],
         },
     },
@@ -155,6 +157,13 @@ NOTIFICATION_EMAIL = env('NOTIFICATION_EMAIL', default='support@desiroots.co.uk'
 # Cloudflare Turnstile Settings
 TURNSTILE_SITE_KEY = env('TURNSTILE_SITE_KEY', default='')
 TURNSTILE_SECRET_KEY = env('TURNSTILE_SECRET_KEY', default='')
+
+# Google Analytics 4 (added 20 Nov 2026). Empty = off. Only loads in a visitor's browser after
+# they press Accept in the cookie pop-up; never for signed-in staff. Anything that is not a
+# G-XXXX measurement ID is ignored.
+GA_MEASUREMENT_ID = env('GA_MEASUREMENT_ID', default='').strip().upper()
+if not re.fullmatch(r'G-[A-Z0-9]{4,15}', GA_MEASUREMENT_ID):
+    GA_MEASUREMENT_ID = ''
 
 
 # Shared file cache (20 Nov 2026): one cache for all Gunicorn workers, so enquiry

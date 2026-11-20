@@ -161,6 +161,9 @@ a {
   border-color: var(--sp-cta-dark);
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(156, 77, 16, 0.25);
+  --bs-btn-active-bg: var(--sp-cta-dark);
+  --bs-btn-active-border-color: var(--sp-masala);
+  --bs-btn-active-color: #ffffff;
 }
 
 .btn-primary:focus-visible {
@@ -227,6 +230,10 @@ a {
   color: var(--sp-saffron-text);
   border-color: var(--sp-saffron-text);
   background-color: transparent;
+  /* Brand colours while pressed, instead of Bootstrap's default blue flash */
+  --bs-btn-active-bg: var(--sp-saffron-text);
+  --bs-btn-active-border-color: var(--sp-saffron-text);
+  --bs-btn-active-color: #ffffff;
 }
 
 .btn-outline-primary:focus-visible {
@@ -440,6 +447,22 @@ footer .footer-bottom {
 .footer-policy-links a {
   white-space: nowrap;                 /* never split "Privacy Policy" over two lines */
 }
+/* "Cookie settings" reopens the privacy pop-up: a button that looks like the links beside it */
+.footer-cookie-settings {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--sp-footer-text);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.footer-cookie-settings:focus-visible {
+  color: #ffffff;
+}
+@media (hover: hover) and (pointer: fine) { .footer-cookie-settings:hover {
+  color: #ffffff;
+} }
 
 /* Desktop: legal line on the left, policy links on the right, top-aligned */
 @media (min-width: 992px) {
@@ -1251,6 +1274,32 @@ footer .footer-bottom {
 }
 .sp-cookie-notice__status--off {
   color: #8a857c;
+}
+.sp-cookie-notice__switch {
+  flex-shrink: 0;
+  margin: 0;
+  padding-left: 2.5em;
+  min-height: 0;
+}
+.sp-cookie-notice__switch .form-check-input {
+  width: 2.5em;
+  height: 1.35em;
+  cursor: pointer;
+}
+.sp-cookie-notice__switch .form-check-input:checked {
+  background-color: var(--sp-cardamom);
+  border-color: var(--sp-cardamom);
+}
+.sp-cookie-notice__save {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 14px;
+  border-top: 1px solid var(--sp-border);
+}
+.sp-cookie-notice__save .btn {
+  padding: 7px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 .sp-cookie-notice__actions {
   display: grid;
