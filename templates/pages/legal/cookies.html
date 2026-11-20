@@ -9,7 +9,7 @@
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
     <h1 class="h2 mb-2">Cookie Policy</h1>
-    <p class="text-muted mb-0">Last updated: 16 November 2026</p>
+    <p class="text-muted mb-0">Last updated: {% if ga_measurement_id %}20 November 2026{% else %}16 November 2026{% endif %}</p>
   </div>
 </div>
 
@@ -25,7 +25,7 @@
 
           <h2 class="h4 fw-semibold mb-3 mt-4">2. Cookies We Use</h2>
           <p class="text-muted">
-            Our website only uses cookies that are strictly necessary for it to work securely. Because of this, we do not need to ask for your consent before setting them.
+            {% if ga_measurement_id %}Our website uses cookies that are strictly necessary for it to work securely, which do not need your consent, and Google Analytics cookies only if you agree to them.{% else %}Our website only uses cookies that are strictly necessary for it to work securely. Because of this, we do not need to ask for your consent before setting them.{% endif %}
           </p>
 
           <h3 class="h6 fw-bold text-dark mt-3 mb-2">Strictly necessary cookies</h3>
@@ -35,6 +35,25 @@
             <li><strong>sessionid</strong> – used only when our own staff sign in to manage the website. Visitors do not receive it.</li>
           </ul>
 
+          {% if ga_measurement_id %}
+          {# Google Analytics wording approved by the owner 20 Nov 2026. Cookie names and lifetimes are Google's published defaults for Google Analytics 4. #}
+          <h3 class="h6 fw-bold text-dark mb-2">Your cookie choice</h3>
+          <p class="text-muted small">
+            Your choice in our privacy pop-up is stored on your own device (<code>dr_cookie_consent</code>) so the pop-up does not appear on every visit. It is not sent to us.
+          </p>
+
+          <h2 class="h4 fw-semibold mb-3 mt-4">3. Analytics Cookies (only with your consent)</h2>
+          <p class="text-muted">
+            If you press <strong>Accept All</strong>, or switch on Analytics in <strong>Customise</strong>, we use Google Analytics, a service provided by Google, to count visits and see which pages are useful, so we can improve our website. Google Analytics is not loaded and these cookies are not set unless you agree.
+          </p>
+          <ul class="text-muted small mb-3">
+            <li class="mb-1"><strong>_ga</strong> – tells visits from different browsers apart. It lasts up to 2 years.</li>
+            <li><strong>_ga_&lt;ID&gt;</strong> – remembers the current visit. It lasts up to 2 years.</li>
+          </ul>
+          <p class="text-muted">
+            We do not use advertising cookies and we do not use Analytics to identify you. You can change your choice at any time with <button type="button" class="btn btn-link p-0 align-baseline text-saffron fw-semibold" data-cookie-settings>Cookie settings</button> (also at the bottom of every page). Switching Analytics off deletes its cookies from this website.
+          </p>
+          {% else %}
           <h3 class="h6 fw-bold text-dark mb-2">Your privacy pop-up choice</h3>
           <p class="text-muted small">
             When you close our privacy pop-up, your browser stores a small setting (<code>sp_cookie_notice_ok</code>) on your own device so the pop-up does not appear on every visit. It is not sent to us.
@@ -44,6 +63,8 @@
           <p class="text-muted">
             We do not use analytics, advertising or tracking cookies, and we do not track you across other websites. If this ever changes, we will update this policy and ask for your consent first.
           </p>
+
+          {% endif %}
 
           <h2 class="h4 fw-semibold mb-3 mt-4">4. Managing Cookies</h2>
           <p class="text-muted mb-0">

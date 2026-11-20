@@ -6,6 +6,8 @@
 {% block og_description %}Thank you for your enquiry. The Desi Roots team will be in touch.{% endblock %}
 
 {% block content %}
+{# Counted as a "lead" in Google Analytics, only for visitors who accepted Analytics cookies (cookie-consent.js) #}
+<span hidden data-analytics-event="generate_lead"></span>
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
     <h1 class="h2 mb-2">Request Submitted</h1>
