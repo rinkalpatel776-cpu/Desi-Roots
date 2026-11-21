@@ -40,6 +40,15 @@ def footer_categories(request):
     return {'footer_categories': categories}
 
 
+def has_faqs(request):
+    """True once the owner has added at least one active FAQ; until then FAQ is left out of the menu and footer."""
+    from pages.models import FAQ
+    try:
+        return {'has_faqs': FAQ.objects.filter(is_active=True).exists()}
+    except Exception:
+        return {'has_faqs': False}
+
+
 def analytics(request):
     """Google Analytics ID for the cookie pop-up; empty (off) for signed-in staff so their visits are not counted."""
     from django.conf import settings

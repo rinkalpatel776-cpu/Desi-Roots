@@ -12,6 +12,7 @@ GA = 'G-TEST12345'
 PAGES = ['/', '/products/', '/brands/', '/about/', '/contact/', '/faq/', '/privacy/', '/cookies/', '/terms/']
 
 
+@override_settings(GA_MEASUREMENT_ID="")  # whatever a local .env says
 class AnalyticsOffByDefaultTests(TestCase):
     def test_no_google_code_or_cookie_settings_when_no_id_is_set(self):
         for path in PAGES:

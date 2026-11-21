@@ -73,6 +73,7 @@ TEMPLATES = [
                 'core.context_processors.site_settings',
                 'core.context_processors.footer_categories',
                 'core.context_processors.analytics',
+                'core.context_processors.has_faqs',
             ],
         },
     },
