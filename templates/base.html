@@ -122,9 +122,11 @@
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="/about/">About Us</a>
           </li>
+          {% if has_faqs %}{# FAQ shows in the menu only once the owner has added answers #}
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/faq/' %}active{% endif %}" href="/faq/">FAQ</a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="/contact/">Contact</a>
           </li>
@@ -188,7 +190,7 @@
           <h2 class="h5">Quick Links</h2>
           <ul class="list-unstyled footer-link-list">
             <li><a href="/about/">About Us</a></li>
-            <li><a href="/faq/">FAQ</a></li>
+            {% if has_faqs %}<li><a href="/faq/">FAQ</a></li>{% endif %}
             <li><a href="/contact/">Contact Us</a></li>
             <li><a href="/brands/">Our Brands</a></li>
           </ul>

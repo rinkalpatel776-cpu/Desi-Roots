@@ -6,7 +6,7 @@
 {% block og_title %}Desi Roots | Wholesale Spices &amp; Groceries Bristol{% endblock %}
 {% block og_description %}Desi Roots supplies wholesale spices, lentils, rice, flour and ethnic groceries to restaurants and retailers in Bristol and nearby areas.{% endblock %}
 
-{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=8" rel="stylesheet">{% endblock %}
+{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=9" rel="stylesheet">{% endblock %}
 
 {% block content %}
 <!-- Hero slider: slide 1 spice-merchant photo, slide 2 welcome, slide 3 MDH; moves every 5 seconds (static/js/hero-slider.js) -->
@@ -16,13 +16,22 @@
  <div class="hs-viewport">
   <div class="hs-track">
    <div class="hs-slide sp-hero-wrapper overflow-hidden text-white" role="group" aria-roledescription="slide" aria-label="1 of 3">
+    {% comment %}Phones (21 Nov 2026): the photo's own words are too small to read on a phone, so phones get a wordless
+       crop of the same photo with the same words as real text below it. Hidden on tablets and computers.{% endcomment %}
+    <img class="hs-m-img" src="{% static 'images/hero/spices-phone-800.webp' %}" srcset="{% static 'images/hero/spices-phone-800.webp' %} 800w, {% static 'images/hero/spices-phone-1200.webp' %} 1200w"
+         sizes="100vw" width="800" height="400" alt="Sacks and bowls of lentils, chickpeas, rice, turmeric and chilli">
     <div class="container sp-hero-container">
      <div class="row">
       {# The buttons line up under the text on the left of the photo; centred on phones #}
       <div class="col-12 text-center text-md-start">
+       <div class="hs-m-text">
+        <p class="hs-m-tag">Ethnic grocery supplier</p>
+        <h2 class="hs-m-title">Authentic Flavours. <span class="hs-m-accent">Quality You Can Trust.</span></h2>
+        <p class="hs-m-lead">Spices, pulses, lentils, rice, whole spices and ethnic grocery.</p>
+       </div>
        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start gap-3 sp-hero-actions">
-        <a href="/contact/" class="btn btn-primary btn-lg text-white px-4 shadow"><i class="bi bi-chat-left-dots me-2" aria-hidden="true"></i>Request Wholesale Quote</a>
-        <a href="/products/" class="btn btn-hero-outline btn-lg px-4 shadow"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>Browse Products</a>
+        <a href="/contact/" class="btn btn-primary btn-lg text-white px-4 shadow"><i class="bi bi-chat-left-dots me-2" aria-hidden="true"></i><span class="hs-label-long">Request Wholesale Quote</span><span class="hs-label-short">Get a quote</span></a>
+        <a href="/products/" class="btn btn-hero-outline btn-lg px-4 shadow"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i><span class="hs-label-long">Browse Products</span><span class="hs-label-short">Browse</span></a>
        </div>
       </div>
      </div>
@@ -34,11 +43,11 @@
      <div class="col-lg-6">
       <p class="h10-tag"><span class="dot"></span>Wholesale supplier · Bristol</p>
       {# Headline wording from the business's "About US" document #}
-      <h2 class="h10-title">Welcome to <span class="c1">Desi Roots</span> – Your Trusted Wholesale Partner for <span class="c2">Authentic World Foods</span></h2>
+      <h2 class="h10-title"><span class="hs-m-hide">Welcome to <span class="c1">Desi Roots</span> – </span>Your Trusted Wholesale Partner for <span class="c2">Authentic World Foods</span></h2>
       <p class="h10-lead">Spices, rice, lentils, flours, oils and snacks from the brands your customers know, supplied to restaurants, takeaways, caterers and shops.</p>
       <div class="h10-actions">
-       <a href="/contact/" class="h10-btn h10-primary"><i class="bi bi-chat-square-text" aria-hidden="true"></i> Request a trade quote</a>
-       <a href="/products/" class="h10-btn h10-ghost"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Browse the catalogue</a>
+       <a href="/contact/" class="h10-btn h10-primary"><i class="bi bi-chat-square-text" aria-hidden="true"></i> <span class="hs-label-long">Request a trade quote</span><span class="hs-label-short">Get a quote</span></a>
+       <a href="/products/" class="h10-btn h10-ghost"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> <span class="hs-label-long">Browse the catalogue</span><span class="hs-label-short">Browse</span></a>
       </div>
       {# Counted from the live catalogue, rounded down #}
       <ul class="h10-chips" aria-label="At a glance">
@@ -64,10 +73,10 @@
      <span class="hs-mdh-rule" aria-hidden="true"></span>
      {# "Largest MDH supplier" claim: the business confirmed on 18 Nov 2026 that it can back this up #}
      <h2 class="hs-mdh-title"><span class="l1">The Largest</span> <span class="l2">MDH Supplier</span> <span class="l3">in South West England</span></h2>
-     <p class="hs-mdh-areas">Bristol <span aria-hidden="true">|</span> Bath <span aria-hidden="true">|</span> Cardiff<br>&amp; surrounding areas</p>
+     <p class="hs-mdh-areas">Bristol <span aria-hidden="true">|</span> Bath <span aria-hidden="true">|</span> Cardiff <br>&amp; surrounding areas</p>
      <div class="hs-mdh-actions">
-      <a href="/contact/" class="hs-mdh-btn hs-mdh-primary">Request Wholesale Quote</a>
-      <a href="/products/?brand=mdh" class="hs-mdh-btn hs-mdh-ghost">Browse MDH Range</a>
+      <a href="/contact/" class="hs-mdh-btn hs-mdh-primary"><span class="hs-label-long">Request Wholesale Quote</span><span class="hs-label-short">Get a quote</span></a>
+      <a href="/products/?brand=mdh" class="hs-mdh-btn hs-mdh-ghost"><span class="hs-label-long">Browse MDH Range</span><span class="hs-label-short">MDH range</span></a>
      </div>
     </div></div>
    </div>
@@ -90,7 +99,7 @@
   <div class="container py-4">
     <div class="text-center mb-5">
       <h2 class="h3 fw-semibold text-dark">Why Choose Desi Roots</h2>
-      <p class="text-muted">Reliable sourcing and local delivery for food businesses across the South West.</p>
+      <p class="text-muted">What you get when you order from us.</p>
     </div>
     
     <div class="row g-4">
@@ -122,7 +131,7 @@
 <section class="py-5 sp-cats-section" aria-labelledby="home-categories">
   <div class="container py-3">
     <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-4">
-      <h2 id="home-categories" class="sp-cats-title mb-0">Everything <span>You Need</span></h2>
+      <h2 id="home-categories" class="sp-cats-title mb-0">Shop by <span>category</span></h2>
       <a href="/products/" class="sp-cats-all">View all products <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </div>
 

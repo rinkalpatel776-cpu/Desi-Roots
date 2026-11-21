@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from pages.models import FAQ
 from django.test import TestCase
 from django.urls import reverse
 
@@ -95,14 +96,14 @@ class HomeHeroSliderTests(TestCase):
         # Floto review 2: one name for contact in the footer, and a benefit line under Why Choose
         self.assertIn('<h2 class="h5">Contact Us</h2>', html)
         self.assertNotIn('Contact Wholesale', html)
-        self.assertIn('Reliable sourcing and local delivery for food businesses across the South West.', html)
+        self.assertIn('What you get when you order from us.', html)
         self.assertNotIn('hs-pause', html)  # owner asked for no pause button
 
     def test_slider_code_and_styles_are_files_not_inline(self):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
         self.assertIn('/static/js/hero-slider.js?v=2', html)
-        self.assertIn('/static/css/home-hero.css?v=8', html)
+        self.assertIn('/static/css/home-hero.css?v=9', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):
@@ -139,5 +140,47 @@ class HomeHeroSliderTests(TestCase):
         from django.conf import settings
         folder = Path(settings.BASE_DIR) / 'static' / 'images' / 'hero'
         for name in ('hero-packs-1400.webp', 'hero-packs-700.webp', 'mdh-slide-1600.webp',
-                     'mdh-slide-1000.webp', 'mdh-slide-phone-900.webp'):
+                     'mdh-slide-1000.webp', 'mdh-slide-phone-900.webp', 'spices-phone-800.webp', 'spices-phone-1200.webp'):
             self.assertTrue((folder / name).exists(), name)
+
+    def test_phone_hero_has_readable_words_and_short_buttons(self):
+        # Phones (21 Nov 2026): slide 1's words are real text under a wordless photo, buttons have short labels
+        html = self.html()
+        self.assertIn('images/hero/spices-phone-800.webp', html)
+        self.assertIn('class="hs-m-title">Authentic Flavours. <span class="hs-m-accent">Quality You Can Trust.</span></h2>', html)
+        self.assertEqual(html.count('class="hs-label-short">Get a quote</span>'), 3)  # one per slide
+        self.assertIn('class="hs-label-long">Request Wholesale Quote</span>', html)  # computers keep the long wording
+        self.assertNotIn('{#', html)          # template notes never show as text
+        self.assertIn('Cardiff <br>', html)   # "Cardiff & surrounding areas" keeps its space on one line
+        css = (__import__('pathlib').Path(__import__('django.conf', fromlist=['settings']).settings.BASE_DIR)
+               / 'static' / 'css' / 'home-hero.css').read_text()
+        phone = css[css.index('Phones (21 Nov 2026)'):]
+        self.assertIn('@media (max-width: 767.98px)', phone)  # tablets and computers unchanged
+
+
+
+class PlainWordingTests(TestCase):
+    """Wording review (21 Nov 2026): plain, specific words instead of stock phrases."""
+
+    def test_new_wording_is_on_the_pages(self):
+        self.assertContains(self.client.get('/brands/'), 'Every brand we stock, A to Z. Pick one to see its products.')
+        home = self.client.get('/')
+        self.assertContains(home, 'Shop by <span>category</span>')
+        self.assertNotContains(home, 'Everything <span>You Need')
+        self.assertContains(self.client.get('/products/'), 'for trade buyers in Bristol and nearby areas.')
+        thanks = self.client.get('/wholesale/thank-you/')
+        self.assertContains(thanks, '<h1 class="h2 mb-2">Enquiry sent</h1>', html=False)
+        self.assertContains(thanks, "Thanks, we'll email you a price quote.")
+        for old in ('Request Submitted', 'Enquiry Received', 'Thank you for your interest'):
+            self.assertNotContains(thanks, old)
+        self.assertEqual(thanks.content.decode().count('<h1'), 1)
+
+    def test_faq_link_appears_only_once_answers_exist(self):
+        home = self.client.get('/').content.decode()
+        self.assertNotIn('href="/faq/"', home)                  # nothing to read yet: no menu or footer link
+        self.assertEqual(self.client.get('/faq/').status_code, 200)  # the page itself still works
+        FAQ.objects.create(question='Do you deliver?', answer='Yes, across Bristol.', is_active=True)
+        home = self.client.get('/').content.decode()
+        self.assertGreaterEqual(home.count('href="/faq/"'), 2)  # menu and footer
+        FAQ.objects.update(is_active=False)
+        self.assertNotIn('href="/faq/"', self.client.get('/about/').content.decode())

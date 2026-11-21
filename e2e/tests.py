@@ -105,6 +105,29 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         self.assertTrue(page.evaluate("document.querySelectorAll('.hs-slide')[1].inert"))
         self.no_sideways_scroll(page)
 
+    def test_phone_hero_slides_match_and_quote_button_is_on_the_first_screen(self):
+        for width, height in ((360, 740), (375, 812), (414, 896)):
+            page = self.page({'width': width, 'height': height})
+            page.emulate_media(reduced_motion='reduce')
+            page.goto(self.live_server_url + '/')
+            self.no_sideways_scroll(page)
+            for i in range(3):
+                page.locator('.hs-dot').nth(i).click()
+                page.evaluate('window.scrollTo(0, 0)')
+                slide = page.locator('.hs-slide').nth(i)
+                quote = slide.get_by_role('link', name='Get a quote')
+                expect(quote).to_be_visible()
+                box = quote.bounding_box()
+                self.assertLessEqual(box['y'] + box['height'], height, f'slide {i + 1} quote button below the first screen at {width}px')
+                self.assertGreaterEqual(box['height'], 44, 'button too small to tap')
+            # No slide leaves a big empty band: the slides' own content heights are within 40px of each other
+            heights = page.evaluate("""() => [...document.querySelectorAll('.hs-slide')].map(s => {
+                let bottom = 0; const top = s.getBoundingClientRect().top;
+                for (const el of s.querySelectorAll('*')) { const r = el.getBoundingClientRect();
+                  if (r.height && getComputedStyle(el).display !== 'none') bottom = Math.max(bottom, r.bottom - top); }
+                return bottom; })""")
+            self.assertLess(max(heights) - min(heights), 40, heights)
+
     def test_hero_slider_waits_while_a_keyboard_user_is_inside(self):
         page = self.page()
         page.goto(self.live_server_url + '/')
