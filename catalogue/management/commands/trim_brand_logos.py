@@ -46,6 +46,9 @@ class Command(BaseCommand):
             # Update the path without calling save(), which only handles fresh uploads
             Brand.objects.filter(pk=brand.pk).update(logo=saved_name)
             storage.delete(name)
+            # ...and the small web copy the website shows (catalogue/logo_thumbs.py)
+            from catalogue.logo_thumbs import make_thumb
+            make_thumb(Brand.objects.get(pk=brand.pk).logo)
 
         if not dry_run:
             from core.page_cache import bump_version

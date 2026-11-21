@@ -213,3 +213,6 @@
 
   .hs-dots { bottom: 12px; }
 }
+
+/* Speed (21 Nov 2026): the <picture> wrappers around hero images take no part in the layout */
+.hs picture { display: contents; }

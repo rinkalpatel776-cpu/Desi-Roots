@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load catalogue_extras %}
 
 {% block meta_title %}Our Brands | Desi Roots{% endblock %}
 {% block meta_description %}The spice and grocery brands Desi Roots supplies wholesale, including Heera, TRS, East End, Fudco, MDH and Shan.{% endblock %}
@@ -23,7 +24,7 @@
             <div class="d-flex align-items-center mb-3">
               {% if brand.logo %}
               <div class="d-flex align-items-center justify-content-center border border-sp rounded bg-white p-1" style="width: 64px; height: 50px; flex-shrink: 0;">
-                <img src="{{ brand.logo.url }}" alt="{{ brand.name }} Logo" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                <img src="{{ brand.logo|logo_url }}" alt="{{ brand.name }} Logo" loading="lazy" style="max-height: 100%; max-width: 100%; object-fit: contain;">
               </div>
               {% else %}
               {# No logo yet: the brand's initials instead of a generic icon #}
