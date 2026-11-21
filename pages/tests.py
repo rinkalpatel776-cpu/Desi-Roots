@@ -103,7 +103,7 @@ class HomeHeroSliderTests(TestCase):
         # The site's Content-Security-Policy only allows inline scripts it already knows (by hash)
         html = self.html()
         self.assertIn('/static/js/hero-slider.js?v=2', html)
-        self.assertIn('/static/css/home-hero.css?v=9', html)
+        self.assertIn('/static/css/home-hero.css?v=10', html)
         self.assertNotIn('setInterval', html)
 
     def test_slider_moves_every_5_seconds_and_respects_reduced_motion(self):

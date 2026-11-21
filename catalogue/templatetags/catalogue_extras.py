@@ -31,3 +31,10 @@ def pack_choices(sizes):
         choices.append({'id': size.id, 'label': label,
                         'key': (weight is None, weight or 0, index)})
     return sorted(choices, key=lambda c: c['key'])
+
+
+@register.filter
+def logo_url(logo_field):
+    """Small WebP copy of a brand logo when there is one (catalogue/logo_thumbs.py), else the original."""
+    from catalogue.logo_thumbs import logo_url as _logo_url
+    return _logo_url(logo_field)

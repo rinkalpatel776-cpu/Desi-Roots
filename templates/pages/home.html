@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static catalogue_extras %}
 
 {% block meta_title %}Desi Roots | Wholesale Spices & Groceries Bristol{% endblock %}
 {% block meta_description %}Desi Roots supplies wholesale spices, lentils, rice, flour and ethnic groceries to restaurants and retailers in Bristol and nearby areas.{% endblock %}
 {% block og_title %}Desi Roots | Wholesale Spices &amp; Groceries Bristol{% endblock %}
 {% block og_description %}Desi Roots supplies wholesale spices, lentils, rice, flour and ethnic groceries to restaurants and retailers in Bristol and nearby areas.{% endblock %}
 
-{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=9" rel="stylesheet">{% endblock %}
+{% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=10" rel="stylesheet">
+{# Slide 1's photo on tablets and computers is a CSS background, which browsers find late: ask for it straight away #}
+<link rel="preload" as="image" href="{% static 'images/hero-ethnic-grocery.jpg' %}" media="(min-width: 768px)" fetchpriority="high">{% endblock %}
 
 {% block content %}
 <!-- Hero slider: slide 1 spice-merchant photo, slide 2 welcome, slide 3 MDH; moves every 5 seconds (static/js/hero-slider.js) -->
@@ -18,8 +20,13 @@
    <div class="hs-slide sp-hero-wrapper overflow-hidden text-white" role="group" aria-roledescription="slide" aria-label="1 of 3">
     {% comment %}Phones (21 Nov 2026): the photo's own words are too small to read on a phone, so phones get a wordless
        crop of the same photo with the same words as real text below it. Hidden on tablets and computers.{% endcomment %}
-    <img class="hs-m-img" src="{% static 'images/hero/spices-phone-800.webp' %}" srcset="{% static 'images/hero/spices-phone-800.webp' %} 800w, {% static 'images/hero/spices-phone-1200.webp' %} 1200w"
-         sizes="100vw" width="800" height="400" alt="Sacks and bowls of lentils, chickpeas, rice, turmeric and chilli">
+    {% comment %}Speed (21 Nov 2026): the first thing a phone shows, so it loads first; tablets and computers get an empty
+       1-pixel placeholder instead of downloading a picture they never show{% endcomment %}
+    <picture>
+     <source media="(min-width: 768px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+     <img class="hs-m-img" src="{% static 'images/hero/spices-phone-800.webp' %}" srcset="{% static 'images/hero/spices-phone-800.webp' %} 800w, {% static 'images/hero/spices-phone-1200.webp' %} 1200w"
+          sizes="100vw" width="800" height="400" fetchpriority="high" alt="Sacks and bowls of lentils, chickpeas, rice, turmeric and chilli">
+    </picture>
     <div class="container sp-hero-container">
      <div class="row">
       {# The buttons line up under the text on the left of the photo; centred on phones #}
@@ -56,17 +63,24 @@
      </div>
      <div class="col-lg-6"><div class="h10-art">
       <img src="{% static 'images/hero/hero-packs-1400.webp' %}" srcset="{% static 'images/hero/hero-packs-700.webp' %} 700w, {% static 'images/hero/hero-packs-1400.webp' %} 1400w"
-           sizes="(min-width: 992px) 50vw, (min-width: 576px) 520px, 330px" width="1400" height="1020"
+           sizes="(min-width: 992px) 50vw, (min-width: 576px) 520px, 330px" width="1400" height="1020" fetchpriority="low"
            alt="Packs from TRS, East End, MDH and Heera with bowls of turmeric, chilli, garam masala, cumin, coriander and cardamom">
      </div></div>
     </div></div>
    </div>
    <div class="hs-slide hs-mdh" role="group" aria-roledescription="slide" aria-label="3 of 3">
-    <img class="hs-mdh-bg" src="{% static 'images/hero/mdh-slide-1600.webp' %}" srcset="{% static 'images/hero/mdh-slide-1000.webp' %} 1000w, {% static 'images/hero/mdh-slide-1600.webp' %} 1600w"
-         sizes="100vw" width="1600" height="900"
+    {# Each screen size downloads only the MDH picture it shows #}
+    <picture>
+     <source media="(max-width: 991.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+     <img class="hs-mdh-bg" src="{% static 'images/hero/mdh-slide-1600.webp' %}" srcset="{% static 'images/hero/mdh-slide-1000.webp' %} 1000w, {% static 'images/hero/mdh-slide-1600.webp' %} 1600w"
+         sizes="100vw" width="1600" height="900" fetchpriority="low"
          alt="MDH Deggi Mirch, Chunky Chat Masala, Kitchen King, Garam Masala and Pav Bhaji Masala packs in front of sacks of lentils and rice">
-    <img class="hs-mdh-phone" src="{% static 'images/hero/mdh-slide-phone-900.webp' %}" width="900" height="454"
+    </picture>
+    <picture>
+     <source media="(min-width: 992px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+     <img class="hs-mdh-phone" src="{% static 'images/hero/mdh-slide-phone-900.webp' %}" width="900" height="454" fetchpriority="low"
          alt="MDH Deggi Mirch, Chunky Chat Masala, Kitchen King, Garam Masala and Pav Bhaji Masala packs">
+    </picture>
     <div class="container position-relative"><div class="hs-mdh-text">
      <p class="hs-mdh-brand">Desi Roots</p>
      <p class="hs-mdh-sub">Ethnic grocery supplier</p>
@@ -216,7 +230,7 @@
         <a class="sp-brand-badge" href="/products/?brand={{ brand.slug }}">
           <span class="sp-badge-ring">
             {% if brand.logo %}
-            <img src="{{ brand.logo.url }}" alt="{{ brand.name }} logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
+            <img src="{{ brand.logo|logo_url }}" alt="{{ brand.name }} logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
             {% else %}
             <span class="sp-badge-letter" aria-hidden="true">{{ brand.initials }}</span>
             {% endif %}

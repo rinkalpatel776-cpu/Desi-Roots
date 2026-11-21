@@ -1,3 +1,4 @@
+import logging
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -88,6 +89,7 @@ class Brand(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        new_logo = bool(self.logo) and not self.logo._committed
         # Trim empty space from newly uploaded logos; saved as PNG to keep transparency
         if self.logo and not self.logo._committed:
             img, changed = trim_logo_border(Image.open(self.logo))
@@ -100,6 +102,13 @@ class Brand(models.Model):
                     output, 'ImageField', f"{base_name}.png", 'image/png', output.getbuffer().nbytes, None
                 )
         super().save(*args, **kwargs)
+        if new_logo:
+            # Small web copy for the website (catalogue/logo_thumbs.py); a failure never blocks saving
+            from .logo_thumbs import make_thumb
+            try:
+                make_thumb(self.logo)
+            except Exception:
+                logging.getLogger(__name__).exception("Could not make the small copy of %s's logo", self.name)
 
     @property
     def initials(self):
