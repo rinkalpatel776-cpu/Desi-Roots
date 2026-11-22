@@ -227,12 +227,24 @@
         {% endif %}
 
         {% else %}
-        <!-- Empty State -->
-        <div class="text-center py-5 bg-white border border-sp rounded">
-          <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
-          <h4>No Products Found</h4>
-          <p class="text-muted">We couldn't find any products matching your search criteria.</p>
-          <a href="/products/" class="btn btn-primary text-white mt-2">Browse All Products</a>
+        {# No results (21 Nov 2026): say what was searched, give tips, and turn the dead end into an enquiry #}
+        <div class="sp-no-results text-center py-5 px-3 bg-white border border-sp rounded">
+          <i class="bi bi-search fs-1 text-muted mb-3 d-block" aria-hidden="true"></i>
+          <h2 class="h4">No products found{% if active_filters.q %} for “{{ active_filters.q }}”{% endif %}</h2>
+          {% if active_filters.q %}
+          <ul class="sp-no-results-tips text-muted">
+            <li>Check the spelling</li>
+            <li>Try one or two words, e.g. “chilli” instead of “red chilli powder 400g”</li>
+            <li>Try the brand name, e.g. Heera or TRS</li>
+          </ul>
+          {% else %}
+          <p class="text-muted">No products match these filters.</p>
+          {% endif %}
+          <p class="text-muted mb-3">We may still be able to supply it. Ask us and we'll check.</p>
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+            <a href="/contact/{% if active_filters.q %}?ask={{ active_filters.q|urlencode }}{% endif %}" class="btn btn-primary text-white">Can't find it? Ask us</a>
+            <a href="/products/" class="btn btn-outline-primary">Clear search and filters</a>
+          </div>
         </div>
         {% endif %}
 

@@ -33,8 +33,9 @@ class EnquiryForm(forms.ModelForm):
     # never see it but form-filling bots do. Anything typed here marks the enquiry as spam.
     website = forms.CharField(
         required=False,
-        label="Leave this field blank",
-        widget=forms.TextInput(attrs={'tabindex': '-1', 'autocomplete': 'off'}),
+        # No visible label and hidden from screen readers (21 Nov 2026): people never meet it, bots still fill it
+        label='',
+        widget=forms.TextInput(attrs={'tabindex': '-1', 'autocomplete': 'off', 'aria-hidden': 'true'}),
     )
     # Signed time the form was shown, to catch instant bot submissions
     form_started = forms.CharField(required=False, widget=forms.HiddenInput())

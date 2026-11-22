@@ -69,7 +69,7 @@ class CatalogueTests(TestCase):
         # Search by non-existent query
         response = self.client.get('/products/?q=nonexistent')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No Products Found")
+        self.assertContains(response, "No products found for")
 
     def test_filtering_functionality(self):
         # Filter by category "rice"
