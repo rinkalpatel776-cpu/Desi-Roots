@@ -15,6 +15,7 @@ import hashlib
 import logging
 from datetime import timedelta
 
+from django.contrib import messages
 from django.core.cache import cache
 from django.utils import timezone
 
@@ -88,6 +89,9 @@ def handle_enquiry_form(request, template_name):
             return redirect('/wholesale/thank-you/')
         if form.is_valid():
             enquiry = form.save()
+            # The thank-you page shows the reference (DR-123). Passed in the short-lived "messages"
+            # cookie the site already uses, so it shows once, only in this visitor's browser.
+            messages.success(request, enquiry.reference, extra_tags='enquiry-ref')
             
             # Send Notification Emails (with error tolerance)
             try:
@@ -153,6 +157,10 @@ def handle_enquiry_form(request, template_name):
                 initial_data['message'] = f"Hello, I am interested in wholesale pricing and availability for {label}."
             except (Product.DoesNotExist, ValueError):
                 pass
+        # From the catalogue's "Can't find it? Ask us" (?ask=<what they searched for>): one short line only
+        ask = ' '.join(request.GET.get('ask', '').split())[:100]
+        if ask and 'message' not in initial_data:
+            initial_data['message'] = f"Hello, I couldn't find \"{ask}\" in your catalogue. Do you supply it, and in which pack sizes?"
                 
         form = EnquiryForm(initial=initial_data)
 

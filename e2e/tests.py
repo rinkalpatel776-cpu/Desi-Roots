@@ -275,6 +275,47 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         subjects = [m.subject for m in mail.outbox]
         self.assertTrue(any(f'Ref {enquiry.reference}' in s for s in subjects), subjects)
 
+    def test_unsent_enquiry_is_kept_then_cleared_once_sent(self):
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/contact/')
+        page.fill('#id_name', 'Asha Patel')
+        page.fill('#id_message', 'Please quote 10 x 5 kg chakki atta.')
+        page.wait_for_timeout(700)                      # saved a moment after typing stops
+        page.reload()                                   # e.g. the page was closed by mistake
+        expect(page.locator('.sp-draft-note')).to_be_visible()
+        self.assertEqual(page.input_value('#id_name'), 'Asha Patel')
+        self.assertEqual(page.input_value('#id_message'), 'Please quote 10 x 5 kg chakki atta.')
+        self.assertFalse(page.is_checked('#id_consent_given'))   # consent is never kept
+        page.fill('#id_email', 'asha@kitchen.example')
+        page.fill('#id_phone', '0117 496 0000')
+        page.check('#id_consent_given')
+        time.sleep(3.2)
+        page.get_by_role('button', name='Send Message').click()
+        expect(page).to_have_url(self.live_server_url + '/wholesale/thank-you/')
+        enquiry = Enquiry.objects.get()
+        expect(page.get_by_text(f'Your reference is {enquiry.reference}')).to_be_visible()
+        self.assertIsNone(page.evaluate("localStorage.getItem('dr_enquiry_draft')"))
+        page.goto(self.live_server_url + '/contact/')
+        self.assertEqual(page.input_value('#id_name'), '')
+        expect(page.locator('.sp-draft-note')).to_have_count(0)
+
+    def test_clear_the_form_removes_kept_text(self):
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/contact/')
+        page.fill('#id_message', 'Draft to throw away')
+        page.wait_for_timeout(700)
+        page.reload()
+        page.get_by_role('button', name='Clear the form').click()
+        self.assertEqual(page.input_value('#id_message'), '')
+        self.assertIsNone(page.evaluate("localStorage.getItem('dr_enquiry_draft')"))
+
+    def test_no_results_ask_us_prefills_the_enquiry(self):
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/products/?q=saffron')
+        page.get_by_role('link', name="Can't find it? Ask us").click()
+        expect(page).to_have_url(re.compile(r'/contact/\?ask=saffron'))
+        self.assertIn('"saffron"', page.input_value('#id_message'))
+
     def test_double_clicking_send_saves_the_enquiry_once(self):
         page = self.page(DESKTOP)
         page.goto(self.live_server_url + '/contact/')

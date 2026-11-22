@@ -1503,3 +1503,17 @@ button, .btn, [role="button"], .hs-dot, .hs-arrow { -webkit-user-select: none; u
 }
 /* Clear space between the search button and the first menu link (Floto review 2) */
 @media (min-width: 1200px) { .navbar .sp-nav-search { margin-right: 20px; } }
+
+/* Thank-you page: the enquiry reference (DR-123), 21 Nov 2026 */
+.sp-enquiry-ref { font-size: 1.1rem; color: var(--sp-text); }
+.sp-enquiry-ref strong { color: var(--sp-saffron-text); font-family: var(--sp-font-head); letter-spacing: .02em; }
+
+/* Contact form: note shown when an unsent enquiry was put back (enquiry-draft.js) */
+.sp-draft-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
+  margin-bottom: 18px; padding: 10px 14px; border-radius: 8px; background: #FFF3DC; border: 1px solid #E8C98A; font-size: .92rem; }
+.sp-draft-clear { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--sp-saffron-text); text-decoration: underline; cursor: pointer; }
+.sp-draft-clear:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 2px; }
+
+/* Catalogue: no-results tips */
+.sp-no-results-tips { display: inline-block; text-align: left; margin: 0 auto 12px; padding-left: 1.2rem; }
+.sp-no-results-tips li { margin-bottom: 2px; }

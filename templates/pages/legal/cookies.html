@@ -35,6 +35,12 @@
             <li><strong>sessionid</strong> – used only when our own staff sign in to manage the website. Visitors do not receive it.</li>
           </ul>
 
+          {# TODO: confirm with business: factual line added 21 Nov 2026 for the unsent-enquiry keeper (static/js/enquiry-draft.js) #}
+          <h3 class="h6 fw-bold text-dark mb-2">Unsent enquiries</h3>
+          <p class="text-muted small">
+            While you fill in our enquiry form, what you type is kept on your own device (<code>dr_enquiry_draft</code>) so it is not lost if the page closes or the form expires. It is not sent to us until you press Send, it is deleted as soon as your enquiry is sent, and it is removed automatically after 7 days. The consent tick is never kept.
+          </p>
+
           {% if ga_measurement_id %}
           {# Google Analytics wording approved by the owner 20 Nov 2026. Cookie names and lifetimes are Google's published defaults for Google Analytics 4. #}
           <h3 class="h6 fw-bold text-dark mb-2">Your cookie choice</h3>

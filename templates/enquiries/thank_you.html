@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block meta_title %}Enquiry Submitted | Desi Roots{% endblock %}
 {% block meta_description %}Thank you for your enquiry. The Desi Roots team will be in touch.{% endblock %}
@@ -7,7 +8,7 @@
 
 {% block content %}
 {# Counted as a "lead" in Google Analytics, only for visitors who accepted Analytics cookies (cookie-consent.js) #}
-<span hidden data-analytics-event="generate_lead"></span>
+<span hidden data-analytics-event="generate_lead" data-enquiry-sent></span>
 <div class="py-5 bg-light border-bottom border-sp">
   <div class="container text-center">
     <h1 class="h2 mb-2">Enquiry sent</h1>
@@ -26,6 +27,10 @@
           
           <h2 class="h4 fw-bold text-dark mb-3">What happens next</h2>
           
+          {% for m in messages %}{% if 'enquiry-ref' in m.tags %}
+          <p class="sp-enquiry-ref mb-3">Your reference is <strong>{{ m }}</strong></p>
+          <p class="text-muted small mb-3">Quote it if you call or WhatsApp us about this enquiry.</p>
+          {% endif %}{% endfor %}
           <p class="text-muted mb-4">
             A copy of your enquiry has been sent to your email address.
           </p>
@@ -43,4 +48,9 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{# Deletes the visitor's kept enquiry text now that it has been sent #}
+<script src="{% static 'js/enquiry-draft.js' %}?v=1" defer></script>
 {% endblock %}
