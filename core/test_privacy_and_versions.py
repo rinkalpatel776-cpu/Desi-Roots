@@ -44,3 +44,17 @@ class DjangoVersionTests(TestCase):
     def test_lock_file_pins_the_patched_django(self):
         lock = (Path(settings.BASE_DIR) / 'requirements.lock.txt').read_text()
         self.assertRegex(lock, r'(?m)^Django==5\.2\.(19|[2-9]\d)$')
+
+
+class PillowVersionTests(TestCase):
+    """Security review, 23 Nov 2026: pip-audit found 25 known holes in Pillow 12.3.0, all fixed in 13.0."""
+
+    def test_pillow_has_the_security_fixes(self):
+        import PIL
+        major = int(PIL.__version__.split('.')[0])
+        self.assertGreaterEqual(major, 13, PIL.__version__)
+
+    def test_lock_file_pins_patched_pillow_and_urllib3(self):
+        lock = (Path(settings.BASE_DIR) / 'requirements.lock.txt').read_text()
+        self.assertIn('pillow==13.0.0', lock)
+        self.assertIn('urllib3==2.8.0', lock)

@@ -8,7 +8,7 @@
 Django>=5.2,<5.3            # LTS release - security patches for years
 psycopg[binary]>=3.2        # PostgreSQL driver
 django-environ>=0.12        # reads settings from .env, keeps secrets out of Git
-Pillow>=11.0                # image handling for product and category images
+Pillow>=13.0                # image handling for product and category images
 
 # ---- Saves you real hours on this timeline ----
 django-import-export>=4.3   # bulk CSV/Excel product import in the admin

@@ -31,6 +31,11 @@ SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
+# Staff admin sign-in (security review 23 Nov 2026): ends 8 hours after signing in, and when the
+# browser is closed, so a lost or shared laptop doesn't stay signed in for Django's default 2 weeks.
+# Visitors never get a session; this only affects staff.
+SESSION_COOKIE_AGE = 8 * 60 * 60
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # HTTP Strict Transport Security.
 # Subdomains and the browser preload list are left off: email lives on Hostinger's
