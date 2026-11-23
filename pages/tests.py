@@ -184,3 +184,19 @@ class PlainWordingTests(TestCase):
         self.assertGreaterEqual(home.count('href="/faq/"'), 2)  # menu and footer
         FAQ.objects.update(is_active=False)
         self.assertNotIn('href="/faq/"', self.client.get('/about/').content.decode())
+
+
+class AboutPageWordingTests(TestCase):
+    """About page (23 Nov 2026): plainer wording; trade only, no Chinese range, no fresh/frozen vegetables."""
+
+    def test_about_page_states_only_what_desi_roots_does(self):
+        html = self.client.get('/about/').content.decode()
+        visible = html.split('<main', 1)[1]
+        visible = __import__('re').sub(r'\{#.*?#\}', '', visible)
+        for wrong in ('households', 'Chinese', 'Fresh and frozen vegetables', 'passionate',
+                      'not just another', "success is our success"):
+            self.assertNotIn(wrong, visible, wrong)
+        self.assertIn('<h1 class="h2 mb-3">About Desi Roots</h1>', html)
+        self.assertIn('Bristol-based wholesale supplier of Indian and Asian spices and groceries', html)
+        self.assertIn('founded by a couple who started working in hospitality over a decade ago', html)
+        self.assertEqual(html.count('<h1'), 1)
