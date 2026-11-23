@@ -61,9 +61,13 @@ a {
   text-align: center;
 }
 /* Several messages sit on top of each other and fade in turn, so the bar keeps the height of the longest */
-.announcement-track { display: grid; }
-.announcement-msg { grid-area: 1 / 1; margin: 0; align-self: center; opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s; }
-.announcement-msg.is-active { opacity: 1; visibility: visible; }
+/* Messages slide sideways like the hero slider (23 Nov 2026): same 0.5s movement and easing */
+.announcement-track { display: grid; overflow: hidden; }
+.announcement-msg { grid-area: 1 / 1; margin: 0; align-self: center; transform: translateX(100%); visibility: hidden;
+  transition: transform .5s cubic-bezier(0.77, 0, 0.175, 1), visibility 0s linear .5s; }
+.announcement-msg.is-active { transform: translateX(0); visibility: visible;
+  transition: transform .5s cubic-bezier(0.77, 0, 0.175, 1), visibility 0s; }
+.announcement-msg.is-leaving { transform: translateX(-100%); visibility: visible; }
 /* Phones: keep every message on one line (owner's request): slightly smaller text, no extra letter spacing */
 @media (max-width: 575.98px) {
   .announcement-bar { font-size: clamp(10px, 3vw, 0.75rem); letter-spacing: 0; }

@@ -37,7 +37,7 @@ class AnnouncementBarTests(TestCase):
         self.assertIn('data-rotate', bar)
         self.assertIn(f'<p class="announcement-msg is-active">{SLOGAN}</p>', bar)
         self.assertIn(f'<p class="announcement-msg" aria-hidden="true">{DELIVERY}</p>', bar)
-        self.assertIn('/static/js/announcement-bar.js?v=1', html)
+        self.assertIn('/static/js/announcement-bar.js?v=2', html)
 
     def test_one_message_does_not_rotate(self):
         self.set_bar(SLOGAN)
@@ -55,6 +55,17 @@ class AnnouncementBarTests(TestCase):
         html, bar = self.bar_html()
         self.assertNotIn('<script>alert(1)</script>', html)
         self.assertIn('&lt;script&gt;', bar)
+
+    def test_messages_slide_like_the_hero(self):
+        root = Path(settings.BASE_DIR) / 'static'
+        css = (root / 'css' / 'style.css').read_text()
+        hero = (root / 'css' / 'home-hero.css').read_text()
+        easing = 'cubic-bezier(0.77, 0, 0.175, 1)'
+        self.assertIn(f'transform .5s {easing}', hero)                       # the hero's movement
+        bar = css[css.index('.announcement-track {'):css.index('Custom Sticky Navigation')]
+        self.assertIn(f'transform .5s {easing}', bar)                        # the same movement in the top bar
+        self.assertIn('.announcement-msg.is-leaving { transform: translateX(-100%)', bar)
+        self.assertIn('overflow: hidden', bar)
 
     def test_script_changes_every_5_seconds_and_respects_reduced_motion(self):
         js = (Path(settings.BASE_DIR) / 'static' / 'js' / 'announcement-bar.js').read_text()
