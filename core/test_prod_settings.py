@@ -17,7 +17,7 @@ PROBE = (
     "'DEBUG', 'SECURE_SSL_REDIRECT', 'SESSION_COOKIE_SECURE', 'CSRF_COOKIE_SECURE', "
     "'SESSION_COOKIE_HTTPONLY', 'SECURE_HSTS_SECONDS', 'SECURE_CONTENT_TYPE_NOSNIFF', "
     "'X_FRAME_OPTIONS', 'ADMIN_URL_PATH', 'SECURE_HSTS_PRELOAD', 'ADMINS', 'SERVER_EMAIL', "
-    "'DEFAULT_FROM_EMAIL')}))"
+    "'DEFAULT_FROM_EMAIL', 'SESSION_COOKIE_AGE', 'SESSION_EXPIRE_AT_BROWSER_CLOSE')}))"
 )
 
 
@@ -49,6 +49,9 @@ class ProductionSettingsTests(SimpleTestCase):
         self.assertIs(values['SESSION_COOKIE_SECURE'], True)
         self.assertIs(values['CSRF_COOKIE_SECURE'], True)
         self.assertIs(values['SESSION_COOKIE_HTTPONLY'], True)
+        # Staff sign-in ends after 8 hours or when the browser closes (security review, 23 Nov 2026)
+        self.assertEqual(values['SESSION_COOKIE_AGE'], 8 * 60 * 60)
+        self.assertIs(values['SESSION_EXPIRE_AT_BROWSER_CLOSE'], True)
         self.assertGreaterEqual(values['SECURE_HSTS_SECONDS'], 31536000)
         self.assertIs(values['SECURE_HSTS_PRELOAD'], False)   # email runs on Hostinger; preload is hard to undo
         self.assertIs(values['SECURE_CONTENT_TYPE_NOSNIFF'], True)
