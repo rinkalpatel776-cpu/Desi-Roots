@@ -1,4 +1,4 @@
-{% load static %}
+{% load static seo_schema %}
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -24,25 +24,8 @@
   <meta property="og:image:alt" content="Desi Roots, ethnic grocery supplier: bowls of spices, lentils and rice">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Organization JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Desi Roots",
-    "legalName": "Desi Roots",{% if site_settings.vat_number %}
-    "vatID": "{{ site_settings.vat_number|cut:' ' }}",{% endif %}
-    "url": "{{ request.scheme }}://{{ request.get_host }}/",
-    "contactPoint": [{
-      "@type": "ContactPoint",
-      "telephone": "{{ site_settings.phone_number }}",
-      "contactType": "customer service",
-      "email": "{{ site_settings.email_address }}",
-      "areaServed": "GB",
-      "availableLanguage": "en"
-    }]
-  }
-  </script>
+  <!-- Structured data for Google and AI answer engines (core/templatetags/seo_schema.py) -->
+  {% site_schema %}
 
   <!-- Google Fonts -->
   <link href="{% static 'css/fonts.css' %}?v=2" rel="stylesheet">
@@ -54,7 +37,7 @@
   <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}?v=1" rel="stylesheet">
 
   <!-- Custom Stylesheet with cache bust -->
-  <link href="{% static 'css/style.css' %}?v=5.16" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}?v=5.17" rel="stylesheet">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
@@ -63,6 +46,8 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body>
+  {# Keyboard and screen-reader users can jump past the header and menu (shown only when focused) #}
+  <a class="visually-hidden-focusable sp-skip-link" href="#main-content">Skip to main content</a>
 
   <!-- Announcement Bar -->
   {# One message per line in Site settings; several lines take turns every 5 seconds (static/js/announcement-bar.js) #}
@@ -139,7 +124,7 @@
   </nav>
 
   <!-- Main Content Wrapper -->
-  <main class="min-vh-100">
+  <main id="main-content" class="min-vh-100" tabindex="-1">
     {% block content %}
     {% endblock %}
   </main>
@@ -151,7 +136,7 @@
         <div class="col-lg-4 col-md-6">
           <div class="footer-brand-wrap mb-3">
             <a class="footer-brand d-inline-flex align-items-center gap-3 text-white text-decoration-none" href="/">
-              <img src="{% static 'images/logo-160.webp' %}" alt="Desi Roots Logo" width="52" height="52" style="height: 52px; width: auto; max-width: 52px; object-fit: contain;" class="footer-logo-img rounded-2 bg-white p-1">
+              <img src="{% static 'images/logo-160.webp' %}" alt="Desi Roots Logo" width="52" height="52" style="height: 52px; width: auto; max-width: 52px; object-fit: contain;" class="footer-logo-img rounded-2 bg-white p-1" loading="lazy">
               <div>
                 <span class="fs-5 fw-bold text-white d-block" style="font-family: var(--sp-font-head); letter-spacing: 0.05em;"><span style="color: var(--sp-saffron);">Desi</span> Roots</span>
                 <small class="text-white-50 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">Wholesale Spices & Groceries</small>
@@ -302,7 +287,7 @@
 
   <!-- Site scripts and Bootstrap JS, all served from this site -->
   <script src="{% static 'js/announcement-bar.js' %}?v=1" defer></script>
-  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"></script>
+  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" defer></script>
 
   <script src="{% static 'js/cookie-consent.js' %}?v=1" defer></script>
 

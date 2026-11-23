@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
-{% load catalogue_extras %}
+{% load catalogue_extras seo_schema %}
 
 {% block meta_title %}Spice &amp; Grocery Brands We Supply | Desi Roots Bristol{% endblock %}
 {% block meta_description %}The spice and grocery brands Desi Roots supplies wholesale, including Heera, TRS, East End, Fudco, MDH and Shan.{% endblock %}
 {% block og_title %}Spice &amp; Grocery Brands We Supply | Desi Roots Bristol{% endblock %}
 {% block og_description %}The spice and grocery brands Desi Roots supplies wholesale, including Heera, TRS, East End, Fudco, MDH and Shan.{% endblock %}
+
+{% block extra_head %}{% breadcrumb_schema "Brands" "/brands/" %}{% endblock %}
 
 {% block content %}
 <div class="py-5 bg-light border-bottom border-sp">

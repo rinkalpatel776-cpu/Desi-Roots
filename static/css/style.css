@@ -808,7 +808,7 @@ footer .footer-bottom {
       rgba(0, 0, 0, 0) 60%,
       rgba(18, 14, 10, 0.60) 100%
     ),
-    url('../images/hero-ethnic-grocery.jpg');
+    url('../images/hero-ethnic-grocery.webp');
   background-size: cover;
   /* Anchor top-left: the brand title and text sit on the left of the photo, so they are never cropped */
   background-position: left top;
@@ -1517,3 +1517,17 @@ button, .btn, [role="button"], .hs-dot, .hs-arrow { -webkit-user-select: none; u
 /* Catalogue: no-results tips */
 .sp-no-results-tips { display: inline-block; text-align: left; margin: 0 auto 12px; padding-left: 1.2rem; }
 .sp-no-results-tips li { margin-bottom: 2px; }
+
+/* Skip-to-content link (23 Nov 2026): appears top-left when reached with the Tab key */
+.sp-skip-link:focus { position: fixed; top: 10px; left: 10px; z-index: 2000; padding: 10px 16px; border-radius: 8px;
+  background: var(--sp-cta-dark); color: #fff; font-weight: 600; text-decoration: none; outline: 3px solid #1a5fb4; outline-offset: 2px; }
+#main-content:focus { outline: none; }
+
+/* Speed (23 Nov 2026): screens up to 1400px wide get a 1400px copy of the hero photo (phones use their own crop) */
+@media (min-width: 768px) and (max-width: 1399.98px) {
+  .sp-hero-wrapper {
+    background-image:
+      linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 60%, rgba(18, 14, 10, 0.60) 100%),
+      url('../images/hero-ethnic-grocery-1400.webp');
+  }
+}

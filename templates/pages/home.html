@@ -8,7 +8,8 @@
 
 {% block extra_head %}<link href="{% static 'css/home-hero.css' %}?v=10" rel="stylesheet">
 {# Slide 1's photo on tablets and computers is a CSS background, which browsers find late: ask for it straight away #}
-<link rel="preload" as="image" href="{% static 'images/hero-ethnic-grocery.jpg' %}" media="(min-width: 768px)" fetchpriority="high">{% endblock %}
+<link rel="preload" as="image" href="{% static 'images/hero-ethnic-grocery-1400.webp' %}" media="(min-width: 768px) and (max-width: 1399.98px)" fetchpriority="high">
+<link rel="preload" as="image" href="{% static 'images/hero-ethnic-grocery.webp' %}" media="(min-width: 1400px)" fetchpriority="high">{% endblock %}
 
 {% block content %}
 <!-- Hero slider: slide 1 spice-merchant photo, slide 2 welcome, slide 3 MDH; moves every 5 seconds (static/js/hero-slider.js) -->
@@ -154,7 +155,7 @@
       {% for cat in categories %}
       <a class="sp-cat-circle" href="/products/?category={{ cat.slug }}">
         {% if cat.image %}
-          <img src="{{ cat.image.url }}" alt="{{ cat.name }} product packs" width="400" height="400"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
+          <img src="{{ cat.image.url }}" alt="{{ cat.name }} product packs" width="400" height="400" loading="lazy">
         {% else %}
           <span class="sp-cat-circle-blank" aria-hidden="true"><i class="bi bi-basket2"></i></span>
         {% endif %}
@@ -187,7 +188,7 @@
             {% endif %}
             {% with product.images.all|first as img %}
               {% if img %}
-                <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" class="img-fluid" style="max-height: 160px;">
+                <img src="{% if img.thumbnail %}{{ img.thumbnail.url }}{% else %}{{ img.image.url }}{% endif %}" alt="{{ img.alt_text|default:product.name }}" class="img-fluid" style="max-height: 160px;" loading="lazy">
               {% else %}
                 {% include 'partials/product_placeholder.html' with name=product.name %}
               {% endif %}
@@ -230,7 +231,7 @@
         <a class="sp-brand-badge" href="/products/?brand={{ brand.slug }}">
           <span class="sp-badge-ring">
             {% if brand.logo %}
-            <img src="{{ brand.logo|logo_url }}" alt="{{ brand.name }} logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}"{% if forloop.counter > 6 %} loading="lazy"{% endif %}>
+            <img src="{{ brand.logo|logo_url }}" alt="{{ brand.name }} logo" width="{{ brand.logo.width }}" height="{{ brand.logo.height }}" loading="lazy">
             {% else %}
             <span class="sp-badge-letter" aria-hidden="true">{{ brand.initials }}</span>
             {% endif %}
