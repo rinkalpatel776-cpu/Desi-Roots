@@ -48,6 +48,9 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         super().tearDownClass()
 
     def setUp(self):
+        # Each test starts with an empty cache, so enquiry limits from earlier runs can't block it
+        from django.core.cache import cache
+        cache.clear()
         spices = Category.objects.create(name='Spices & Masalas', slug='spices-masalas', display_order=1, show_on_home=True)
         rice = Category.objects.create(name='Rice', slug='rice', display_order=2, show_on_home=True)
         heera = Brand.objects.create(name='Heera', slug='heera', is_featured=True, home_order=1)
@@ -172,6 +175,28 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
             for msg in page.locator('.announcement-msg').all():
                 self.assertFalse(msg.evaluate('m => m.scrollWidth > m.clientWidth + 1'), f'cut off at {width}px')
                 self.assertLess(msg.evaluate('m => m.getBoundingClientRect().height'), 24, f'wraps at {width}px')
+
+    def test_top_bar_messages_slide_sideways(self):
+        from core.models import SiteSettings
+        s = SiteSettings.objects.first() or SiteSettings()
+        s.announcement_bar = 'FIRST MESSAGE\nSECOND MESSAGE'
+        s.save()
+        page = self.page(DESKTOP)
+        page.goto(self.live_server_url + '/')
+        first, second = page.locator('.announcement-msg').nth(0), page.locator('.announcement-msg').nth(1)
+        rest = first.evaluate('m => m.getBoundingClientRect().left')   # where a shown message sits
+        page.wait_for_timeout(5250)                          # halfway through the first slide
+        x1 = first.evaluate('m => m.getBoundingClientRect().left')
+        x2 = second.evaluate('m => m.getBoundingClientRect().left')
+        self.assertLess(x1, rest - 50)                       # the old message is moving out to the left
+        self.assertGreater(x2, rest + 50)                    # the new one is coming in from the right
+        page.wait_for_timeout(700)
+        expect(second).to_be_visible()
+        expect(first).to_be_hidden()
+        self.assertAlmostEqual(second.evaluate('m => m.getBoundingClientRect().left'), rest, delta=2)
+        page.wait_for_timeout(5000)                          # and round again: the first message slides back in
+        expect(first).to_be_visible()
+        self.no_sideways_scroll(page)
 
     def test_phone_taps_do_not_zoom_flash_or_leave_hover_stuck(self):
         context = self.browser.new_context(viewport=PHONE, is_mobile=True, has_touch=True)
