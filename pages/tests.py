@@ -198,8 +198,17 @@ class AboutPageWordingTests(TestCase):
             self.assertNotIn(wrong, visible, wrong)
         self.assertIn('<h1 class="h2 mb-3">About Desi Roots</h1>', html)
         self.assertIn('Bristol-based wholesale supplier of Indian and Asian spices and groceries', html)
-        self.assertIn('founded by a couple who started working in hospitality over a decade ago', html)
+        self.assertIn('We are a couple who started working in hospitality over a decade ago', html)
         self.assertEqual(html.count('<h1'), 1)
+
+    def test_about_page_uses_one_voice_and_one_range_name(self):
+        # Tidied 24 Nov 2026: "we" throughout, "Indian and Asian" as in the home page, headings in sentence case
+        html = self.client.get('/about/').content.decode()
+        self.assertIn('content="Desi Roots is a Bristol-based wholesale supplier of Indian and Asian spices', html)
+        for old in ('Asian and Far Eastern spices', 'Indian, South Asian, Asian and Far Eastern', 'Indian, Asian and Far Eastern',
+                    'Desi Roots was founded by', 'Why Choose Desi Roots?', 'Customer-Focused Service'):
+            self.assertNotIn(old, html, old)
+        self.assertIn('>Why choose us</h2>', html)
 
 
 class OneQuoteWordingTests(TestCase):
