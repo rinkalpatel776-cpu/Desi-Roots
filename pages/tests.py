@@ -92,7 +92,7 @@ class HomeHeroSliderTests(TestCase):
         # Floto review (19 Nov 2026): steps start with a verb; the header button matches the hero wording
         self.assertIn('>Send Enquiry</h3>', html)
         self.assertIn('>Receive Delivery</h3>', html)
-        self.assertIn('>Request a trade quote</a>', html)
+        self.assertIn('>Get a trade quote</a>', html)
         # Floto review 2: one name for contact in the footer, and a benefit line under Why Choose
         self.assertIn('<h2 class="h5">Contact Us</h2>', html)
         self.assertNotIn('Contact Wholesale', html)
@@ -149,7 +149,7 @@ class HomeHeroSliderTests(TestCase):
         self.assertIn('images/hero/spices-phone-800.webp', html)
         self.assertIn('class="hs-m-title">Authentic Flavours. <span class="hs-m-accent">Quality You Can Trust.</span></h2>', html)
         self.assertEqual(html.count('class="hs-label-short">Get a quote</span>'), 3)  # one per slide
-        self.assertIn('class="hs-label-long">Request Wholesale Quote</span>', html)  # computers keep the long wording
+        self.assertEqual(html.count('class="hs-label-long">Get a trade quote</span>'), 3)  # computers keep the long wording
         self.assertNotIn('{#', html)          # template notes never show as text
         self.assertIn('Cardiff <br>', html)   # "Cardiff & surrounding areas" keeps its space on one line
         css = (__import__('pathlib').Path(__import__('django.conf', fromlist=['settings']).settings.BASE_DIR)
@@ -200,3 +200,18 @@ class AboutPageWordingTests(TestCase):
         self.assertIn('Bristol-based wholesale supplier of Indian and Asian spices and groceries', html)
         self.assertIn('founded by a couple who started working in hospitality over a decade ago', html)
         self.assertEqual(html.count('<h1'), 1)
+
+
+class OneQuoteWordingTests(TestCase):
+    """Impeccable review (24 Nov 2026): the quote button has one name everywhere, not five."""
+    OLD = ('Request a trade quote', 'Request a Trade Quote', 'Request Wholesale Quote', '>Enquire<', 'Enquire About This Product')
+
+    def test_every_quote_button_says_get_a_quote(self):
+        from catalogue.models import Category, Product
+        cat = Category.objects.create(name='Spices', slug='spices', show_on_home=True)
+        Product.objects.create(name='Heera Chilli Powder', slug='hcp', category=cat, is_published=True, is_featured=True)
+        for path in ('/', '/products/', '/products/hcp/', '/about/', '/brands/'):
+            html = self.client.get(path).content.decode()
+            self.assertIn('Get a', html, path)
+            for old in self.OLD:
+                self.assertNotIn(old, html, f'{path}: {old}')
