@@ -222,7 +222,7 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         card.hover()
         page.wait_for_timeout(500)
         self.assertNotEqual(card.evaluate('e => getComputedStyle(e).transform'), 'none')
-        button = page.get_by_role('button', name='Enquire').first
+        button = page.get_by_role('button', name='Get a quote').first
         box = button.bounding_box()
         page.mouse.move(box['x'] + 10, box['y'] + 10)
         page.mouse.down()
@@ -263,9 +263,9 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
     def test_enquire_button_prefills_the_contact_form(self):
         page = self.page()
         page.goto(self.live_server_url + '/products/?q=chilli')
-        # The box shows the 'Pack size' placeholder, so pressing Enquire without choosing sends no size
+        # The box shows the 'Pack size' placeholder, so pressing Get a quote without choosing sends no size
         expect(page.get_by_label('Pack size').first).to_have_value('')
-        page.get_by_role('button', name='Enquire').first.click()
+        page.get_by_role('button', name='Get a quote').first.click()
         expect(page.locator('#id_message')).to_have_value(
             'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder.')
 
@@ -274,7 +274,7 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         page = self.page(PHONE)
         page.goto(self.live_server_url + '/products/?q=chilli')
         page.get_by_label('Pack size').first.select_option(label='1 kg')  # list shows weights only
-        page.get_by_role('button', name='Enquire').first.click()
+        page.get_by_role('button', name='Get a quote').first.click()
         expect(page.locator('#id_message')).to_have_value(
             'Hello, I am interested in wholesale pricing and availability for Heera Chilli Powder (6 x 1 kg).')
 

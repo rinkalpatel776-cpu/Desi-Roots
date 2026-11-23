@@ -700,7 +700,7 @@ class ProductCardEnquireTests(TestCase):
         # Enquire is now a small GET form to the contact page carrying the product (and chosen size)
         self.assertContains(response, '<form action="/contact/" method="get" class="sp-enquire-form">', html=False)
         self.assertContains(response, f'<input type="hidden" name="product_id" value="{p.id}">', html=False)
-        self.assertContains(response, 'Enquire')
+        self.assertContains(response, 'Get a quote</button>')
         self.assertNotContains(response, 'View Details')
         # Cards don't open the product page: neither the photo nor the name is a link
         self.assertNotContains(response, 'href="/products/allinson-yeast/"')
