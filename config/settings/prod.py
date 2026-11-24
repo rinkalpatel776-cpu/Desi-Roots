@@ -5,6 +5,9 @@ import sentry_sdk
 
 DEBUG = False
 
+# Static files get content-hashed names (core/storage.py), so Nginx can let browsers keep them for a year
+STORAGES = {**STORAGES, 'staticfiles': {'BACKEND': 'core.storage.DesiRootsStaticStorage'}}
+
 # ---- Secrets must come from the server's .env, never from a default ----
 SECRET_KEY = env('SECRET_KEY', default='')
 if len(SECRET_KEY) < 50 or SECRET_KEY.startswith('django-insecure') or 'change' in SECRET_KEY.lower():

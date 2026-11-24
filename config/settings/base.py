@@ -121,8 +121,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Static files compression and caching
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# File storage. Django 4.2+ reads STORAGES (the old STATICFILES_STORAGE setting is ignored).
+# Plain names here (development and tests); prod.py switches static files to content-hashed names.
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+}
 
 # Media files (Product photos, etc.)
 MEDIA_URL = '/media/'
