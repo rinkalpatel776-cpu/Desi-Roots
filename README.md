@@ -1,8 +1,8 @@
-# 🌿 Spice Pantry
+# 🌿 Desi Roots
 
 ### Premium B2B Wholesale Food Catalogue Website
 
-A modern, responsive B2B wholesale catalogue website built for **Spice Pantry**, the trading brand of **Desi Roots Ltd**.
+A modern, responsive B2B wholesale catalogue website built for **Desi Roots Ltd** (desiroots.co.uk).
 
 The platform allows restaurants, retailers, cafés, hotels and other food businesses to explore wholesale food products, discover brands and submit enquiries.
 
@@ -12,7 +12,7 @@ The platform allows restaurants, retailers, cafés, hotels and other food busine
 
 ## ✨ Overview
 
-Spice Pantry is a catalogue-first wholesale platform designed to showcase food products without online purchasing.
+Desi Roots is a catalogue-first wholesale platform designed to showcase food products without online purchasing.
 
 The catalogue currently shows **over 1,400 products** from **more than 20 brands** across 18 categories, with more added as product photos arrive. Categories include:
 
@@ -116,7 +116,7 @@ Design principles:
 ## 📂 Project Structure
 
 ```text
-Spice-Pantry/
+Desi-Roots/
 │
 ├── config/              # Django project configuration
 ├── catalogue/           # Products, brands, categories, pack sizes and photos
