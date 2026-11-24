@@ -103,8 +103,10 @@ def handle_enquiry_form(request, template_name):
                     f"Press Reply to answer the customer directly.\n\n"
                     f"Full Name: {enquiry.name}\n"
                     f"Business Name: {enquiry.business_name or 'N/A'}\n"
+                    f"Business Type: {enquiry.get_business_type_display() or 'N/A'}\n"
                     f"Phone Number: {enquiry.phone}\n"
-                    f"Email Address: {enquiry.email}\n\n"
+                    f"Email Address: {enquiry.email}\n"
+                    f"Delivery Postcode: {enquiry.postcode or 'N/A'}\n\n"
                     f"Message:\n{enquiry.message}\n"
                 )
                 EmailMessage(

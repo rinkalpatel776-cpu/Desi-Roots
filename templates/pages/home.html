@@ -113,30 +113,32 @@
 <div class="py-5 bg-white border-bottom border-sp">
   <div class="container py-4">
     <div class="text-center mb-5">
-      <h2 class="h3 fw-semibold text-dark">Why Choose Desi Roots</h2>
+      <h2 class="h3 fw-semibold text-dark">Why choose Desi Roots</h2>
       <p class="text-muted">What you get when you order from us.</p>
     </div>
     
-    <div class="row g-4">
-      <div class="col-md-3 text-center">
+    {# Phones: 2 x 2 grid (24 Nov 2026) instead of one tall column #}
+    <div class="row g-4 sp-why-grid">
+      <div class="col-6 col-md-3 text-center">
         <div class="mb-3 text-saffron"><i class="bi bi-award fs-1"></i></div>
-        <h3 class="h5 fw-semibold">One Supplier, Full Range</h3>
-        <p class="text-muted small">Spices, rice, flour, lentils, oils, snacks and more from a single order.</p>
+        <h3 class="h5 fw-semibold">One supplier, full range</h3>
+        {# Live counts from the catalogue (same as the hero chips), so the claim is always true #}
+        <p class="text-muted small">{{ hero_stats.products }} products in {{ hero_stats.categories }} categories, from a single order.</p>
       </div>
-      <div class="col-md-3 text-center">
+      <div class="col-6 col-md-3 text-center">
         <div class="mb-3 text-saffron"><i class="bi bi-truck fs-1"></i></div>
-        <h3 class="h5 fw-semibold">Local Delivery</h3>
+        <h3 class="h5 fw-semibold">Local delivery</h3>
         <p class="text-muted small">Delivered to businesses across Bristol and nearby areas.</p>
       </div>
-      <div class="col-md-3 text-center">
+      <div class="col-6 col-md-3 text-center">
         <div class="mb-3 text-saffron"><i class="bi bi-briefcase fs-1"></i></div>
-        <h3 class="h5 fw-semibold">Trade Pack Sizes</h3>
+        <h3 class="h5 fw-semibold">Trade pack sizes</h3>
         <p class="text-muted small">Cases and bulk sacks sized for kitchens and shop shelves.</p>
       </div>
-      <div class="col-md-3 text-center">
+      <div class="col-6 col-md-3 text-center">
         <div class="mb-3 text-saffron"><i class="bi bi-tags fs-1"></i></div>
-        <h3 class="h5 fw-semibold">Brands People Know</h3>
-        <p class="text-muted small">Well-known Indian and Asian brands, all in one catalogue.</p>
+        <h3 class="h5 fw-semibold">Brands people know</h3>
+        <p class="text-muted small">{{ hero_stats.brands }} well-known Indian and Asian brands in one catalogue.</p>
       </div>
     </div>
   </div>
@@ -222,7 +224,7 @@
 <section class="py-5 bg-white border-bottom border-sp" aria-labelledby="home-brands">
   <div class="container py-3">
     <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-4">
-      <h2 id="home-brands" class="sp-cats-title mb-0">Shop by Brand</h2>
+      <h2 id="home-brands" class="sp-cats-title mb-0">Shop by <span>brand</span></h2>
       <a href="/brands/" class="sp-cats-all">All brands <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </div>
     <div class="sp-brand-slider">
@@ -251,36 +253,37 @@
 <div class="py-5 bg-white border-bottom border-sp">
   <div class="container py-4">
     <div class="text-center mb-5">
-      <h2 class="h3 fw-semibold text-dark">How Wholesale Works</h2>
+      <h2 class="h3 fw-semibold text-dark">How wholesale works</h2>
       <p class="text-muted">From enquiry to delivery in four steps.</p>
     </div>
     
-    <div class="row g-4 justify-content-center">
-      <div class="col-lg-3 col-md-6">
+    {# Phones: 2 x 2 grid (24 Nov 2026) #}
+    <div class="row g-4 justify-content-center sp-steps-grid">
+      <div class="col-6 col-lg-3">
         <div class="process-step">
           <div class="process-step-number">1</div>
-          <h3 class="h5 fw-semibold mb-2">Browse Catalogue</h3>
+          <h3 class="h5 fw-semibold mb-2">Browse the catalogue</h3>
           <p class="text-muted small mb-0">Look through our spices, rice, lentils, flour, oils and pickles.</p>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6">
+      <div class="col-6 col-lg-3">
         <div class="process-step">
           <div class="process-step-number">2</div>
-          <h3 class="h5 fw-semibold mb-2">Send Enquiry</h3>
+          <h3 class="h5 fw-semibold mb-2">Send an enquiry</h3>
           <p class="text-muted small mb-0">Tell us the products and quantities you need.</p>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6">
+      <div class="col-6 col-lg-3">
         <div class="process-step">
           <div class="process-step-number">3</div>
-          <h3 class="h5 fw-semibold mb-2">Receive Quote</h3>
+          <h3 class="h5 fw-semibold mb-2">Get your quote</h3>
           <p class="text-muted small mb-0">We email you a price quote for your order.</p>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6">
+      <div class="col-6 col-lg-3">
         <div class="process-step">
           <div class="process-step-number">4</div>
-          <h3 class="h5 fw-semibold mb-2">Receive Delivery</h3>
+          <h3 class="h5 fw-semibold mb-2">Get your delivery</h3>
           <p class="text-muted small mb-0">We deliver the order to your premises.</p>
         </div>
       </div>

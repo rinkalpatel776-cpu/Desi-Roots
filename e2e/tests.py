@@ -300,6 +300,28 @@ class BrowserJourneyTests(StaticLiveServerTestCase):
         subjects = [m.subject for m in mail.outbox]
         self.assertTrue(any(f'Ref {enquiry.reference}' in s for s in subjects), subjects)
 
+    def test_business_type_and_postcode_are_sent_on_phone(self):
+        # Optional fields added 24 Nov 2026: a bad postcode keeps you on the form, a good one is tidied and saved
+        page = self.page(PHONE)
+        page.goto(self.live_server_url + '/contact/')
+        page.fill('#id_name', 'Asha Patel')
+        page.select_option('#id_business_type', label='Takeaway')
+        page.fill('#id_email', 'asha@kitchen.example')
+        page.fill('#id_phone', '0117 496 0000')
+        page.fill('#id_postcode', 'not a postcode')
+        page.fill('#id_message', 'Please quote for 10 x 5 kg chapati flour.')
+        page.check('#id_consent_given')
+        time.sleep(3.2)
+        page.get_by_role('button', name='Send Message').click()
+        expect(page.get_by_text('Please enter a UK postcode')).to_be_visible()
+        self.assertEqual(Enquiry.objects.count(), 0)
+        page.fill('#id_postcode', 'bs16 1qy')
+        page.check('#id_consent_given')
+        page.get_by_role('button', name='Send Message').click()
+        expect(page).to_have_url(self.live_server_url + '/wholesale/thank-you/')
+        enquiry = Enquiry.objects.get()
+        self.assertEqual((enquiry.business_type, enquiry.postcode), ('takeaway', 'BS16 1QY'))
+
     def test_unsent_enquiry_is_kept_then_cleared_once_sent(self):
         page = self.page(PHONE)
         page.goto(self.live_server_url + '/contact/')
