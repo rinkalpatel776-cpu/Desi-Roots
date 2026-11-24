@@ -38,3 +38,10 @@ def logo_url(logo_field):
     """Small WebP copy of a brand logo when there is one (catalogue/logo_thumbs.py), else the original."""
     from catalogue.logo_thumbs import logo_url as _logo_url
     return _logo_url(logo_field)
+
+
+@register.filter
+def category_small_url(image_field):
+    """Small phone copy of a category photo (catalogue/category_thumbs.py), or '' when there is none."""
+    from catalogue.category_thumbs import small_url
+    return small_url(image_field)

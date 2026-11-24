@@ -82,3 +82,61 @@ class SiteSpeedTests(TestCase):
             text = path.read_text()
             bad = [m.group(0)[:60] for m in re.finditer(r'\{#(.*?)#\}', text, re.S) if '\n' in m.group(1)]
             self.assertEqual(bad, [], path)
+
+
+def category_photo(name='spices-circle.png', size=(400, 400)):
+    img = Image.new('RGBA', size, (0, 0, 0, 0))
+    for x in range(40, 360, 3):
+        for y in range(40, 360, 3):
+            img.putpixel((x, y), ((x * 7) % 255, (y * 5) % 255, 120, 255))
+    out = BytesIO(); img.save(out, 'PNG')
+    return SimpleUploadedFile(name, out.getvalue(), content_type='image/png')
+
+
+@override_settings(MEDIA_ROOT=MEDIA)
+class CategoryPhotoCopyTests(TestCase):
+    """Smaller category photos on phones (24 Nov 2026): a 240 px WebP copy offered through srcset."""
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(MEDIA, ignore_errors=True)
+        super().tearDownClass()
+
+    def make_category(self):
+        from catalogue.models import Category, Product
+        cat = Category.objects.create(name='Spices', slug='spices', show_on_home=True, image=category_photo())
+        Product.objects.create(name='Heera Chilli Powder', slug='hcp', category=cat, is_published=True)
+        return cat
+
+    def test_uploading_a_photo_makes_a_small_webp_copy_and_keeps_the_original(self):
+        from catalogue.category_thumbs import thumb_name as cat_thumb
+        cat = self.make_category()
+        original = Path(MEDIA) / cat.image.name
+        small = Path(MEDIA) / cat_thumb(cat.image.name)
+        self.assertTrue(original.exists())
+        with Image.open(small) as img:
+            self.assertEqual(img.format, 'WEBP')
+            self.assertEqual(max(img.size), 240)
+        self.assertLess(small.stat().st_size, original.stat().st_size)
+
+    def test_home_offers_the_small_copy_to_phones_and_the_original_to_computers(self):
+        from catalogue.category_thumbs import thumb_name as cat_thumb
+        cat = self.make_category()
+        html = self.client.get('/').content.decode()
+        tag = re.search(r'<img [^>]*alt="Spices product packs"[^>]*>', html).group(0)
+        small = settings.MEDIA_URL + cat_thumb(cat.image.name)
+        original = settings.MEDIA_URL + cat.image.name
+        self.assertIn(f'src="{original}"', tag)
+        self.assertIn(f'srcset="{small} 240w, {original} 400w"', tag)
+        self.assertIn('sizes="(max-width: 575.98px) 18vw', tag)  # 18vw, not the real ~30vw: caps phones at 2x so 3x iPhones get the small copy too
+        self.assertIn('loading="lazy"', tag)
+
+    def test_missing_copy_falls_back_to_the_original_and_the_command_remakes_it(self):
+        from catalogue.category_thumbs import thumb_name as cat_thumb
+        cat = self.make_category()
+        (Path(MEDIA) / cat_thumb(cat.image.name)).unlink()
+        tag = re.search(r'<img [^>]*alt="Spices product packs"[^>]*>', self.client.get('/').content.decode()).group(0)
+        self.assertNotIn('srcset', tag)
+        self.assertIn(f'src="{settings.MEDIA_URL + cat.image.name}"', tag)
+        call_command('make_category_thumbs', stdout=StringIO())
+        self.assertTrue((Path(MEDIA) / cat_thumb(cat.image.name)).exists())

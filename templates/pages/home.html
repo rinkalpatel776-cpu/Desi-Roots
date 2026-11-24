@@ -151,11 +151,12 @@
     </div>
 
     {% if categories %}
+    {# Phone circles are ~30vw wide; sizes says 18vw on purpose so 3x phones also pick the 240 px copy (still 2x sharp). #}
     <div class="sp-cat-circles">
       {% for cat in categories %}
       <a class="sp-cat-circle" href="/products/?category={{ cat.slug }}">
         {% if cat.image %}
-          <img src="{{ cat.image.url }}" alt="{{ cat.name }} product packs" width="400" height="400" loading="lazy">
+          {% with small=cat.image|category_small_url %}<img src="{{ cat.image.url }}"{% if small %} srcset="{{ small }} 240w, {{ cat.image.url }} 400w" sizes="(max-width: 575.98px) 18vw, (max-width: 991.98px) 22vw, 200px"{% endif %} alt="{{ cat.name }} product packs" width="400" height="400" loading="lazy">{% endwith %}
         {% else %}
           <span class="sp-cat-circle-blank" aria-hidden="true"><i class="bi bi-basket2"></i></span>
         {% endif %}
