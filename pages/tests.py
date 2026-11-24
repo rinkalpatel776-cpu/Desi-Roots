@@ -1,3 +1,4 @@
+from pathlib import Path
 from django.contrib.auth.models import User
 from pages.models import FAQ
 from django.test import TestCase
@@ -90,8 +91,8 @@ class HomeHeroSliderTests(TestCase):
             self.assertIn(f'aria-label="{label}"', html)
         self.assertIn('href="/products/?brand=mdh"', html)
         # Floto review (19 Nov 2026): steps start with a verb; the header button matches the hero wording
-        self.assertIn('>Send Enquiry</h3>', html)
-        self.assertIn('>Receive Delivery</h3>', html)
+        self.assertIn('>Send an enquiry</h3>', html)   # sentence case since 24 Nov 2026
+        self.assertIn('>Get your delivery</h3>', html)
         self.assertIn('>Get a trade quote</a>', html)
         # Floto review 2: one name for contact in the footer, and a benefit line under Why Choose
         self.assertIn('<h2 class="h5">Contact Us</h2>', html)
@@ -224,3 +225,31 @@ class OneQuoteWordingTests(TestCase):
             self.assertIn('Get a', html, path)
             for old in self.OLD:
                 self.assertNotIn(old, html, f'{path}: {old}')
+
+
+class HomeTidyTests(TestCase):
+    """Impeccable leftovers (24 Nov 2026): matching headings, real numbers, shorter phone page."""
+
+    def setUp(self):
+        from catalogue.models import Category, Product
+        cat = Category.objects.create(name='Spices', slug='spices', show_on_home=True)
+        brand = Brand.objects.create(name='Heera', slug='heera', is_featured=True, home_order=1)
+        for i in range(3):
+            Product.objects.create(name=f'Heera Item {i}', slug=f'heera-item-{i}', category=cat, brand=brand, is_published=True)
+
+    def test_headings_match_and_claims_use_live_counts(self):
+        html = self.client.get('/').content.decode()
+        self.assertIn('Shop by <span>category</span>', html)
+        self.assertIn('Shop by <span>brand</span>', html)
+        for heading in ('>Why choose Desi Roots</h2>', '>How wholesale works</h2>', '>One supplier, full range</h3>'):
+            self.assertIn(heading, html)
+        self.assertIn('3 products in 1 categories, from a single order.', html)
+        self.assertIn('1 well-known Indian and Asian brands in one catalogue.', html)
+
+    def test_phone_layout_is_two_by_two(self):
+        html = self.client.get('/').content.decode()
+        self.assertEqual(html.count('class="col-6 col-md-3 text-center"'), 4)
+        self.assertEqual(html.count('class="col-6 col-lg-3"'), 4)
+        css = (Path(__import__('django.conf', fromlist=['settings']).settings.BASE_DIR) / 'static/css/style.css').read_text()
+        self.assertIn('.sp-why-grid, .sp-steps-grid', css)
+        self.assertNotIn('text-transform: uppercase; letter-spacing: .02em; }', css)   # brand names not in capitals
