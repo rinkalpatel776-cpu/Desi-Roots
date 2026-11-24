@@ -50,3 +50,6 @@ backups/
 
 # Django file cache (local)
 .cache/
+
+# Sync-conflict copies made by macOS/iCloud ("views 2.py", "style 3.css"): never commit them
+* [2-9].*
