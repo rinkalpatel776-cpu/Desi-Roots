@@ -5,16 +5,16 @@ from .models import Enquiry
 
 @admin.register(Enquiry)
 class EnquiryAdmin(admin.ModelAdmin):
-    list_display = ('reference', 'business_name', 'name', 'email', 'phone', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
+    list_display = ('reference', 'business_name', 'business_type', 'postcode', 'name', 'email', 'phone', 'status', 'created_at')
+    list_filter = ('status', 'business_type', 'created_at')
     list_editable = ('status',)
-    search_fields = ('name', 'business_name', 'email', 'phone', 'message', 'admin_notes')
+    search_fields = ('name', 'business_name', 'email', 'phone', 'postcode', 'message', 'admin_notes')
     readonly_fields = ('reference', 'created_at')
     fieldsets = (
-        # Business type, product and category interest are not asked for on the contact
-        # form, so they are left out here (the database columns are kept)
+        # Product and category interest are not asked for on the contact form, so they are
+        # left out here (the database columns are kept). Business type and postcode: since 24 Nov 2026.
         ('Contact Info', {
-            'fields': ('name', 'business_name', 'email', 'phone', 'consent_given')
+            'fields': ('name', 'business_name', 'business_type', 'email', 'phone', 'postcode', 'consent_given')
         }),
         ("Customer's Message", {
             'fields': ('message',)

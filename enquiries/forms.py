@@ -1,3 +1,4 @@
+import re
 import time
 
 from django import forms
@@ -16,6 +17,8 @@ logger = logging.getLogger(__name__)
 MESSAGE_MAX_LENGTH = 5000
 # A form left open longer than this must be sent again (stops one old page being reused by bots)
 FORM_MAX_AGE_SECONDS = 24 * 60 * 60
+# UK postcode, e.g. BS1 1AA, BS16 1QY, SW1A 1AA (checked after removing spaces and upper-casing)
+UK_POSTCODE = re.compile(r'^([A-Z]{1,2}[0-9][A-Z0-9]?)([0-9][A-Z]{2})$')
 
 
 def single_line(value):
@@ -37,6 +40,13 @@ class EnquiryForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(attrs={'tabindex': '-1', 'autocomplete': 'off', 'aria-hidden': 'true'}),
     )
+    # Optional delivery postcode (24 Nov 2026). Up to 16 characters typed (spaces, lower case), stored
+    # tidied as e.g. 'BS16 1QY' (8 at most) by clean_postcode
+    postcode = forms.CharField(
+        required=False, max_length=16, label='Delivery Postcode (optional)',
+        help_text='Helps us check delivery to your area.',
+        widget=forms.TextInput(attrs={'placeholder': 'e.g., BS1 1AA', 'autocomplete': 'postal-code'}),
+    )
     # Signed time the form was shown, to catch instant bot submissions
     form_started = forms.CharField(required=False, widget=forms.HiddenInput())
 
@@ -51,8 +61,10 @@ class EnquiryForm(forms.ModelForm):
         fields = [
             'name', 
             'business_name', 
+            'business_type',
             'email', 
             'phone', 
+            'postcode',
             'message', 
             'consent_given'
         ]
@@ -68,6 +80,7 @@ class EnquiryForm(forms.ModelForm):
             'business_name': 'Business Name',
             'email': 'Email Address',
             'phone': 'Phone Number',
+            'business_type': 'Type of Business (optional)',
             'message': 'Enquiry / Message Details',
             'consent_given': 'Privacy Consent',
         }
@@ -80,6 +93,9 @@ class EnquiryForm(forms.ModelForm):
         self.fields['phone'].required = True
         self.fields['message'].required = True
         self.fields['consent_given'].required = True
+        # Optional extras (24 Nov 2026): help the owner quote and plan delivery, never block sending
+        self.fields['business_type'].required = False
+        self.fields['business_type'].choices = [('', 'Choose one')] + Enquiry.BUSINESS_TYPE_CHOICES
         # Keep messages to a sensible size (no database change needed)
         self.fields['message'].validators.append(MaxLengthValidator(MESSAGE_MAX_LENGTH))
         self.fields['message'].widget.attrs['maxlength'] = MESSAGE_MAX_LENGTH
@@ -96,6 +112,16 @@ class EnquiryForm(forms.ModelForm):
 
     def clean_phone(self):
         return single_line(self.cleaned_data.get('phone'))
+
+    def clean_postcode(self):
+        """Optional; when given it must look like a UK postcode, stored as e.g. 'BS1 1AA'."""
+        raw = ''.join(single_line(self.cleaned_data.get('postcode')).split()).upper()
+        if not raw:
+            return ''
+        match = UK_POSTCODE.match(raw)
+        if not match:
+            raise forms.ValidationError('Please enter a UK postcode, for example BS1 1AA, or leave it empty.')
+        return f'{match.group(1)} {match.group(2)}'
 
     def looks_like_spam(self, cleaned_data):
         if cleaned_data.get('website'):

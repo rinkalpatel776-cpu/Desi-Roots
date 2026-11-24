@@ -10,7 +10,7 @@
 
   var KEY = "dr_enquiry_draft";
   var MAX_AGE = 7 * 24 * 60 * 60 * 1000;
-  var FIELDS = ["name", "business_name", "email", "phone", "message"];
+  var FIELDS = ["name", "business_name", "business_type", "email", "phone", "postcode", "message"];
 
   function clear() {
     try { localStorage.removeItem(KEY); } catch (e) {}

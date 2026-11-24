@@ -33,7 +33,7 @@ class EnquiryTests(TestCase):
         response = self.client.get('/contact/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Send Message')
-        for removed in ('business_type', 'category_interest', 'name="product"'):
+        for removed in ('category_interest', 'name="product"'):   # business type is asked again since 24 Nov 2026
             self.assertNotContains(response, removed)
 
     def test_product_link_prefills_message_on_contact_page(self):
@@ -333,3 +333,56 @@ class RepeatEnquiryTests(TestCase):
         response = self.client.get('/contact/')
         self.assertContains(response, 'data-send-once')
         self.assertContains(response, '/static/js/enquiry-form.js')
+
+
+@override_settings(TURNSTILE_SECRET_KEY='', TURNSTILE_SITE_KEY='')
+class BusinessTypeAndPostcodeTests(TestCase):
+    """Optional business type and delivery postcode on the enquiry form (24 Nov 2026)."""
+
+    def setUp(self):
+        cache.clear()
+
+    def test_form_shows_both_fields_as_optional(self):
+        html = self.client.get('/contact/').content.decode()
+        self.assertIn('name="business_type"', html)
+        self.assertIn('name="postcode"', html)
+        self.assertIn('Type of Business (optional)', html)
+        self.assertIn('Delivery Postcode (optional)', html)
+        for label in ('Restaurant', 'Takeaway', 'Catering company', 'Shop or retailer', 'Other food business'):
+            self.assertIn(f'>{label}</option>', html)
+        self.assertIn('autocomplete="postal-code"', html)
+
+    def test_enquiry_still_sends_without_them(self):
+        self.client.post('/contact/', data=good_payload())
+        enquiry = Enquiry.objects.get()
+        self.assertEqual((enquiry.business_type, enquiry.postcode), ('', ''))
+
+    def test_postcode_is_tidied_and_both_reach_the_owner_email(self):
+        self.client.post('/contact/', data=good_payload(business_type='takeaway', postcode=' bs16  1qy '))
+        enquiry = Enquiry.objects.get()
+        self.assertEqual(enquiry.business_type, 'takeaway')
+        self.assertEqual(enquiry.postcode, 'BS16 1QY')
+        from django.conf import settings
+        to_business = next(m for m in mail.outbox if m.to == [settings.NOTIFICATION_EMAIL])
+        self.assertIn('Business Type: Takeaway', to_business.body)
+        self.assertIn('Delivery Postcode: BS16 1QY', to_business.body)
+
+    def test_bad_postcodes_and_unknown_business_types_are_refused(self):
+        for bad in ('12345', 'BS1', 'not a postcode', 'BS1 1AA\nBcc: x@evil.com', '<script>x</script>', 'BS1 1AA' * 50):
+            response = self.client.post('/contact/', data=good_payload(postcode=bad))
+            self.assertEqual(response.status_code, 200, bad)          # the form comes back with an error
+            self.assertNotContains(response, '<script>x</script>')     # never echoed unescaped
+        self.assertContains(self.client.post('/contact/', data=good_payload(postcode='12345')), 'Please enter a UK postcode')
+        response = self.client.post('/contact/', data=good_payload(business_type='hacker'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Enquiry.objects.count(), 0)
+
+    def test_admin_lists_and_filters_by_them(self):
+        from django.conf import settings
+        from django.contrib.auth.models import User
+        self.client.post('/contact/', data=good_payload(business_type='restaurant', postcode='BS1 1AA'))
+        self.client.force_login(User.objects.create_superuser('boss', 'boss@example.com', 'a-long-test-password-123'))
+        url = f'/{settings.ADMIN_URL_PATH}/enquiries/enquiry/'
+        self.assertContains(self.client.get(url), 'BS1 1AA')
+        self.assertEqual(self.client.get(url, {'business_type__exact': 'restaurant'}).context['cl'].result_count, 1)
+        self.assertEqual(self.client.get(url, {'business_type__exact': 'shop'}).context['cl'].result_count, 0)
