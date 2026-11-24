@@ -1,4 +1,4 @@
-# AGENTS.md — Spice Pantry
+# AGENTS.md — Desi Roots
 
 Rules for any AI coding agent working in this repository. Read this file and `docs/PROJECT_BRIEF.md` before writing code. If a request in chat conflicts with this file, stop and ask rather than guessing.
 
@@ -6,7 +6,7 @@ Rules for any AI coding agent working in this repository. Read this file and `do
 
 ## What this project is
 
-A **B2B wholesale product catalogue** website for Spice Pantry, the customer-facing trading brand of Desi Roots — a UK spice and grocery wholesaler serving Bristol and nearby areas. Roughly 480 products across six categories. Business buyers browse the catalogue and submit a **wholesale enquiry**. That enquiry form is the only conversion mechanism on the site.
+A **B2B wholesale product catalogue** website for Desi Roots (renamed from Spice Pantry on 7 Nov 2026) — a UK spice and grocery wholesaler serving Bristol and nearby areas. Roughly 480 products across six categories. Business buyers browse the catalogue and submit a **wholesale enquiry**. That enquiry form is the only conversion mechanism on the site.
 
 It is **not a shop**. Nobody buys anything on this website.
 

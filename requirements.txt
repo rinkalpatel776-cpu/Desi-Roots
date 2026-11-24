@@ -1,4 +1,4 @@
-# Spice Pantry — Python dependencies
+# Desi Roots — Python dependencies
 #
 # Version families below are known-good pairings for Django 5.2 LTS.
 # Install, confirm the site runs, then lock exact versions with:

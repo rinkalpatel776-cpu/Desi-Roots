@@ -116,7 +116,7 @@ class Command(BaseCommand):
         download = options['download']
 
         self.stdout.write(self.style.NOTICE(
-            f"=== Spice Pantry Product Image Collection (Dry-Run: {not download}) ==="
+            f"=== Desi Roots Product Image Collection (Dry-Run: {not download}) ==="
         ))
 
         # 1. Fetch targeted products from DB

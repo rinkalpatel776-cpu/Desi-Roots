@@ -1,5 +1,5 @@
 
-# Spice Pantry — Project Brief
+# Desi Roots — Project Brief
 
 Source of truth for scope and content decisions. Save this at `docs/PROJECT_BRIEF.md` in the repository. Paired with `AGENTS.md` at the repo root, which holds the technical rules.
 
@@ -7,7 +7,7 @@ Source of truth for scope and content decisions. Save this at `docs/PROJECT_BRIE
 
 ## 1. Business identity
 
-Customer-facing brand is **Spice Pantry**, the trading name of the registered business **Desi Roots**. Business email is `support@desiroots.co.uk`. The domain is already owned.
+Customer-facing brand is **Desi Roots**, the same name as the registered business (the brand was called Spice Pantry until 7 Nov 2026). Business email is `support@desiroots.co.uk`. The domain is already owned.
 
 Tagline: **WE SUPPLY THE SPICE, YOU CREATE THE MAGIC.**
 
@@ -17,7 +17,7 @@ Use the supplied logo exactly as provided. Do not redesign it. Logo and tagline 
 
 A **B2B wholesale supplier** currently serving **Bristol and surrounding areas**, delivering with its own vehicles.
 
-The business may later expand beyond Bristol, serve more of the UK, stock products from countries other than India, and grow the catalogue. **The website must therefore not permanently position Spice Pantry as an Indian-only spice company.** Imagery and copy should read as global premium grocery, not region-specific.
+The business may later expand beyond Bristol, serve more of the UK, stock products from countries other than India, and grow the catalogue. **The website must therefore not permanently position Desi Roots as an Indian-only spice company.** Imagery and copy should read as global premium grocery, not region-specific.
 
 ## 3. Target customers
 
@@ -63,7 +63,7 @@ Home · About Us · Products · Product Detail · Brands · Wholesale · FAQ · 
 
 ## 10. Homepage structure
 
-In this order: announcement bar → sticky navigation → hero → Why Choose Spice Pantry → product categories → featured products → featured brands → wholesale process → testimonials → FAQ preview → contact CTA → footer.
+In this order: announcement bar → sticky navigation → hero → Why Choose Desi Roots → product categories → featured products → featured brands → wholesale process → testimonials → FAQ preview → contact CTA → footer.
 
 ## 11. Hero section
 
@@ -75,7 +75,7 @@ Subtitle: Supplying restaurants, cafés, retailers and food businesses with care
 
 Buttons: **Browse Products** and **Request Wholesale Quote**.
 
-## 12. Why Choose Spice Pantry
+## 12. Why Choose Desi Roots
 
 Four points: Premium Quality Products · Reliable Local Delivery · Trusted Wholesale Supply · Multiple Leading Brands.
 
@@ -147,4 +147,4 @@ Anywhere these are needed, use an obvious placeholder and a `TODO` comment. Cont
 
 ## The guiding principle
 
-Spice Pantry is a **catalogue-first B2B platform, not an online shop.** The architecture should be simple enough to run cheaply today, but structured so that customer accounts, restaurant accounts, a cart, orders, Stripe payments, order tracking, inventory and eventually a mobile app can be added later **without throwing away this project.**
+Desi Roots is a **catalogue-first B2B platform, not an online shop.** The architecture should be simple enough to run cheaply today, but structured so that customer accounts, restaurant accounts, a cart, orders, Stripe payments, order tracking, inventory and eventually a mobile app can be added later **without throwing away this project.**
