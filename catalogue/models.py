@@ -52,6 +52,17 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        new_image = bool(self.image) and not self.image._committed
+        super().save(*args, **kwargs)
+        if new_image:
+            # Small phone copy for the home page (catalogue/category_thumbs.py); a failure never blocks saving
+            from .category_thumbs import make_thumb
+            try:
+                make_thumb(self.image)
+            except Exception:
+                logging.getLogger(__name__).exception("Could not make the small copy of %s's photo", self.name)
+
     @classmethod
     def for_home_page(cls):
         """Active categories with published products: the ticked ones, or all of them if none are ticked."""
