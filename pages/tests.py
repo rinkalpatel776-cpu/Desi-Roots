@@ -253,3 +253,10 @@ class HomeTidyTests(TestCase):
         css = (Path(__import__('django.conf', fromlist=['settings']).settings.BASE_DIR) / 'static/css/style.css').read_text()
         self.assertIn('.sp-why-grid, .sp-steps-grid', css)
         self.assertNotIn('text-transform: uppercase; letter-spacing: .02em; }', css)   # brand names not in capitals
+
+
+class FooterTaglineTests(TestCase):
+    def test_footer_says_supplier(self):
+        # Owner's wording (25 Nov 2026), under the footer logo on every page
+        for path in ('/', '/about/'):
+            self.assertContains(self.client.get(path), '>Wholesale Spices & Groceries Supplier</small>', html=False)
