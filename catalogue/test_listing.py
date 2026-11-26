@@ -119,8 +119,8 @@ class CatalogueListingTests(TestCase):
         self.assertEqual(self.names(response), ['Z Spice', 'B Rice'])
 
     def test_old_category_and_brand_addresses_redirect(self):
-        self.assertRedirects(self.client.get('/categories/rice/'), '/products/?category=rice', fetch_redirect_response=False)
-        self.assertRedirects(self.client.get('/brands/heera/'), '/products/?brand=heera', fetch_redirect_response=False)
+        self.assertRedirects(self.client.get('/categories/rice/'), '/products/?category=rice', status_code=301, fetch_redirect_response=False)
+        self.assertRedirects(self.client.get('/brands/heera/'), '/products/?brand=heera', status_code=301, fetch_redirect_response=False)
 
     # ---- sitemap ----
     def test_sitemap_lists_published_products_only(self):

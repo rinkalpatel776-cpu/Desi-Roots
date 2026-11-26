@@ -102,6 +102,8 @@ def product_list(request):
         'page_query': query_without(),          # for pagination links: ?page=N&<page_query>
         'sort_query': query_without('q', 'category', 'brand'),  # keeps the sort on category/brand links
         'remove_filter_urls': {name: '?' + query_without(name) for name in ('q', 'category', 'brand')},
+        # Keep search results and empty filter pages out of Google ("soft 404"); visitors still see them
+        'robots_noindex': bool(query) or paginator.count == 0,
     }
     return render(request, 'catalogue/product_list.html', context)
 
@@ -150,9 +152,9 @@ def brand_list(request):
 
 def category_detail_redirect(request, slug):
     # Redirect /categories/<slug>/ to products list page filtered by category
-    return redirect(f'/products/?category={slug}')
+    return redirect(f'/products/?category={slug}', permanent=True)
 
 
 def brand_detail_redirect(request, slug):
     # Redirect /brands/<slug>/ to products list page filtered by brand
-    return redirect(f'/products/?brand={slug}')
+    return redirect(f'/products/?brand={slug}', permanent=True)
