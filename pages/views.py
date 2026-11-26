@@ -70,7 +70,9 @@ def contact(request):
 def faq_list(request):
     faqs = FAQ.objects.filter(is_active=True).order_by('display_order', 'id')
     context = {
-        'faqs': faqs
+        'faqs': faqs,
+        # "Answers coming soon" is a thin page to Google; index it once real answers are added
+        'robots_noindex': not faqs,
     }
     return render(request, 'pages/faq.html', context)
 

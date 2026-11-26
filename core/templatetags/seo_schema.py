@@ -100,3 +100,26 @@ def faq_schema(faqs):
         'mainEntity': [{'@type': 'Question', 'name': f.question,
                         'acceptedAnswer': {'@type': 'Answer', 'text': f.answer}} for f in faqs],
     })
+
+
+# Query parameters that make a genuinely different page. Everything else (search, sort,
+# utm_*/fbclid tracking, page=1) points back at the clean page, so Google sees one main copy.
+CANONICAL_PARAMS = ('category', 'brand', 'page')
+
+
+@register.simple_tag(takes_context=True)
+def canonical_url(context):
+    from urllib.parse import urlencode
+    request = context['request']
+    host = request.get_host()
+    if host.startswith('www.'):
+        host = host[4:]
+    keep = []
+    # Only the catalogue listing has real filter/page variants; every other page is one clean URL
+    for name in (CANONICAL_PARAMS if request.path == '/products/' else ()):
+        value = request.GET.get(name, '').strip()
+        if not value or (name == 'page' and (not value.isdigit() or int(value) <= 1)):
+            continue
+        keep.append((name, value))
+    query = ('?' + urlencode(keep)) if keep else ''
+    return f'{request.scheme}://{host}{request.path}{query}'

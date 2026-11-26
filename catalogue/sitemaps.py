@@ -1,4 +1,5 @@
 from django.contrib.sitemaps import Sitemap
+from django.db.models import Count, Q
 from django.urls import reverse
 from catalogue.models import Product, Category, Brand
 
@@ -18,7 +19,10 @@ class CategorySitemap(Sitemap):
     priority = 0.6
 
     def items(self):
-        return Category.objects.filter(is_active=True).order_by('display_order')
+        # Only categories with published products: an empty filter page is a "soft 404" to Google
+        return (Category.objects.filter(is_active=True)
+                .annotate(n=Count('products', filter=Q(products__is_published=True)))
+                .filter(n__gt=0).order_by('display_order', 'name'))
 
     def location(self, item):
         return f'/products/?category={item.slug}'
@@ -29,7 +33,9 @@ class BrandSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return Brand.objects.all().order_by('name')
+        # Only brands with published products (see CategorySitemap)
+        return (Brand.objects.annotate(n=Count('products', filter=Q(products__is_published=True)))
+                .filter(n__gt=0).order_by('name'))
 
     def location(self, item):
         return f'/products/?brand={item.slug}'
@@ -40,7 +46,7 @@ class StaticViewSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return ['pages:home', 'pages:about', 'pages:contact', 'pages:faq_list']
+        return ['pages:home', 'catalogue:brand_list', 'pages:about', 'pages:contact', 'pages:faq_list']
 
     def location(self, item):
         return reverse(item)
